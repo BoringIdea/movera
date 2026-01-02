@@ -1,0 +1,16 @@
+{
+  "name": "movera-docs",
+  "version": "1.0.0",
+  "description": "Movera Documentation",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/copy-readme.js",
+    "dev": "vitepress dev",
+    "prebuild": "node scripts/copy-readme.js",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

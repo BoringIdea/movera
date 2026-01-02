@@ -1,0 +1,14 @@
+node_modules
+.turbo
+.pnpm-store
+.yarn/
+.yarn-cache
+.yarn/cache
+dist
+.next
+temp
+.DS_Store
+
+# VitePress
+docs/.vitepress/dist
+docs/.vitepress/cache

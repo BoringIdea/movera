@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@movera/contracts/*": [
+        "packages/contracts/*"
+      ],
+      "@movera/sdk/*": [
+        "packages/sdk/src/*"
+      ]
+    }
+  }
+}

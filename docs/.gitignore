@@ -1,0 +1,11 @@
+# VitePress
+.vitepress/dist
+.vitepress/cache
+
+# Dependencies
+node_modules
+
+# Copied README files (generated, do not commit)
+SDK.md
+Contracts.md
+

@@ -1,0 +1,9 @@
+# aas
+aas/.aptos/
+aas/.movement
+aas/build/
+aas/resolver_example/build
+
+#sas
+sas/build/
+sas/resolvers/build

@@ -1,0 +1,22 @@
+{
+  "name": "movera",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Movera monorepo",
+  "author": "Luke Ma <lukema95@gmail.com>",
+  "license": "Business Source License 1.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspace @movera/sdk build && yarn workspace movera-backend build && yarn workspace movera-website build",
+    "dev": "yarn workspace movera-website dev",
+    "dev:backend": "yarn workspace movera-backend start:dev",
+    "lint": "yarn workspaces run lint",
+    "test": "yarn workspaces run test"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0"
+  }
+}

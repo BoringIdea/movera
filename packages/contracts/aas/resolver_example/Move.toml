@@ -1,0 +1,22 @@
+[package]
+name = "resolver_example"
+version = "1.0.0"
+authors = []
+
+[addresses]
+aas = "0x22b0020431434625e70a4ffce67ecf8a7e83712df325fbaa69164ee6439a5f6d"
+resolver_example = "_"
+
+[dev-addresses]
+aas = "0x101"
+resolver_example = "0x102"
+
+[dependencies]
+aas = { local = "../" }
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
