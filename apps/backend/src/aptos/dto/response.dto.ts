@@ -120,10 +120,53 @@ export class AttestationResponseDto {
   recipient: string;
 
   @ApiProperty({
+    description: 'Storage type (0 = on-chain, 1 = off-chain)',
+    example: 0,
+    required: false,
+  })
+  storage_type?: number;
+
+  @ApiProperty({
     description: 'Attestation data',
     example: '0x1234567890abcdef',
+    required: false,
   })
-  data: string;
+  data?: string;
+
+  @ApiProperty({
+    description: 'Off-chain data hash (blake2b_256)',
+    example: '0xabcdef1234567890',
+    required: false,
+  })
+  data_hash?: string;
+
+  @ApiProperty({
+    description: 'Shelby account address for blob owner',
+    example: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+    required: false,
+  })
+  shelby_account?: string;
+
+  @ApiProperty({
+    description: 'Shelby blob path/name',
+    example: 'attestations/profile/alice',
+    required: false,
+  })
+  shelby_blob_name?: string;
+
+  @ApiProperty({
+    description: 'Shelby blob merkle root (commitment)',
+    example: '0xcb32d55d50a7ece063120628d6407a236f8b01ef321aa42289044a722f1194b1',
+    required: false,
+  })
+  shelby_blob_merkle_root?: string;
+
+  @ApiProperty({
+    description: 'Shelby blob register transaction hash',
+    example: '0x976a1e93cc0f9c39ca4bbb9540a81f46f805d363916c1b9666d26cd6a24de1d1',
+    required: false,
+  })
+  shelby_register_tx_hash?: string;
 
   @ApiProperty({
     description: 'Transaction hash of attestation creation',
@@ -160,6 +203,20 @@ export class AttestationWithSchemaResponseDto extends AttestationResponseDto {
     required: false,
   })
   schema_data?: string;
+}
+
+export class ShelbyDownloadResponseDto {
+  @ApiProperty({
+    description: 'Base64-encoded blob data',
+    example: 'SGVsbG8gTW92ZSBBdHRlc3RhdGlvbg==',
+  })
+  data_base64: string;
+
+  @ApiProperty({
+    description: 'Blake2b_256 hash of the blob data (hex)',
+    example: '0xabcdef1234567890',
+  })
+  data_hash: string;
 }
 
 export class CountResponseDto {

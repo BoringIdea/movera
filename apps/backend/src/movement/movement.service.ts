@@ -48,18 +48,36 @@ export class MovementService implements OnModuleInit {
 
   async attestationCreatedEvents() {
     const attestationCnt = await this.attestationCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${MOVEMENT_ADDRESS}::attestation::AttestationCreated`,
-      options: {
-        offset: attestationCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetAttestationCreatedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${MOVEMENT_ADDRESS}::attestation::AttestationCreated`,
+          offset: attestationCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       for (const event of events) {
         const txInfo = await this.aptosClient.getTransactionByVersion({
-          ledgerVersion: event.transaction_version,
+          ledgerVersion: BigInt(event.transaction_version),
         });
         const txHash = txInfo.hash;
 
@@ -87,13 +105,31 @@ export class MovementService implements OnModuleInit {
 
   async attestationRevokedEvents() {
     const revokedCnt = await this.revokedCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${MOVEMENT_ADDRESS}::attestation::AttestationRevoked`,
-      options: {
-        offset: revokedCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetAttestationRevokedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${MOVEMENT_ADDRESS}::attestation::AttestationRevoked`,
+          offset: revokedCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       for (const event of events) {
@@ -107,18 +143,36 @@ export class MovementService implements OnModuleInit {
 
   async schemaCreatedEvents() {
     const schemaCnt = await this.schemaCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${MOVEMENT_ADDRESS}::schema::SchemaCreated`,
-      options: {
-        offset: schemaCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetSchemaCreatedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${MOVEMENT_ADDRESS}::schema::SchemaCreated`,
+          offset: schemaCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       for (const event of events) {
         const txInfo = await this.aptosClient.getTransactionByVersion({
-          ledgerVersion: event.transaction_version,
+          ledgerVersion: BigInt(event.transaction_version),
         });
         const txHash = txInfo.hash;
 

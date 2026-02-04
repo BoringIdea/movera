@@ -12,6 +12,8 @@ import { ScheduledTaskStatus, TaskExecutionResult, ScheduledTaskType } from './d
 export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(ScheduledTaskService.name);
   private isRunning = false;
+  private readonly isEnabled =
+    process.env.ACHIEVEMENTS_SCHEDULED_TASKS_ENABLED !== 'false';
 
   constructor(
     private readonly achievementCalculationService: AchievementCalculationService,
@@ -20,17 +22,27 @@ export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     this.logger.log('ScheduledTaskService initialized');
+    if (!this.isEnabled) {
+      this.logger.warn('Scheduled tasks disabled via ACHIEVEMENTS_SCHEDULED_TASKS_ENABLED=false');
+      return;
+    }
     await this.startScheduledTasks();
   }
 
   async onModuleDestroy() {
     this.logger.log('ScheduledTaskService destroyed');
+    if (!this.isEnabled) {
+      return;
+    }
     await this.stopScheduledTasks();
   }
 
   // Start scheduled tasks
   async startScheduledTasks(): Promise<void> {
     try {
+      if (!this.isEnabled) {
+        return;
+      }
       this.logger.log('Starting scheduled tasks...');
       
       // Load all active scheduled tasks
@@ -53,6 +65,9 @@ export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
   // Stop scheduled tasks
   async stopScheduledTasks(): Promise<void> {
     try {
+      if (!this.isEnabled) {
+        return;
+      }
       this.logger.log('Stopping scheduled tasks...');
       this.isRunning = false;
     } catch (error) {
@@ -63,6 +78,9 @@ export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
   // Daily achievement check task
   @Cron(CronExpression.EVERY_DAY_AT_2AM)
   async executeAchievementCheck(): Promise<void> {
+    if (!this.isEnabled) {
+      return;
+    }
     if (this.isRunning) {
       this.logger.warn('Achievement check already running, skipping...');
       return;
@@ -127,6 +145,9 @@ export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
   // Hourly data sync task
   @Cron(CronExpression.EVERY_HOUR)
   async executeDataSync(): Promise<void> {
+    if (!this.isEnabled) {
+      return;
+    }
     try {
       this.logger.log('Starting hourly data sync...');
       
@@ -175,6 +196,9 @@ export class ScheduledTaskService implements OnModuleInit, OnModuleDestroy {
   // Weekly cleanup task
   @Cron(CronExpression.EVERY_WEEKEND)
   async executeCleanup(): Promise<void> {
+    if (!this.isEnabled) {
+      return;
+    }
     try {
       this.logger.log('Starting weekly cleanup...');
       

@@ -55,7 +55,7 @@ export const PACKAGES = {
         PackageAddress: ''
       },
       testnet: {
-        PackageAddress: '0xa6ba1e444bea4a3dd0dcf4fd51ee9eb287fe00ee9228ee06364a83f555176bb4',
+        PackageAddress: '0x99e924dd0fba0e4bde9f53cafad9e07f6d9813f818877d94e2b9c42bd5c42fc0',
         ResolverPackageAddress: '0x0f6e0bf40111bc7efe17b4b249e09474bc3e25c9d2f2ce7524379d1d5c294ac6',
       },
       devnet: {

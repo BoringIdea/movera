@@ -21,6 +21,12 @@ export interface AptosAttestation {
   revokable: boolean;
   attestor: string;
   recipient: string;
+  storageType?: number;
   data: any;
+  dataHash?: Uint8Array;
+  shelbyAccount?: string;
+  shelbyBlobName?: string;
+  shelbyBlobMerkleRoot?: Uint8Array;
+  shelbyRegisterTxHash?: Uint8Array;
   txHash?: string;
 }

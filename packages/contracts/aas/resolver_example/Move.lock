@@ -41,7 +41,13 @@ manifest_digest = "7AFB66695545775FBFBB2D3078ADFD084244D5002392E837FDE21D9EA1C6D
 deps = { MoveStdlib = "MoveStdlib" }
 
 [pinned.testnet.aas]
-source = { root = true }
+source = { local = ".." }
 use_environment = "testnet"
 manifest_digest = "DA1129C4B6195B60640C60DF4F44A87794ECD8D83D615D8C683C695394806591"
 deps = { AptosFramework = "AptosFramework", AptosToken = "AptosToken", std = "MoveStdlib", sui = "Sui" }
+
+[pinned.testnet.resolver_example]
+source = { root = true }
+use_environment = "testnet"
+manifest_digest = "0BCB371A7C9C18C2C0E0EE0E33B4D34F5C0096FF3FEFC169B5A748DD86D9DEB1"
+deps = { AptosFramework = "AptosFramework", aas = "aas", std = "MoveStdlib", sui = "Sui" }

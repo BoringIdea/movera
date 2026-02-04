@@ -1,9 +1,9 @@
 import type { SuiClient } from '@mysten/sui/client';
-import type { Signer } from '@mysten/sui/cryptography';
+// Signer type varies between Sui package versions; keep as any for compatibility.
 import type { ClientWithExtensions, Experimental_CoreClient } from '@mysten/sui/experimental';
 import { getFullnodeUrl, SuiClient as SuiClientClass } from '@mysten/sui/client';
 import { walrus, type WalrusClient as WalrusClientType, blobIdFromInt } from '@mysten/walrus';
-import type { Network } from './utils';
+import type { Network } from './utils.js';
 
 export interface WalrusConfig {
   network?: Network;
@@ -50,7 +50,7 @@ export class WalrusClient {
         storageNodeClientOptions: config?.storageNodeClientOptions || {
           timeout: 60_000, // 60 seconds timeout for slow nodes
         },
-      })
+      }) as any
     );
 
     this.suiClient = client as any;
@@ -68,7 +68,7 @@ export class WalrusClient {
    */
   async uploadData(
     data: Uint8Array,
-    signer: Signer,
+    signer: any,
     epochs: number = 3,
     deletable: boolean = false,
     owner?: string // Optional owner address (defaults to signer address)
@@ -178,4 +178,3 @@ export class WalrusClient {
     return true;
   }
 }
-

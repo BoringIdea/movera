@@ -4,7 +4,7 @@ import {
 } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { Network, getClient } from '../utils';
+import { Network, getClient } from '../utils.js';
 
 export class Blacklist {
   private client: SuiClient;

@@ -49,7 +49,8 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
 
-  const storageType = attestation.storage_type ?? 0; // Default to ON_CHAIN
+  // Convert to number for comparison (backend may return string)
+  const storageType = Number(attestation.storage_type ?? 0);
   const isEncrypted = attestation.encrypted === true;
   const isOffChain = storageType === StorageType.OFF_CHAIN;
 

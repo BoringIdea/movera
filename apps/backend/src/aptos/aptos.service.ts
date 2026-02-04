@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Aptos, AptosConfig, ClientConfig, Network } from '@aptos-labs/ts-sdk';
+import { computeBlake2b256, downloadFromShelby } from '@movera/sdk';
 import { db } from '../db/db';
 import { aptos_schemas, aptos_attestations } from '../db/schema';
 import { sql, eq, desc, or, like } from 'drizzle-orm';
@@ -52,20 +53,38 @@ export class AptosService implements OnModuleInit {
 
   async attestationCreatedEvents() {
     const attestationCnt = await this.attestationCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${APTOS_ADDRESS}::attestation::AttestationCreated`,
-      options: {
-        offset: attestationCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetAttestationCreatedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${APTOS_ADDRESS}::attestation::AttestationCreated`,
+          offset: attestationCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       console.log('Attestation created events', events);
       for (const event of events) {
         try {
         const txInfo = await this.aptosClient.getTransactionByVersion({
-          ledgerVersion: event.transaction_version,
+          ledgerVersion: BigInt(event.transaction_version),
         });
         const txHash = txInfo.hash;
 
@@ -78,7 +97,13 @@ export class AptosService implements OnModuleInit {
           revocation_time: '0',
           attestor: event.data.attestor,
           recipient: event.data.recipient,
+          storage_type: event.data.storage_type ?? 0,
           data: event.data.data,
+          data_hash: event.data.data_hash ?? null,
+          shelby_account: event.data.shelby_account ?? null,
+          shelby_blob_name: event.data.shelby_blob_name ?? null,
+          shelby_blob_merkle_root: event.data.shelby_blob_merkle_root ?? null,
+          shelby_register_tx_hash: event.data.shelby_register_tx_hash ?? null,
           tx_hash: txHash,
         };
 
@@ -96,13 +121,31 @@ export class AptosService implements OnModuleInit {
 
   async attestationRevokedEvents() {
     const revokedCnt = await this.revokedCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${APTOS_ADDRESS}::attestation::AttestationRevoked`,
-      options: {
-        offset: revokedCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetAttestationRevokedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${APTOS_ADDRESS}::attestation::AttestationRevoked`,
+          offset: revokedCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       for (const event of events) {
@@ -116,20 +159,38 @@ export class AptosService implements OnModuleInit {
 
   async schemaCreatedEvents() {
     const schemaCnt = await this.schemaCount();
-    const events = await this.aptosClient.event.getModuleEventsByEventType({
-      eventType: `${APTOS_ADDRESS}::schema::SchemaCreated`,
-      options: {
-        offset: schemaCnt,
-        limit: 100,
+    const result = await this.aptosClient.queryIndexer<{
+      events: Array<{ data: any; transaction_version: string }>;
+    }>({
+      query: {
+        query: `
+          query GetSchemaCreatedEvents($event_type: String!, $offset: Int!, $limit: Int!) {
+            events(
+              where: { indexed_type: { _eq: $event_type } }
+              offset: $offset
+              limit: $limit
+              order_by: { transaction_version: asc }
+            ) {
+              data
+              transaction_version
+            }
+          }
+        `,
+        variables: {
+          event_type: `${APTOS_ADDRESS}::schema::SchemaCreated`,
+          offset: schemaCnt,
+          limit: 100,
+        },
       },
     });
+    const events = result.events || [];
 
     if (events.length > 0) {
       console.log('Schema created events', events);
       for (const event of events) {
         try {
         const txInfo = await this.aptosClient.getTransactionByVersion({
-          ledgerVersion: event.transaction_version,
+          ledgerVersion: BigInt(event.transaction_version),
         });
         const txHash = txInfo.hash;
 
@@ -388,7 +449,13 @@ export class AptosService implements OnModuleInit {
         revocation_time: aptos_attestations.revocation_time,
         attestor: aptos_attestations.attestor,
         recipient: aptos_attestations.recipient,
+        storage_type: aptos_attestations.storage_type,
         data: aptos_attestations.data,
+        data_hash: aptos_attestations.data_hash,
+        shelby_account: aptos_attestations.shelby_account,
+        shelby_blob_name: aptos_attestations.shelby_blob_name,
+        shelby_blob_merkle_root: aptos_attestations.shelby_blob_merkle_root,
+        shelby_register_tx_hash: aptos_attestations.shelby_register_tx_hash,
         tx_hash: aptos_attestations.tx_hash,
         // schema fields
         schema_id: aptos_schemas.id,
@@ -429,6 +496,41 @@ export class AptosService implements OnModuleInit {
       .select({ count: sql`count(*)` })
       .from(aptos_attestations);
     return result[0].count as number;
+  }
+
+  async downloadOffChainData(account: string, blobName: string) {
+    let data: Uint8Array;
+    try {
+      data = await downloadFromShelby({
+        account,
+        blobName,
+        apiKey: process.env.SHELBY_API_KEY,
+        network: Network.SHELBYNET,
+      });
+    } catch (error) {
+      const apiKey = process.env.SHELBY_API_KEY;
+      const baseUrl = process.env.SHELBY_RPC_URL ?? 'https://api.shelbynet.shelby.xyz/shelby';
+      const encodedBlobName = blobName
+        .split('/')
+        .map((part) => encodeURIComponent(part))
+        .join('/');
+      const url = `${baseUrl}/v1/blobs/${account}/${encodedBlobName}`;
+      const headers: Record<string, string> = {};
+      if (apiKey) {
+        headers.Authorization = `Bearer ${apiKey}`;
+      }
+      const response = await fetch(url, { headers });
+      if (!response.ok) {
+        throw new Error(`Shelby download failed: ${response.status} ${response.statusText}`);
+      }
+      const buffer = await response.arrayBuffer();
+      data = new Uint8Array(buffer);
+    }
+    const hash = computeBlake2b256(data);
+    return {
+      data_base64: Buffer.from(data).toString('base64'),
+      data_hash: `0x${Buffer.from(hash).toString('hex')}`,
+    };
   }
 
   async getSchemaCount() {

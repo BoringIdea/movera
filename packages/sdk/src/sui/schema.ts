@@ -4,8 +4,8 @@ import {
 } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { getClient, getPackageId, getSchemaRegistryId, Network } from './utils';
-import { SuiSchema, SchemaRegistry } from './types';
+import { getClient, getPackageId, getSchemaRegistryId, Network } from './utils.js';
+import { SuiSchema, SchemaRegistry } from './types.js';
 
 export class Schema {
   private client: SuiClient;
@@ -216,7 +216,7 @@ export async function getSchemas(chain: string, network: Network): Promise<SuiSc
   });
   console.log('tableData', tableData);
 
-  const schemaPromises = tableData.data.map(async (dataItem) => {
+  const schemaPromises = tableData.data.map(async (dataItem: any) => {
     // Get the table item
     const tableItem = await client.getObject({
       id: dataItem.objectId,

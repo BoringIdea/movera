@@ -1,4 +1,4 @@
-import { PACKAGES } from "../constants";
+import { PACKAGES } from "../constants.js";
 
 type Network = 'mainnet' | 'testnet' | 'devnet' | 'localnet' | 'custom'
 

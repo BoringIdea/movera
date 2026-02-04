@@ -7,6 +7,7 @@ import {
   AttestationAddressParamDto,
   UserAddressParamDto,
   SearchSchemaQueryDto,
+  ShelbyDownloadQueryDto,
 } from './dto/query-params.dto';
 import {
   SchemaResponseDto,
@@ -17,6 +18,7 @@ import {
   SingleSchemaResponseDto,
   SingleAttestationResponseDto,
   CountApiResponseDto,
+  ShelbyDownloadResponseDto,
 } from './dto/response.dto';
 import { ApiResponse as IApiResponse } from '../common';
 import { ResponseUtil } from '../common/utils/response.util';
@@ -398,5 +400,32 @@ export class AptosController {
       return ResponseUtil.error('Attestation not found');
     }
     return ResponseUtil.success(attestation, 'Successfully retrieved attestation');
+  }
+
+  @Get('attestations/offchain/download')
+  @ApiOperation({
+    summary: 'Download off-chain attestation data (Shelby)',
+    description: 'Fetches blob data from Shelby by account and blob name',
+  })
+  @ApiQuery({
+    name: 'account',
+    description: 'Shelby account address',
+    example: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+  })
+  @ApiQuery({
+    name: 'blobName',
+    description: 'Shelby blob path/name',
+    example: 'attestations/profile/alice',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully retrieved off-chain data',
+    type: ShelbyDownloadResponseDto,
+  })
+  async downloadOffChainData(
+    @Query() query: ShelbyDownloadQueryDto,
+  ): Promise<IApiResponse<ShelbyDownloadResponseDto>> {
+    const data = await this.aptosService.downloadOffChainData(query.account, query.blobName);
+    return ResponseUtil.success(data, 'Successfully retrieved off-chain data');
   }
 }

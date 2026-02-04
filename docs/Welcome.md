@@ -13,7 +13,7 @@ By enabling secure and verifiable proofs, MoveAS supports a more transparent and
 ## Key Features
 
 - **Multi-Chain Support**: Deployed on both Sui and Aptos blockchains
-- **Dual Storage Options**: Choose between on-chain and off-chain storage (Walrus) for optimal cost and scalability
+- **Dual Storage Options**: Choose between on-chain and off-chain storage (Walrus for Sui, Shelby for Aptos) for optimal cost and scalability
 - **Privacy Protection**: Seal encryption integration for sensitive attestation data (Sui only)
 - **Schema-Based**: Flexible schema system for defining attestation data structures
 - **Resolver Pattern**: Custom validation logic for access control
@@ -52,7 +52,7 @@ Traditional attestation systems often face several challenges:
 1. **Decentralization**: Built on blockchain, eliminating single points of failure
 2. **Multi-Chain**: Works across Sui and Aptos for broader reach
 3. **Privacy-First**: Optional Seal encryption for sensitive data
-4. **Cost-Efficient**: Off-chain storage via Walrus for large datasets
+4. **Cost-Efficient**: Off-chain storage via Walrus (Sui) or Shelby (Aptos) for large datasets
 5. **Flexible Design**: Custom schemas, resolvers, and access patterns
 
 ## Use Cases
@@ -94,4 +94,3 @@ This project is licensed under the Business Source License 1.1. See the [LICENSE
 ---
 
 **Next**: [Concepts](./Concepts.md) →
-

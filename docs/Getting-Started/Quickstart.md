@@ -314,6 +314,70 @@ const res2 = await aas.createAttestation(
 console.log('Attestation created:', res2);
 ```
 
+## Example: Create Off-Chain Attestation (Aptos + Shelby)
+
+```typescript
+import { Aas, Codec, uploadToShelby, computeBlake2b256 } from '@movera/sdk';
+import { Account, Network, Ed25519PrivateKey, Hex } from "@aptos-labs/ts-sdk";
+import { bcs } from '@mysten/bcs';
+
+// Set up account (same as above)
+const privateKeyBytes = Hex.fromHexString(process.env.PRIVATE_KEY || "").toUint8Array();
+const privateKey = new Ed25519PrivateKey(privateKeyBytes);
+const account = Account.fromPrivateKey({ privateKey });
+const aas = new Aas(account, 'aptos', Network.TESTNET);
+
+// Create schema (same as above)
+const schemaTemplate = "name: string, age: u64";
+const codec = new Codec(schemaTemplate);
+const schema = bcs.string().serialize(schemaTemplate).toBytes();
+const res = await aas.createSchema(schema, "User Profile", "Description", "https://example.com", false, '0x0');
+
+// Extract schema address
+const events = (res as any).events;
+let schemaAddress = "";
+for (const event of events) {
+  if (event.type.includes("SchemaCreated")) {
+    schemaAddress = event.data.schema_address;
+    break;
+  }
+}
+
+// Prepare attestation data
+const item = { name: "Alice", age: 30n };
+const attestationRaw = codec.encodeToBytes(item);
+
+// Compute hash and blobName
+const dataHash = computeBlake2b256(attestationRaw);
+const dataHashHex = Buffer.from(dataHash).toString('hex');
+const blobName = `movera/user-profile/${dataHashHex}`;
+
+// Upload to Shelby (shelbynet)
+const upload = await uploadToShelby({
+  account,
+  blobName,
+  blobData: attestationRaw,
+  apiKey: process.env.SHELBY_API_KEY,
+  network: Network.SHELBYNET,
+});
+
+// Create off-chain attestation
+const res2 = await aas.createAttestationOffChain(
+  account.accountAddress.toString(),
+  schemaAddress,
+  '0x0',
+  0, // expiration_time
+  false, // revokable
+  upload.dataHash,
+  upload.account,
+  upload.blobName,
+  upload.blobMerkleRoot,
+  upload.registerTxHash
+);
+
+console.log('Off-chain attestation created:', res2);
+```
+
 ## Next Steps
 
 - Learn about [Core Concepts](../Basics/Core-Concepts.md)
@@ -324,4 +388,3 @@ console.log('Attestation created:', res2);
 ---
 
 **Next**: [Core Concepts](../Basics/Core-Concepts.md) →
-

@@ -5,7 +5,8 @@ import {
   ApiResponse, 
   AttestationWithSchema, 
   CountResult, 
-  PaginationParams 
+  PaginationParams,
+  OffChainData
 } from './types';
 import { getBaseUrl, createQueryString, apiRequest } from './utils';
 
@@ -110,6 +111,17 @@ export function useAttestationCountByRecipient(
   );
 }
 
+export function useOffChainData(
+  chain: ChainType,
+  account: string | undefined,
+  blobName: string | undefined
+) {
+  return useSWR(
+    account && blobName ? ['offchain-data', chain, account, blobName] : null,
+    () => fetchOffChainData(chain, account!, blobName!)
+  );
+}
+
 // API Functions
 export async function fetchAttestations(
   chain: ChainType, 
@@ -121,6 +133,17 @@ export async function fetchAttestations(
   const url = `${baseUrl}/attestations${queryString}`;
   
   return await apiRequest<AttestationWithSchema[]>(url);
+}
+
+export async function fetchOffChainData(
+  chain: ChainType,
+  account: string,
+  blobName: string
+): Promise<ApiResponse<OffChainData>> {
+  const baseUrl = getBaseUrl(chain);
+  const queryString = createQueryString({ account, blobName });
+  const url = `${baseUrl}/attestations/offchain/download${queryString}`;
+  return apiRequest<OffChainData>(url);
 }
 
 export async function fetchAttestationsBySchema(
@@ -213,5 +236,4 @@ export async function getAttestationCountByRecipient(
   
   return await apiRequest<CountResult>(url);
 }
-
 

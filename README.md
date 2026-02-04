@@ -40,6 +40,8 @@ cp apps/frontend/.env.example apps/frontend/.env.local
 cp apps/backend/.env.example apps/backend/.env
 ```
 
+For Aptos off-chain attestations (Shelby), the backend requires `SHELBY_API_KEY` in `apps/backend/.env` to download blobs via the proxy endpoint. The frontend off-chain creation flow expects `NEXT_PUBLIC_SHELBY_API_KEY` in `apps/frontend/.env.local`.
+
 ## Common Tasks
 
 ```bash
@@ -88,4 +90,3 @@ Security disclosures should follow the process outlined in `SECURITY.md`. The sm
 ## License
 
 This repository is distributed under the Business Source License 1.1. Non-production use is permitted, and on `2029-01-01` (or earlier subject to the license terms) the code will transition to Apache License 2.0. See `LICENSE` for the full text.
-

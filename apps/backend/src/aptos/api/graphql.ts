@@ -25,7 +25,13 @@ export interface Attestation {
   revokable: boolean;
   attestor: string;
   recipient: string;
-  data: string;
+  data?: string;
+  storage_type?: number;
+  data_hash?: string;
+  shelby_account?: string;
+  shelby_blob_name?: string;
+  shelby_blob_merkle_root?: string;
+  shelby_register_tx_hash?: string;
   tx_hash: string;
 }
 
@@ -223,6 +229,12 @@ export class GraphQLService {
           address
           attestor
           data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           expiration_time
           recipient
           revocation_time
@@ -248,6 +260,12 @@ export class GraphQLService {
           address
           attestor
           data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           expiration_time
           recipient
           revocation_time
@@ -271,6 +289,13 @@ export class GraphQLService {
           ref_attestation
           address
           attestor
+          data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           expiration_time
           recipient
           revocation_time
@@ -329,6 +354,13 @@ export class GraphQLService {
           ref_attestation
           address
           attestor
+          data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           expiration_time
           recipient
           revocation_time
@@ -378,6 +410,13 @@ export class GraphQLService {
           ref_attestation
           address
           attestor
+          data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           expiration_time
           recipient
           revocation_time
@@ -441,6 +480,12 @@ export class GraphQLService {
           attestor
           recipient
           data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           tx_hash
         }
       }
@@ -465,6 +510,12 @@ export class GraphQLService {
           schema
           time
           data
+          storage_type
+          data_hash
+          shelby_account
+          shelby_blob_name
+          shelby_blob_merkle_root
+          shelby_register_tx_hash
           tx_hash
         }
       }
