@@ -1,15 +1,18 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { SuiClient, getFullnodeUrl, EventId } from '@mysten/sui/client';
+import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { bcs } from '@mysten/bcs';
 import { db } from '../db/db';
 import { sql, eq, desc, or } from 'drizzle-orm';
 import { sui_schemas, sui_attestations } from 'src/db/schema';
-import { getAttestation, Network } from '@movera/sdk';
+import { getAttestation, Network, WalrusClient } from '@movera/sdk';
+import { fromHEX } from '@mysten/bcs';
 
 type NewSuiSchema = typeof sui_schemas.$inferInsert;
 type NewSuiAttestation = typeof sui_attestations.$inferInsert;
 
 const PACKAGE_ID = process.env.SUI_PACKAGE_ID;
+const SUI_NETWORK = process.env.SUI_NETWORK || 'testnet';
 
 @Injectable()
 export class SuiService implements OnModuleInit {
@@ -20,7 +23,7 @@ export class SuiService implements OnModuleInit {
       throw new Error('SUI_PACKAGE_ID environment variable is required but not set');
     }
 
-    this.suiClient = new SuiClient({ url: getFullnodeUrl('testnet') });
+    this.suiClient = new SuiClient({ url: getFullnodeUrl(SUI_NETWORK as any) });
   }
 
   onModuleInit() {
@@ -671,5 +674,42 @@ export class SuiService implements OnModuleInit {
       .from(sui_attestations)
       .where(eq(sui_attestations.recipient, address));
     return result[0].count as number;
+  }
+
+  async uploadOffChainData(dataBase64: string) {
+    const secretKey = process.env.WALRUS_UPLOADER_SECRET_KEY;
+    if (!secretKey) {
+      throw new Error('WALRUS_UPLOADER_SECRET_KEY is not set');
+    }
+
+    const walrusKeypair = Ed25519Keypair.fromSecretKey(fromHEX(secretKey));
+    const walrusOwner = process.env.WALRUS_OWNER_ADDRESS || walrusKeypair.toSuiAddress();
+
+    const walrusClient = new WalrusClient(this.suiClient as any, {
+      network: SUI_NETWORK as any,
+      uploadRelay: SUI_NETWORK === 'testnet' ? {
+        host: 'https://upload-relay.testnet.walrus.space',
+        sendTip: {
+          max: 1_000,
+        },
+      } : undefined,
+      storageNodeClientOptions: {
+        timeout: 60_000,
+      },
+    });
+
+    const data = new Uint8Array(Buffer.from(dataBase64, 'base64'));
+    const uploadResult = await walrusClient.uploadData(
+      data,
+      walrusKeypair,
+      3,
+      false,
+      walrusOwner,
+    );
+
+    return {
+      walrus_sui_object_id: uploadResult.suiObjectId,
+      walrus_blob_id: uploadResult.blobId,
+    };
   }
 }

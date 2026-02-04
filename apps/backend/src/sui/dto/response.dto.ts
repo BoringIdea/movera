@@ -202,6 +202,20 @@ export class AttestationResponseDto {
   tx_hash: string;
 }
 
+export class WalrusUploadResponseDto {
+  @ApiProperty({
+    description: 'Walrus Sui object ID',
+    example: '0x...',
+  })
+  walrus_sui_object_id: string;
+
+  @ApiProperty({
+    description: 'Walrus blob ID (base64url string)',
+    example: 'b6CoN4a38EN53OKgXEur1t0LVoy6BR_PCtP_qC1y0n4',
+  })
+  walrus_blob_id: string;
+}
+
 export class AttestationWithSchemaResponseDto extends AttestationResponseDto {
   @ApiProperty({
     description: 'Schema ID',
@@ -388,4 +402,3 @@ export class CountApiResponseDto implements ApiResponse<CountResponseDto> {
   })
   message?: string;
 }
-

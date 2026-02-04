@@ -1,6 +1,6 @@
 import { Account, Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { ClayErasureCodingProvider, generateCommitments, ShelbyNodeClient } from "@shelby-protocol/sdk/node";
-import { createHash } from "crypto";
+import { blake2b } from "@noble/hashes/blake2b";
 
 export interface ShelbyUploadOptions {
   account: Account;
@@ -34,8 +34,8 @@ export interface ShelbyDownloadOptions {
 }
 
 export function computeBlake2b256(data: Uint8Array): Uint8Array {
-  const hash = createHash("blake2b512").update(Buffer.from(data)).digest();
-  return new Uint8Array(hash.subarray(0, 32));
+  // Use BLAKE2b-256 (dkLen = 32) to match Move's blake2b_256
+  return blake2b(data, { dkLen: 32 });
 }
 
 export function verifyBlake2b256(data: Uint8Array, expected: Uint8Array | string): boolean {

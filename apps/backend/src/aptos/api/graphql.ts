@@ -50,6 +50,48 @@ interface CountResult {
   count: number;
 }
 
+const ATTESTATION_FIELDS = gql`
+  fragment AttestationFields on attestations {
+    ref_attestation
+    address
+    attestor
+    data
+    storage_type
+    data_hash
+    shelby_account
+    shelby_blob_name
+    shelby_blob_merkle_root
+    shelby_register_tx_hash
+    expiration_time
+    recipient
+    revocation_time
+    revokable
+    schema
+    time
+    tx_hash
+  }
+`;
+
+const ATTESTATION_FIELDS_INLINE = `
+  ref_attestation
+  address
+  attestor
+  data
+  storage_type
+  data_hash
+  shelby_account
+  shelby_blob_name
+  shelby_blob_merkle_root
+  shelby_register_tx_hash
+  expiration_time
+  recipient
+  revocation_time
+  revokable
+  schema
+  time
+  tx_hash
+`;
+
 export class GraphQLService {
   private client: GraphQLClient;
   private url: string;
@@ -223,25 +265,10 @@ export class GraphQLService {
 
   async getAttestations(offset: number, limit: number): Promise<Attestation[]> {
     const query = gql`
+      ${ATTESTATION_FIELDS}
       query GetAttestations($offset: Int!, $limit: Int!) {
         attestations(offset: $offset, limit: $limit) {
-          ref_attestation
-          address
-          attestor
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          tx_hash
+          ...AttestationFields
         }
       }
     `;
@@ -254,25 +281,10 @@ export class GraphQLService {
     const protocol_account = '0xa0c1c581f74104add8bcccf999216b83641cf7f63a67ccd13ea4736c0993abeb';
     
     const query = gql`
+      ${ATTESTATION_FIELDS}
       query GetPassportAttestations($recipient: String!, $protocol_account: String!) {
         attestations(limit: 1, order_by: {time: desc}, where: {recipient: {_eq: $recipient}, attestor: {_eq: $protocol_account}}) {
-          ref_attestation
-          address
-          attestor
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          tx_hash
+          ...AttestationFields
         }
       }
     `;
@@ -284,25 +296,10 @@ export class GraphQLService {
   async getAttestationsWithSchemas(offset: number, limit: number): Promise<AttestationWithSchema[]> {
     // First, get attestations
     const attestationsQuery = gql`
+      ${ATTESTATION_FIELDS}
       query GetAttestations($offset: Int!, $limit: Int!) {
         attestations(offset: $offset, limit: $limit, order_by: {time: desc}) {
-          ref_attestation
-          address
-          attestor
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          tx_hash
+          ...AttestationFields
         }
       }
     `;
@@ -349,25 +346,10 @@ export class GraphQLService {
   async getAttestationsBySchema(schema: string, offset: number, limit: number): Promise<AttestationWithSchema[]> {
     // First, get attestations for the specific schema
     const attestationsQuery = gql`
+      ${ATTESTATION_FIELDS}
       query GetAttestationsBySchema($schema: String!, $offset: Int!, $limit: Int!) {
         attestations(where: {schema: {_eq: $schema}}, offset: $offset, limit: $limit) {
-          ref_attestation
-          address
-          attestor
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          tx_hash
+          ...AttestationFields
         }
       }
     `;
@@ -405,25 +387,10 @@ export class GraphQLService {
   async getAttestationsByUser(address: string, offset: number, limit: number): Promise<AttestationWithSchema[]> {
     // First, get attestations for the user (as attestor or recipient)
     const attestationsQuery = gql`
+      ${ATTESTATION_FIELDS}
       query GetAttestationsByUser($address: String!, $offset: Int!, $limit: Int!) {
         attestations(where: {_or: [{attestor: {_eq: $address}}, {recipient: {_eq: $address}}]}, offset: $offset, limit: $limit) {
-          ref_attestation
-          address
-          attestor
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          tx_hash
+          ...AttestationFields
         }
       }
     `;
@@ -471,22 +438,7 @@ export class GraphQLService {
     const query = gql`
       query FindAttestationByAddress($address: String!) {
         attestation(address: $address) {
-          address
-          schema
-          ref_attestation
-          time
-          expiration_time
-          revocation_time
-          attestor
-          recipient
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          tx_hash
+          ${ATTESTATION_FIELDS_INLINE}
         }
       }
     `;
@@ -498,25 +450,10 @@ export class GraphQLService {
   async getAttestationAndSchema(attestationAddress: string): Promise<AttestationWithSchema | null> {
     // First, get the attestation
     const attestationQuery = gql`
+      ${ATTESTATION_FIELDS}
       query GetAttestationByAddress($address: String!) {
         attestations(where: {address: {_eq: $address}}) {
-          ref_attestation
-          address
-          attestor
-          expiration_time
-          recipient
-          revocation_time
-          revokable
-          schema
-          time
-          data
-          storage_type
-          data_hash
-          shelby_account
-          shelby_blob_name
-          shelby_blob_merkle_root
-          shelby_register_tx_hash
-          tx_hash
+          ...AttestationFields
         }
       }
     `;

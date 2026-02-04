@@ -6,7 +6,11 @@ import {
   AttestationWithSchema, 
   CountResult, 
   PaginationParams,
-  OffChainData
+  OffChainData,
+  AptosOffChainUploadRequest,
+  AptosOffChainUploadResponse,
+  SuiOffChainUploadRequest,
+  SuiOffChainUploadResponse
 } from './types';
 import { getBaseUrl, createQueryString, apiRequest } from './utils';
 
@@ -146,6 +150,28 @@ export async function fetchOffChainData(
   return apiRequest<OffChainData>(url);
 }
 
+export async function uploadAptosOffChainData(
+  payload: AptosOffChainUploadRequest
+): Promise<ApiResponse<AptosOffChainUploadResponse>> {
+  const baseUrl = getBaseUrl('aptos');
+  const url = `${baseUrl}/attestations/offchain/upload`;
+  return apiRequest<AptosOffChainUploadResponse>(url, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function uploadSuiOffChainData(
+  payload: SuiOffChainUploadRequest
+): Promise<ApiResponse<SuiOffChainUploadResponse>> {
+  const baseUrl = getBaseUrl('sui');
+  const url = `${baseUrl}/attestations/offchain/upload`;
+  return apiRequest<SuiOffChainUploadResponse>(url, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function fetchAttestationsBySchema(
   schema: string,
   chain: ChainType, 
@@ -236,4 +262,3 @@ export async function getAttestationCountByRecipient(
   
   return await apiRequest<CountResult>(url);
 }
-

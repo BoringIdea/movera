@@ -11,13 +11,13 @@ import { Transaction } from "@mysten/sui/transactions"
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils"
 import { getExplorerTxUrl } from "@/utils"
 import { useCurrentWallet, useSignAndExecuteTransaction, useSuiClient, useCurrentAccount } from '@mysten/dapp-kit';
-import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { fromHEX } from '@mysten/bcs';
+import { uploadSuiOffChainData } from "@/api/attestation";
 import { AlertDialog, Flex } from "@radix-ui/themes"
 import { Loader2 } from "lucide-react"
 import { Chain } from "@/components/providers/chain-provider"
 import { getNetwork } from "@/utils/utils"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Buffer } from "buffer";
 
 export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any }) {
   const network = getNetwork() as Network;
@@ -192,29 +192,6 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
 
       // Handle OFF_CHAIN storage
       if (storageType === StorageType.OFF_CHAIN) {
-        // Initialize Walrus client with upload relay and timeout configuration
-        // Use upload relay to reduce request count and improve reliability
-        // This reduces ~2200 requests to just a few requests handled by the relay server
-        const { WalrusClient } = await import("@movera/sdk");
-        const walrusClient = new WalrusClient(suiClient as any, {
-          network,
-          // Use upload relay to reduce request count and improve reliability
-          // This significantly reduces the number of client requests
-          uploadRelay: network === 'testnet' ? {
-            host: 'https://upload-relay.testnet.walrus.space',
-            sendTip: {
-              max: 1_000, // Maximum tip in MIST (optional, relay will determine actual tip needed)
-            },
-          } : undefined, // Only use relay on testnet for now
-          storageNodeClientOptions: {
-            timeout: 60_000, // 60 seconds timeout for slow nodes
-            onError: (error) => {
-              // Log errors for debugging (optional)
-              console.warn('Walrus storage node error:', error);
-            },
-          },
-        });
-
         // Step 1: Calculate data hash of ORIGINAL data (before encryption)
         // This hash is stored on-chain and used to verify decrypted data integrity
         // Use blake2b256 from SDK to match Sui's hash::blake2b256
@@ -275,65 +252,16 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
           finalData = new Uint8Array(Array.from(encryptedData));
         }
 
-        // Step 3: Upload to Walrus
-        const epochs = 3; // Default to 3 epochs
+        const uploadResponse = await uploadSuiOffChainData({
+          data_base64: Buffer.from(finalData).toString('base64'),
+        });
 
-        // Get Walrus signer from environment variable (dedicated account for Walrus storage)
-        // This avoids wallet signer complexity and uses a dedicated account for all Walrus uploads
-        const WALRUS_SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY;
-        if (!WALRUS_SECRET_KEY) {
-          throw new Error('Walrus secret key not configured. Please set NEXT_PUBLIC_SECRET_KEY environment variable.');
+        if (!uploadResponse.success) {
+          throw new Error(uploadResponse.message || 'Failed to upload to Walrus.');
         }
 
-        // Create keypair from secret key
-        const walrusKeypair = Ed25519Keypair.fromSecretKey(fromHEX(WALRUS_SECRET_KEY));
-        console.log('Using Walrus account:', walrusKeypair.toSuiAddress());
-
-        // Optional: Get owner address from environment variable (defaults to signer address)
-        const WALRUS_OWNER_ADDRESS = process.env.NEXT_PUBLIC_WALRUS_OWNER_ADDRESS;
-        const walrusOwner = WALRUS_OWNER_ADDRESS || walrusKeypair.toSuiAddress();
-
-        // Upload data to Walrus with retry logic 
-        // Note: walrusSuiObjectId and walrusBlobIdBase64 are already declared at function scope
-        let retries = 3;
-        let lastError: Error | null = null;
-
-        for (let i = 0; i < retries; i++) {
-          try {
-            console.log(`Attempting Walrus upload (attempt ${i + 1}/${retries})...`);
-            // Upload data to Walrus using dedicated Walrus keypair as signer
-            const uploadResult = await walrusClient.uploadData(
-              finalData,
-              walrusKeypair, // Use dedicated Walrus keypair as signer
-              epochs,
-              false,
-              walrusOwner // Optional owner address (defaults to signer address in SDK)
-            );
-            walrusSuiObjectId = uploadResult.suiObjectId;
-            walrusBlobIdBase64 = uploadResult.blobId;
-            console.log('Uploaded to Walrus:');
-            console.log('  Sui Object ID:', walrusSuiObjectId);
-            console.log('  Blob ID (base64url):', walrusBlobIdBase64);
-            console.log('  Owner:', walrusOwner);
-            break; // Success, exit retry loop
-          } catch (error: any) {
-            lastError = error;
-            console.warn(`Upload attempt ${i + 1} failed:`, error.message);
-            if (i < retries - 1) {
-              // Wait before retrying (exponential backoff)
-              const waitTime = Math.pow(2, i) * 1000; // 1s, 2s, 4s
-              console.log(`Waiting ${waitTime}ms before retry...`);
-              await new Promise(resolve => setTimeout(resolve, waitTime));
-            }
-          }
-        }
-
-        if (!walrusSuiObjectId || !walrusBlobIdBase64) {
-          throw new Error(
-            `Failed to upload to Walrus after ${retries} attempts. Last error: ${lastError?.message || 'Unknown error'}. ` +
-            `This may indicate that Walrus testnet nodes are temporarily unavailable. Please try again later.`
-          );
-        }
+        walrusSuiObjectId = uploadResponse.data.walrus_sui_object_id;
+        walrusBlobIdBase64 = uploadResponse.data.walrus_blob_id;
       }
 
       const tx = new Transaction();
@@ -613,6 +541,11 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                   Off-chain (Walrus)
                 </button>
               </div>
+              {storageType === StorageType.OFF_CHAIN && (
+                <p className="text-[0.65rem] text-black/60 mt-2">
+                  Off-chain data is uploaded by the backend to Walrus. Your wallet only signs the final on-chain attestation.
+                </p>
+              )}
             </div>
 
             {storageType === StorageType.OFF_CHAIN && (

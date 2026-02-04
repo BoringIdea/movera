@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Aptos, AptosConfig, ClientConfig, Network } from '@aptos-labs/ts-sdk';
-import { computeBlake2b256, downloadFromShelby } from '@movera/sdk';
+import { Account, Aptos, AptosConfig, ClientConfig, Ed25519PrivateKey, Hex, Network } from '@aptos-labs/ts-sdk';
+import { computeBlake2b256, downloadFromShelby, uploadToShelby } from '@movera/sdk';
 import { db } from '../db/db';
 import { aptos_schemas, aptos_attestations } from '../db/schema';
 import { sql, eq, desc, or, like } from 'drizzle-orm';
@@ -95,6 +95,7 @@ export class AptosService implements OnModuleInit {
           time: event.data.time,
           expiration_time: event.data.expiration_time,
           revocation_time: '0',
+          revokable: event.data.revokable ?? false,
           attestor: event.data.attestor,
           recipient: event.data.recipient,
           storage_type: event.data.storage_type ?? 0,
@@ -530,6 +531,47 @@ export class AptosService implements OnModuleInit {
     return {
       data_base64: Buffer.from(data).toString('base64'),
       data_hash: `0x${Buffer.from(hash).toString('hex')}`,
+    };
+  }
+
+  async uploadOffChainData(schemaName: string, dataBase64: string) {
+    const privateKeyHex = process.env.SHELBY_UPLOADER_PRIVATE_KEY;
+    if (!privateKeyHex) {
+      throw new Error('SHELBY_UPLOADER_PRIVATE_KEY is not set');
+    }
+
+    const privateKeyBytes = Hex.fromHexString(privateKeyHex).toUint8Array();
+    const privateKey = new Ed25519PrivateKey(privateKeyBytes);
+    const account = Account.fromPrivateKey({ privateKey });
+
+    const data = Buffer.from(dataBase64, 'base64');
+    const dataHash = computeBlake2b256(new Uint8Array(data));
+    const dataHashHex = Buffer.from(dataHash).toString('hex');
+
+    const slug = schemaName
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'schema';
+    const blobName = `movera/${slug}/${dataHashHex}`;
+
+    const upload = await uploadToShelby({
+      account,
+      blobName,
+      blobData: new Uint8Array(data),
+      apiKey: process.env.SHELBY_API_KEY,
+      network: Network.SHELBYNET,
+    });
+
+    const normalizeHex = (value: string) =>
+      value.startsWith('0x') ? value : `0x${value}`;
+
+    return {
+      account: upload.account,
+      blob_name: upload.blobName,
+      data_hash: normalizeHex(Buffer.from(upload.dataHash).toString('hex')),
+      blob_merkle_root: normalizeHex(upload.blobMerkleRoot),
+      register_tx_hash: normalizeHex(upload.registerTxHash),
     };
   }
 

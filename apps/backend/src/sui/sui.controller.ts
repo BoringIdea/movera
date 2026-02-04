@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param, ValidationPipe, UsePipes, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Query, Param, ValidationPipe, UsePipes, HttpStatus, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { SuiService } from './sui.service';
 import {
@@ -17,9 +17,11 @@ import {
   SingleSchemaResponseDto,
   SingleAttestationResponseDto,
   CountApiResponseDto,
+  WalrusUploadResponseDto,
 } from './dto/response.dto';
 import { ApiResponse as IApiResponse } from '../common';
 import { ResponseUtil } from '../common/utils/response.util';
+import { WalrusUploadRequestDto } from './dto/request.dto';
 
 @ApiTags('Sui Attestation Service')
 @Controller('api/v1/sui')
@@ -104,6 +106,27 @@ export class SuiController {
   async getSchemaCreatorCount(): Promise<IApiResponse<CountResponseDto>> {
     const count = await this.suiService.getSchemaCreatorCnt();
     return ResponseUtil.success({ count }, 'Successfully retrieved schema creator count');
+  }
+
+  @Post('attestations/offchain/upload')
+  @ApiOperation({
+    summary: 'Upload off-chain attestation data (Walrus)',
+    description: 'Uploads blob data to Walrus using a backend uploader account',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid request payload',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully uploaded off-chain data',
+    type: WalrusUploadResponseDto,
+  })
+  async uploadOffChainData(
+    @Body() body: WalrusUploadRequestDto,
+  ): Promise<IApiResponse<WalrusUploadResponseDto>> {
+    const data = await this.suiService.uploadOffChainData(body.data_base64);
+    return ResponseUtil.success(data, 'Successfully uploaded off-chain data');
   }
 
   @Get('schemas/:schemaAddress')

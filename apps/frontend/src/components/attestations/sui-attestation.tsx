@@ -95,23 +95,40 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
           let blobId: string;
           let rawData: Uint8Array;
 
-          if (attestation.walrus_blob_id) {
-            // Use blobId directly (base64url string)
-            blobId = attestation.walrus_blob_id;
-            setWalrusBlobId(blobId);
+          const maxAttempts = 5;
+          const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+          const shouldRetry = (message: string) =>
+            message.toLowerCase().includes('not certified');
 
-            // Download raw data using blobId (encrypted or not)
-            rawData = await walrusClient.downloadData(blobId, true);
-          } else if (attestation.walrus_sui_object_id) {
-            // Fall back to suiObjectId (needs to fetch blobId from chain)
-            blobId = await walrusClient.getBlobIdFromObjectId(attestation.walrus_sui_object_id);
-            setWalrusBlobId(blobId);
+          const downloadWithRetry = async () => {
+            let lastError: Error | null = null;
+            for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+              try {
+                if (attestation.walrus_blob_id) {
+                  blobId = attestation.walrus_blob_id;
+                  setWalrusBlobId(blobId);
+                  return await walrusClient.downloadData(blobId, true);
+                }
+                if (attestation.walrus_sui_object_id) {
+                  blobId = await walrusClient.getBlobIdFromObjectId(attestation.walrus_sui_object_id);
+                  setWalrusBlobId(blobId);
+                  return await walrusClient.downloadData(attestation.walrus_sui_object_id, false);
+                }
+                throw new Error('Either walrus_blob_id or walrus_sui_object_id is required');
+              } catch (err) {
+                const message = err instanceof Error ? err.message : String(err);
+                lastError = err instanceof Error ? err : new Error(message);
+                if (attempt < maxAttempts - 1 && shouldRetry(message)) {
+                  await sleep(1500 * (attempt + 1));
+                  continue;
+                }
+                throw lastError;
+              }
+            }
+            throw lastError ?? new Error('Failed to load off-chain data');
+          };
 
-            // Download raw data using suiObjectId (encrypted or not)
-            rawData = await walrusClient.downloadData(attestation.walrus_sui_object_id, false);
-          } else {
-            throw new Error('Either walrus_blob_id or walrus_sui_object_id is required');
-          }
+          rawData = await downloadWithRetry();
 
           // Set raw data state (this is encrypted data for encrypted attestations)
           setOffChainRawData(rawData);
@@ -132,7 +149,12 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
           }
         } catch (error) {
           console.error('Error loading off-chain data:', error);
-          setDecryptError(`Failed to load off-chain data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          const message = error instanceof Error ? error.message : 'Unknown error';
+          if (message.toLowerCase().includes('not certified')) {
+            setDecryptError('Off-chain data is not certified yet. Please refresh in a moment.');
+          } else {
+            setDecryptError(`Failed to load off-chain data: ${message}`);
+          }
         } finally {
           setIsLoadingOffChain(false);
         }
