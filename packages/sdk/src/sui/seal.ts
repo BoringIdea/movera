@@ -1,5 +1,4 @@
 import type { SuiClient } from '@mysten/sui/client';
-import type { Signer } from '@mysten/sui/cryptography';
 import type { SealClient as SealClientType, SealClientOptions } from '@mysten/seal';
 import { SealClient, SessionKey, EncryptedObject, DemType } from '@mysten/seal';
 import type { EncryptOptions } from '@mysten/seal';
@@ -165,7 +164,7 @@ export class SealWrapper {
   async createSessionKey(
     userAddress: string,
     packageId: string,
-    signer: Signer,
+    signer: any,
     ttlMin: number = 30
   ): Promise<SessionKey> {
     return await SessionKey.create({
@@ -229,4 +228,3 @@ export function computeSealKeyId(attestor: string, nonce: Uint8Array): string {
   // Convert to hex string for Seal SDK (without 0x prefix)
   return Array.from(sealIdBytes).map(b => b.toString(16).padStart(2, '0')).join('');
 }
-

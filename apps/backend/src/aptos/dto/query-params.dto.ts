@@ -89,3 +89,21 @@ export class AttestationsByUserQueryDto extends PaginationQueryDto {
   @IsNotEmpty({ message: 'Address cannot be empty' })
   address: string;
 }
+
+export class ShelbyDownloadQueryDto {
+  @ApiProperty({
+    description: 'Shelby account address that owns the blob',
+    example: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+  })
+  @IsString({ message: 'Account must be a string' })
+  @IsNotEmpty({ message: 'Account cannot be empty' })
+  account: string;
+
+  @ApiProperty({
+    description: 'Shelby blob path/name',
+    example: 'attestations/profile/alice',
+  })
+  @IsString({ message: 'Blob name must be a string' })
+  @IsNotEmpty({ message: 'Blob name cannot be empty' })
+  blobName: string;
+}

@@ -7,7 +7,7 @@ This document outlines the development roadmap for Movera.
 ### ✅ Completed Features
 
 - **Multi-Chain Support**: Sui and Aptos testnet deployments
-- **Dual Storage**: On-chain and off-chain (Walrus) storage options
+- **Dual Storage**: On-chain and off-chain storage (Walrus for Sui, Shelby for Aptos)
 - **Privacy Protection**: Seal encryption integration for Sui
 - **Schema System**: Flexible schema definition and registration
 - **Resolver Pattern**: Custom validation logic support
@@ -34,4 +34,3 @@ Have ideas or suggestions? Please open an issue on GitHub or reach out to the te
 ---
 
 **Next**: [Quickstart](./Getting-Started/Quickstart.md) →
-

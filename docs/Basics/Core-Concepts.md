@@ -91,7 +91,7 @@ Codec validates data types:
 - Higher gas costs
 - Limited by block size
 
-### Off-Chain Storage (Walrus)
+### Off-Chain Storage (Walrus / Shelby)
 
 **When to Use**:
 - Large data (> 1KB)
@@ -100,8 +100,8 @@ Codec validates data types:
 - Archive data
 
 **Characteristics**:
-- Data stored in Walrus decentralized storage
-- Only metadata and hash on-chain
+- Data stored in decentralized storage (Walrus for Sui, Shelby for Aptos)
+- Only metadata and hash on-chain (blake2b256)
 - Lower gas costs
 - Unlimited size
 - Requires additional retrieval step
@@ -125,7 +125,7 @@ For sensitive data, Movera integrates with Seal to provide end-to-end encryption
 1. Generate random nonce (16-32 bytes)
 2. Compute Seal ID: `[attestor][nonce]`
 3. Encrypt data using Seal SDK
-4. Store encrypted data in Walrus
+4. Store encrypted data in Walrus (Sui only)
 5. Store hash of original data on-chain
 
 **Decryption Flow**:
@@ -211,7 +211,7 @@ Tracks all attestations:
 - Access denied
 
 **Storage Errors**:
-- Walrus upload failures
+- Walrus/Shelby upload failures
 - Hash mismatch
 - Missing data
 
@@ -255,4 +255,3 @@ Tracks all attestations:
 ---
 
 **Next**: [Architecture](./Architecture.md) →
-

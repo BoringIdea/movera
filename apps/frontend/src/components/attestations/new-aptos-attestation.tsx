@@ -5,15 +5,18 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Header } from "@/components/header"
 import Link from 'next/link'
-import { getPackageAddress, Codec, SchemaField, Network } from "@movera/sdk"
+import { getPackageAddress, Codec, SchemaField, generateBlobName } from "@movera/sdk"
 import { getExplorerTxUrl } from "@/utils"
 import { AlertDialog, Flex } from "@radix-ui/themes"
 import { Loader2 } from "lucide-react"
 import { Chain } from "@/components/providers/chain-provider"
 import { getNetwork } from "@/utils/utils"
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Aptos, AptosConfig, Hex } from '@aptos-labs/ts-sdk';
+import { Aptos, AptosConfig, Hex, Network as AptosNetwork, AccountAddress } from '@aptos-labs/ts-sdk';
 import { bcs } from "@mysten/bcs"
+import { Buffer } from "buffer";
+import { blake2b } from "@noble/hashes/blake2b";
+import { createDefaultErasureCodingProvider, expectedTotalChunksets, generateCommitments, ShelbyBlobClient, ShelbyClient } from "@shelby-protocol/sdk/browser";
 
 const network = getNetwork() || 'testnet';
 const config = new AptosConfig({ network: network as any });
@@ -28,7 +31,6 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
   const [expirationTime, setExpirationTime] = useState(0)
   const [refAttestationId, setRefAttestationId] = useState("0x00")
   const [isRevocable, setIsRevocable] = useState(false)
-
   const [isLoading, setIsLoading] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -101,29 +103,108 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
 
     try {
       const encodedData = codec.encodeToBytes(attestationData);
-      const packageAddress = getPackageAddress(chain, network as Network);
+      const packageAddress = getPackageAddress(chain, network as any);
 
-      const response = await signAndSubmitTransaction({
-        sender: account?.address,
-        data: {
-          function: `${packageAddress}::aas::create_attestation`,
-          functionArguments: [
-            recipient,
-            schema.address,
-            refAttestationId,
-            expirationTime,
-            isRevocable,
-            encodedData
-          ]
+      let txHash = '';
+      if (selectedButton === 'offchain') {
+        if (!account?.address) {
+          throw new Error('Wallet account not available.');
         }
-      });
 
-      console.log('executed transaction', response);
-      setDigest(response.hash);
+        const apiKey = process.env.NEXT_PUBLIC_SHELBY_API_KEY;
+        if (!apiKey) {
+          throw new Error('Missing NEXT_PUBLIC_SHELBY_API_KEY.');
+        }
+
+        const dataHash = blake2b(encodedData, { dkLen: 32 });
+        const hashHex = Buffer.from(dataHash).toString('hex');
+        const schemaSlug = schema.name || `schema-${schema.id}`;
+        // Generate unique blob name using SDK helper function
+        const blobName = generateBlobName(schemaSlug, hashHex);
+
+        const provider = await createDefaultErasureCodingProvider();
+        const commitments = await generateCommitments(provider, Buffer.from(encodedData));
+        const expirationMicros = (Date.now() + 1000 * 60 * 60 * 24 * 30) * 1000;
+
+        const accountAddress = AccountAddress.from(account.address);
+
+        const payload = ShelbyBlobClient.createRegisterBlobPayload({
+          account: accountAddress,
+          blobName,
+          blobMerkleRoot: commitments.blob_merkle_root,
+          numChunksets: expectedTotalChunksets(commitments.raw_data_size),
+          expirationMicros,
+          blobSize: commitments.raw_data_size,
+        });
+
+        const registerTx = await signAndSubmitTransaction({
+          sender: account.address,
+          data: payload,
+        });
+
+        await aptos.waitForTransaction({ transactionHash: registerTx.hash });
+
+        const shelbyClient = new ShelbyClient({
+          network: AptosNetwork.SHELBYNET,
+          apiKey,
+        });
+
+        await shelbyClient.rpc.putBlob({
+          account: accountAddress,
+          blobName,
+          blobData: new Uint8Array(encodedData),
+        });
+
+        // Convert blob merkle root and register tx hash to bytes
+        const blobMerkleRootBytes = Buffer.from(commitments.blob_merkle_root.replace('0x', ''), 'hex');
+        const registerTxHashBytes = Buffer.from(registerTx.hash.replace('0x', ''), 'hex');
+
+        const response = await signAndSubmitTransaction({
+          sender: account.address,
+          data: {
+            function: `${packageAddress}::aas::create_attestation_off_chain`,
+            functionArguments: [
+              recipient,
+              schema.address,
+              refAttestationId,
+              expirationTime,
+              isRevocable,
+              dataHash,
+              account.address,
+              blobName,
+              blobMerkleRootBytes,
+              registerTxHashBytes
+            ]
+          }
+        });
+
+        console.log('executed transaction', response);
+        txHash = response.hash;
+      } else {
+        const response = await signAndSubmitTransaction({
+          sender: account?.address,
+          data: {
+            function: `${packageAddress}::aas::create_attestation`,
+            functionArguments: [
+              recipient,
+              schema.address,
+              refAttestationId,
+              expirationTime,
+              isRevocable,
+              encodedData
+            ]
+          }
+        });
+
+        console.log('executed transaction', response);
+        txHash = response.hash;
+      }
 
       try {
-        await aptos.waitForTransaction({ transactionHash: response.hash });
-        setAlertMessage(`Transaction submitted successfully!\n\nTransaction hash: ${response.hash}`);
+        await aptos.waitForTransaction({ transactionHash: txHash });
+        setDigest(txHash);
+        const hashToShow = txHash || 'Submitted';
+        setAlertMessage(`Transaction submitted successfully!\n\nTransaction hash: ${hashToShow}`);
         setIsAlertOpen(true);
         setIsLoading(false);
       } catch (error) {
@@ -240,10 +321,10 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
               <div className="flex gap-2">
                 <button
                   type="button"
-                  disabled
-                  className="flex-1 h-12 border border-black bg-white/70 text-black/40 font-black uppercase tracking-[0.3em]"
+                  onClick={() => handleButtonClick('offchain')}
+                  className={`flex-1 h-12 border border-black font-black uppercase tracking-[0.3em] transition ${selectedButton === 'offchain' ? 'bg-[#2792FF] text-white' : 'bg-white text-black'}`}
                 >
-                  Off-chain (coming soon)
+                  Off-chain
                 </button>
                 <button
                   type="button"

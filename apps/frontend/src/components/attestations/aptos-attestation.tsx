@@ -4,6 +4,9 @@ import { bcs } from "@mysten/bcs";
 import { Hex } from "@aptos-labs/ts-sdk";
 import { getExplorerUrl, getExplorerTxUrl } from "@/utils/utils";
 import { Chain } from "@/components/providers/chain-provider";
+import { fetchOffChainData } from "@/api/attestation";
+import { useEffect, useMemo, useState } from "react";
+import { Buffer } from "buffer";
 
 const formatValue = (value: any): string => {
   if (typeof value === 'bigint') {
@@ -28,11 +31,91 @@ const decodeTimestamp = (value?: string) => {
 };
 
 export function AptosAttestation({ chain, attestation }: { chain: Chain; attestation: any }) {
-  const rawSchema = Hex.fromHexString(attestation.schema_data).toUint8Array();
-  const schema = bcs.string().parse(rawSchema);
-  const codec = new Codec(schema);
-  const item = codec.schemaItem();
-  const decoded = codec.decodeFromBytes(Hex.fromHexString(attestation.data).toUint8Array());
+  // Convert to number for comparison (backend returns string)
+  const storageType = Number(attestation.storage_type ?? 0);
+  const isOffChain = storageType === 1 || (!!attestation.shelby_account && !!attestation.shelby_blob_name);
+  const [offChainBase64, setOffChainBase64] = useState<string | null>(null);
+  const [offChainBytes, setOffChainBytes] = useState<Uint8Array | null>(null);
+  const [offChainError, setOffChainError] = useState<string | null>(null);
+  const [isLoadingOffChain, setIsLoadingOffChain] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadOffChain = async () => {
+      if (!isOffChain || !attestation.shelby_account || !attestation.shelby_blob_name) return;
+      try {
+        setIsLoadingOffChain(true);
+        setOffChainError(null);
+        const response = await fetchOffChainData('aptos', attestation.shelby_account, attestation.shelby_blob_name);
+        if (cancelled) return;
+        const base64 = response.data.data_base64;
+        const bytes = base64?.startsWith('0x')
+          ? Hex.fromHexString(base64).toUint8Array()
+          : new Uint8Array(Buffer.from(base64, 'base64'));
+        setOffChainBase64(base64);
+        setOffChainBytes(bytes);
+      } catch (error) {
+        if (!cancelled) {
+          setOffChainError(error instanceof Error ? error.message : 'Failed to load off-chain data');
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingOffChain(false);
+        }
+      }
+    };
+
+    loadOffChain();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOffChain, attestation.shelby_account, attestation.shelby_blob_name]);
+
+  const { item, decoded, rawDataDisplay } = useMemo(() => {
+    if (!attestation.schema_data) {
+      return { item: [], decoded: null, rawDataDisplay: '—' };
+    }
+
+    let schema: string | null = null;
+    if (typeof attestation.schema_data === 'string' && attestation.schema_data.startsWith('0x')) {
+      try {
+        const rawSchema = Hex.fromHexString(attestation.schema_data).toUint8Array();
+        schema = bcs.string().parse(rawSchema);
+      } catch {
+        schema = null;
+      }
+    } else if (typeof attestation.schema_data === 'string') {
+      schema = attestation.schema_data;
+    }
+
+    if (!schema) {
+      return { item: [], decoded: null, rawDataDisplay: '—' };
+    }
+
+    const codec = new Codec(schema);
+    const item = codec.schemaItem();
+    let decoded: any = null;
+    let rawDataDisplay = attestation.data ?? '—';
+
+    if (isOffChain) {
+      rawDataDisplay = offChainBase64 ?? '—';
+      if (offChainBytes) {
+        try {
+          decoded = codec.decodeFromBytes(offChainBytes);
+        } catch {
+          decoded = null;
+        }
+      }
+    } else if (attestation.data) {
+      try {
+        decoded = codec.decodeFromBytes(Hex.fromHexString(attestation.data).toUint8Array());
+      } catch {
+        decoded = null;
+      }
+    }
+
+    return { item, decoded, rawDataDisplay };
+  }, [attestation.schema_data, attestation.data, isOffChain, offChainBase64, offChainBytes]);
 
   return (
     <div className="min-h-screen bg-[#F4F7FF] text-black">
@@ -40,7 +123,7 @@ export function AptosAttestation({ chain, attestation }: { chain: Chain; attesta
       <main className="max-w-5xl mx-auto space-y-6 px-4 py-8">
         <section className="border border-black bg-white px-6 py-5">
           <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Attestation Detail</p>
-          <h1 className="text-3xl font-black">Onchain Attestation</h1>
+          <h1 className="text-3xl font-black">{isOffChain ? 'Offchain Attestation' : 'Onchain Attestation'}</h1>
           <p className="text-sm font-bold text-black/60">Ledger reference: {attestation.address}</p>
         </section>
 
@@ -102,13 +185,22 @@ export function AptosAttestation({ chain, attestation }: { chain: Chain; attesta
             <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Decoded Data</p>
           </div>
           <div className="space-y-3">
-            {item.map((field: any, index: number) => (
+            {isOffChain && isLoadingOffChain && (
+              <p className="font-mono text-xs text-black/70">Loading off-chain data...</p>
+            )}
+            {offChainError && (
+              <p className="font-mono text-xs text-red-600">{offChainError}</p>
+            )}
+            {decoded && item.map((field: any, index: number) => (
               <div key={index} className="border border-black px-4 py-3">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">{field.type}</p>
                 <p className="font-bold text-black">{field.name}</p>
                 <p className="font-mono text-xs font-black text-black/70 break-all">{formatValue(decoded[field.name])}</p>
               </div>
             ))}
+            {!decoded && !isLoadingOffChain && (
+              <p className="font-mono text-xs text-black/70">No decoded data available.</p>
+            )}
           </div>
         </section>
 
@@ -133,7 +225,7 @@ export function AptosAttestation({ chain, attestation }: { chain: Chain; attesta
         <section className="border border-black bg-white px-6 py-5">
           <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Raw Data</p>
           <div className="mt-3 border border-black bg-white px-4 py-3 font-mono text-xs text-black break-words">
-            {attestation.data}
+            {rawDataDisplay}
           </div>
         </section>
       </main>

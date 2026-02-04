@@ -8,10 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start": "NODE_OPTIONS='--experimental-require-module' nest start",
+    "start:dev": "NODE_OPTIONS='--experimental-require-module' nest start --watch",
+    "start:debug": "NODE_OPTIONS='--experimental-require-module' nest start --debug --watch",
+    "start:prod": "node --experimental-require-module dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@aptos-labs/ts-sdk": "^2.0.1",
+    "@aptos-labs/ts-sdk": "latest",
     "@movera/sdk": "link:../../packages/sdk",
     "@mysten/sui": "^1.35.0",
     "@nestjs/common": "^11.1.2",

@@ -39,15 +39,24 @@ export interface Attestation {
   revocation_time: string;
   attestor: string;
   recipient: string;
-  data: string;
+  data?: string;
   tx_hash: string;
   storage_type?: number;         // 0 = ON_CHAIN, 1 = OFF_CHAIN
   walrus_sui_object_id?: string; // Sui object ID of Walrus blob
   walrus_blob_id?: string;       // Walrus blob ID (base64url string)
   data_hash?: string;
+  shelby_account?: string;
+  shelby_blob_name?: string;
+  shelby_blob_merkle_root?: string;   // Shelby blob merkle root (commitment)
+  shelby_register_tx_hash?: string;   // Shelby blob register transaction hash
   encrypted?: boolean;
   seal_nonce?: string;          // Seal encryption nonce (hex string)
   seal_policy_id?: string;      // Seal policy ID (for other patterns, optional)
+}
+
+export interface OffChainData {
+  data_base64: string;
+  data_hash?: string;
 }
 
 export interface AttestationWithSchema extends Attestation {

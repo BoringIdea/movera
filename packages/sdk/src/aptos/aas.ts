@@ -1,7 +1,7 @@
 import { Account, Aptos, AptosConfig, Network, CommittedTransactionResponse, Hex } from "@aptos-labs/ts-sdk";
 import { createSurfClient } from '@thalalabs/surf';
-import { getPackageAddress } from './utils';
-import { AptosSchema, AptosAttestation } from './types';
+import { getPackageAddress } from './utils.js';
+import { AptosSchema, AptosAttestation } from './types.js';
 
 export class Aas {
   private account: Account;
@@ -66,6 +66,53 @@ export class Aas {
       data: {
         function: `${this.packageId}::aas::create_attestation`,
         functionArguments: [recipient, schemaAddr, refAttestation, expirationTime, revokable, data]
+      }
+    });
+
+    const tx = await this.aptosClient.transaction.signAndSubmitTransaction({
+      signer: this.account,
+      transaction
+    });
+
+    return await this.aptosClient.waitForTransaction({ transactionHash: tx.hash });
+  }
+
+  async createAttestationOffChain(
+    recipient: string,
+    schemaAddr: string,
+    refAttestation: string,
+    expirationTime: number,
+    revokable: boolean,
+    dataHash: Uint8Array,
+    shelbyAccount: string,
+    shelbyBlobName: string,
+    shelbyBlobMerkleRoot: Uint8Array | string,
+    shelbyRegisterTxHash: Uint8Array | string
+  ): Promise<CommittedTransactionResponse> {
+    // Convert string to Uint8Array if needed
+    const merkleRootBytes = typeof shelbyBlobMerkleRoot === 'string' 
+      ? Hex.fromHexString(shelbyBlobMerkleRoot).toUint8Array()
+      : shelbyBlobMerkleRoot;
+    const registerTxHashBytes = typeof shelbyRegisterTxHash === 'string'
+      ? Hex.fromHexString(shelbyRegisterTxHash).toUint8Array()
+      : shelbyRegisterTxHash;
+
+    const transaction = await this.aptosClient.transaction.build.simple({
+      sender: this.account.accountAddress,
+      data: {
+        function: `${this.packageId}::aas::create_attestation_off_chain`,
+        functionArguments: [
+          recipient,
+          schemaAddr,
+          refAttestation,
+          expirationTime,
+          revokable,
+          dataHash,
+          shelbyAccount,
+          shelbyBlobName,
+          merkleRootBytes,
+          registerTxHashBytes
+        ]
       }
     });
 
@@ -166,7 +213,21 @@ export async function getAptosAttestation(chain: string, network: Network, attes
       expirationTime: attestation.expiration_time,
       revocationTime: attestation.revocation_time,
       revokable: attestation.revokable,
-      data: Hex.fromHexString(attestation.data).toUint8Array(),
+      storageType: attestation.storage_type,
+      data: attestation.data && attestation.data !== '0x' && attestation.data !== ''
+        ? Hex.fromHexString(attestation.data).toUint8Array()
+        : new Uint8Array(),
+      dataHash: attestation.data_hash && attestation.data_hash !== '0x' && attestation.data_hash !== '' 
+        ? Hex.fromHexString(attestation.data_hash).toUint8Array() 
+        : undefined,
+      shelbyAccount: attestation.shelby_account,
+      shelbyBlobName: attestation.shelby_blob_name,
+      shelbyBlobMerkleRoot: attestation.shelby_blob_merkle_root && attestation.shelby_blob_merkle_root !== '0x' && attestation.shelby_blob_merkle_root !== ''
+        ? Hex.fromHexString(attestation.shelby_blob_merkle_root).toUint8Array()
+        : undefined,
+      shelbyRegisterTxHash: attestation.shelby_register_tx_hash && attestation.shelby_register_tx_hash !== '0x' && attestation.shelby_register_tx_hash !== ''
+        ? Hex.fromHexString(attestation.shelby_register_tx_hash).toUint8Array()
+        : undefined,
       txHash: attestation.tx_hash
     }
 }

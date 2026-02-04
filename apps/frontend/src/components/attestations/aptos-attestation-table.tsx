@@ -107,9 +107,24 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
                 </TableCell>
                 {!isMobile && (
                   <TableCell className="px-6 py-4">
-                    <span className="rounded-none border border-black bg-white px-2 py-0.5 text-[0.65rem] font-black uppercase tracking-[0.2em] text-black">
-                      {attestation.tx_hash ? 'OnChain' : 'OffChain'}
-                    </span>
+                    {(() => {
+                      // Convert to number for comparison (backend returns string)
+                      const storageType = Number(attestation.storage_type ?? 0);
+                      
+                      if (storageType === 0) {
+                        return (
+                          <span className="inline-block whitespace-nowrap rounded-none border border-black bg-white px-2 py-0.5 text-[0.65rem] font-black uppercase tracking-[0.2em] text-black">
+                            ON CHAIN
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className="inline-block whitespace-nowrap rounded-none border border-black bg-[#D0E8FF] px-2 py-0.5 text-[0.65rem] font-black uppercase tracking-[0.2em] text-[#2792FF]">
+                            OFF CHAIN
+                          </span>
+                        );
+                      }
+                    })()}
                   </TableCell>
                 )}
                 <TableCell className="px-4 py-4 min-w-[120px]">

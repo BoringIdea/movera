@@ -25,7 +25,11 @@ CREATE TABLE IF NOT EXISTS aptos_attestations (
     revokable BOOLEAN DEFAULT false,
     attestor TEXT NOT NULL,
     recipient TEXT NOT NULL,
-    data TEXT NOT NULL,
+    storage_type INTEGER DEFAULT 0,
+    data TEXT,
+    data_hash TEXT,
+    shelby_account TEXT,
+    shelby_blob_name TEXT,
     tx_hash TEXT NOT NULL
 );
 
@@ -353,4 +357,3 @@ CREATE TABLE IF NOT EXISTS data_sync_status (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-

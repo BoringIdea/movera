@@ -22,7 +22,7 @@ features:
     details: Deployed on both Sui and Aptos blockchains for maximum reach
   - icon: 💾
     title: Dual Storage
-    details: Choose between on-chain and off-chain storage (Walrus) for optimal cost and scalability
+    details: Choose between on-chain and off-chain storage (Walrus for Sui, Shelby for Aptos) for optimal cost and scalability
   - icon: 🔒
     title: Privacy Protection
     details: Seal encryption integration for sensitive attestation data (Sui only)
@@ -37,4 +37,3 @@ features:
     details: Comprehensive SDK for easy integration
 
 ---
-

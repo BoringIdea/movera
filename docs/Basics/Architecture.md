@@ -10,7 +10,7 @@ Movera is built as a modular, multi-chain platform for attestations, powered by 
 2. **SDK**: TypeScript SDK for client integration
 3. **Backend API**: NestJS backend for indexing and querying
 4. **Frontend Explorer**: Next.js web interface
-5. **Storage Layer**: Walrus for off-chain data storage
+5. **Storage Layer**: Walrus (Sui) and Shelby (Aptos) for off-chain data storage
 6. **Privacy Layer**: Seal for encryption
 
 ## System Architecture
@@ -55,10 +55,10 @@ Movera is built as a modular, multi-chain platform for attestations, powered by 
 ┌───────────────────────────────────────────────────────┘
 │              External Services                        │
 │                                                       │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
-│  │  Walrus  │  │   Seal   │  │ Database │             │
-│  │ Storage  │  │ Key Svr  │  │  (PG)    │             │
-│  └──────────┘  └──────────┘  └──────────┘             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐│
+│  │  Walrus  │  │  Shelby  │  │   Seal   │  │ Database ││
+│  │ Storage  │  │ Storage  │  │ Key Svr  │  │  (PG)    ││
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘│
 └───────────────────────────────────────────────────────┘
 ```
 
@@ -131,7 +131,7 @@ Movera is built as a modular, multi-chain platform for attestations, powered by 
 
 1. **Client** encodes data using Codec
 2. **Client** optionally encrypts data (Seal)
-3. **Client** optionally uploads to Walrus (off-chain)
+3. **Client** optionally uploads to Walrus (Sui) or Shelby (Aptos) for off-chain data
 4. **Client** creates transaction via SDK
 5. **SDK** submits transaction to blockchain
 6. **Contract** emits `AttestationCreated` event
@@ -144,7 +144,7 @@ Movera is built as a modular, multi-chain platform for attestations, powered by 
 2. **Backend** returns attestation metadata
 3. **Client** retrieves data:
    - On-chain: Read from object
-   - Off-chain: Download from Walrus
+   - Off-chain: Download from Walrus (Sui) or Shelby (Aptos)
 4. **Client** optionally decrypts (Seal)
 5. **Client** decodes data using Codec
 6. **Client** verifies data integrity (hash)
@@ -252,4 +252,3 @@ Walrus Storage
 ---
 
 **Next**: [Contracts](./Contracts.md) →
-

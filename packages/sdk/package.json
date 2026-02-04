@@ -1,7 +1,31 @@
 {
   "name": "@movera/sdk",
   "version": "0.0.20-beta",
+  "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./aptos": {
+      "types": "./aptos.d.ts",
+      "import": "./dist/aptos/index.js",
+      "default": "./dist/aptos/index.js"
+    },
+    "./aptos/blob-utils": {
+      "types": "./dist/aptos/blob-utils.d.ts",
+      "import": "./dist/aptos/blob-utils.js",
+      "default": "./dist/aptos/blob-utils.js"
+    },
+    "./sui": {
+      "types": "./sui.d.ts",
+      "import": "./dist/sui/index.js",
+      "default": "./dist/sui/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -13,7 +37,6 @@
   ],
   "author": "Luke Ma <lukema95@gmail.com>",
   "license": "Business Source License 1.1",
-  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -26,11 +49,12 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@aptos-labs/ts-sdk": "^2.0.1",
+    "@aptos-labs/ts-sdk": "latest",
     "@mysten/bcs": "^1.6.1",
     "@mysten/sui": "^1.30.1",
     "@mysten/seal": "^0.9.4",
     "@mysten/walrus": "^0.8.4",
+    "@shelby-protocol/sdk": "latest",
     "@thalalabs/surf": "^1.9.6",
     "dotenv": "^16.5.0",
     "got": "^14.4.7"

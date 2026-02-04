@@ -79,6 +79,35 @@ module aas::aas {
         create_attestation_and_get_address(attestor, recipient, schema_addr, ref_attestation, expiration_time, revokable, data);
     }
 
+    /// Create a new off-chain attestation (Shelby)
+    public entry fun create_attestation_off_chain(
+        attestor: &signer,
+        recipient: address,
+        schema_addr: address,
+        ref_attestation: address,
+        expiration_time: u64,
+        revokable: bool,
+        data_hash: vector<u8>,
+        shelby_account: address,
+        shelby_blob_name: String,
+        shelby_blob_merkle_root: vector<u8>,
+        shelby_register_tx_hash: vector<u8>,
+    ) {
+        create_attestation_off_chain_and_get_address(
+            attestor,
+            recipient,
+            schema_addr,
+            ref_attestation,
+            expiration_time,
+            revokable,
+            data_hash,
+            shelby_account,
+            shelby_blob_name,
+            shelby_blob_merkle_root,
+            shelby_register_tx_hash,
+        );
+    }
+
     /// Revoke multiple attestations
     public entry fun revoke_multi_attestations(
         admin: &signer,
@@ -156,6 +185,53 @@ module aas::aas {
         };
         
         attestation::create_attestation(signer::address_of(attestor), recipient, schema_addr, ref_attestation, expiration_time, revokable, data)
+    }
+
+    public fun create_attestation_off_chain_and_get_address(
+        attestor: &signer,
+        recipient: address,
+        schema_addr: address,
+        ref_attestation: address,
+        expiration_time: u64,
+        revokable: bool,
+        data_hash: vector<u8>,
+        shelby_account: address,
+        shelby_blob_name: String,
+        shelby_blob_merkle_root: vector<u8>,
+        shelby_register_tx_hash: vector<u8>,
+    ): address {
+        assert!(!attestation::attestation_exists(ref_attestation), error::invalid_argument(EATTESTATIONS_NOT_EXIST_AT_ADDRESS));
+        assert!(schema::schema_exists(schema_addr), error::invalid_argument(ESCHEMA_NOT_FOUND));
+        let resolver = schema::schema_resolver(schema_addr);
+        if (resolver != @0x0) {
+            assert!(
+                resolver_dispatcher::on_attest(
+                    resolver,
+                    signer::address_of(attestor),
+                    recipient,
+                    schema_addr,
+                    ref_attestation,
+                    expiration_time,
+                    revokable,
+                    data_hash,
+                ),
+                error::unauthenticated(ERESOLVE_FAILED)
+            );
+        };
+
+        attestation::create_attestation_off_chain(
+            signer::address_of(attestor),
+            recipient,
+            schema_addr,
+            ref_attestation,
+            expiration_time,
+            revokable,
+            data_hash,
+            shelby_account,
+            shelby_blob_name,
+            shelby_blob_merkle_root,
+            shelby_register_tx_hash,
+        )
     }
 
 }

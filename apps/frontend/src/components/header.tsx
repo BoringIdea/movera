@@ -16,6 +16,12 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { useChain, Chain } from "@/components/providers/chain-provider"
 import { WalletSelector } from "./WalletSelector"
 import { Menu, X } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const chains = getChains()
 
@@ -199,7 +205,25 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] md:gap-4 ml-4 mr-2">
             <NavLink href="/attestations">Attestations</NavLink>
             <NavLink href="/schemas">Schemas</NavLink>
-            {currentChain !== 'sui' && <NavLink href="/passport">Passport</NavLink>}
+            {currentChain !== 'sui' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={`flex items-center gap-1 text-xs font-black uppercase tracking-[0.2em] ${hoverStyles} text-black/60`}>
+                    More <ChevronDownIcon className="h-3 w-3" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[10rem]">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/passport"
+                      className="w-full text-xs font-black uppercase tracking-[0.2em] text-black/80"
+                    >
+                      Passport
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </nav>
         )}
       </div>
@@ -364,7 +388,14 @@ export function Header() {
           <nav className={`w-full mt-6 flex flex-col items-start gap-5 p-6 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/50 backdrop-blur-md border-2 border-blue-200/50 shadow-lg ${isMenuOpen ? 'block' : 'hidden'}`}>
             <NavLink href="/attestations">Attestations</NavLink>
             <NavLink href="/schemas">Schemas</NavLink>
-            {currentChain !== 'sui' && <NavLink href="/passport">Passport</NavLink>}
+            {currentChain !== 'sui' && (
+              <div className="flex flex-col items-start gap-3">
+                <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">
+                  More
+                </span>
+                <NavLink href="/passport">Passport</NavLink>
+              </div>
+            )}
             <div className="flex items-center gap-4 mt-6 pt-6 border-t-2 border-blue-200/50">
               <Link
                 href="https://github.com/BoringIdea/movera"

@@ -25,7 +25,13 @@ export const aptos_attestations = pgTable('aptos_attestations', {
   revokable: boolean('revokable').default(false),
   attestor: text('attestor').notNull(),
   recipient: text('recipient').notNull(),
-  data: text('data').notNull(),
+  storage_type: integer('storage_type').default(0),
+  data: text('data'),
+  data_hash: text('data_hash'),
+  shelby_account: text('shelby_account'),
+  shelby_blob_name: text('shelby_blob_name'),
+  shelby_blob_merkle_root: text('shelby_blob_merkle_root'),
+  shelby_register_tx_hash: text('shelby_register_tx_hash'),
   tx_hash: text('tx_hash').notNull(),
 });
 

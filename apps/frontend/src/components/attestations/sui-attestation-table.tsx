@@ -108,7 +108,8 @@ export function SuiAttestationTable({ attestations }: { attestations: any[] }) {
                 {!isMobile && (
                   <TableCell className="px-6 py-4">
                     {(() => {
-                      const storageType = attestation.storage_type ?? 0; // Default to ON_CHAIN for backward compatibility
+                      // Convert to number for comparison (backend may return string)
+                      const storageType = Number(attestation.storage_type ?? 0);
                       const isEncrypted = attestation.encrypted === true;
                       
                       if (storageType === 0) {

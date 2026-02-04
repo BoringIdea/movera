@@ -2,7 +2,7 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { fromHEX, toHEX, bcs } from '@mysten/bcs';
 import { blake2b } from '@noble/hashes/blake2b';
-import { PACKAGES } from "../constants";
+import { PACKAGES } from "../constants.js";
 
 import dotenv from 'dotenv';
 dotenv.config();

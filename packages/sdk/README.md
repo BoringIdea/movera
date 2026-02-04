@@ -6,7 +6,7 @@ Move Attestation Service SDK - A TypeScript library for creating, managing, and 
 
 Movera SDK is a comprehensive TypeScript library that provides a unified interface for interacting with the Move Attestation Service on both Sui and Aptos blockchains. The SDK includes support for:
 
-- **Dual Storage Modes**: On-chain and off-chain (Walrus) storage options
+- **Dual Storage Modes**: On-chain and off-chain (Walrus for Sui, Shelby for Aptos)
 - **Privacy Protection**: Seal encryption for sensitive attestation data
 - **Data Integrity**: Blake2b-256 hash verification
 - **Schema-based Encoding**: Type-safe data encoding and decoding with Codec
@@ -16,9 +16,9 @@ Movera SDK is a comprehensive TypeScript library that provides a unified interfa
 | Chain | Status | Features |
 |-------|--------|----------|
 | Sui | Testnet ✅ | On-chain storage, Off-chain storage (Walrus), Seal encryption |
-| Aptos | Testnet ✅ | On-chain storage |
+| Aptos | Testnet ✅ | On-chain storage, Off-chain storage (Shelby) |
 
-**Note**: Off-chain storage and Seal encryption are currently only available for Sui.
+**Note**: Seal encryption is currently only available for Sui.
 
 ## Installation
 
@@ -91,7 +91,7 @@ const result = await sas.attest(
 console.log('Attestation created:', result);
 ```
 
-### Off-Chain Storage with Walrus
+### Off-Chain Storage with Walrus (Sui)
 
 ```typescript
 import { Sas, Codec, StorageType, WalrusClient, getKeypair, getClient, blake2b256 } from '@movera/sdk';
@@ -304,7 +304,7 @@ const decoded = schemaCodec.decodeFromBytes(decryptedData);
 console.log('Decrypted data:', decoded);
 ```
 
-### Aptos Chain
+### Aptos Chain (On-Chain)
 
 ```typescript
 import { Aas, Codec } from '@movera/sdk';
@@ -361,6 +361,68 @@ const res2 = await aas.createAttestation(
 console.log('Attestation created:', res2);
 ```
 
+### Aptos Off-Chain (Shelby)
+
+```typescript
+import { Aas, Codec, uploadToShelby, computeBlake2b256 } from '@movera/sdk';
+import { Account, Network, Ed25519PrivateKey, Hex } from "@aptos-labs/ts-sdk";
+import { bcs } from '@mysten/bcs';
+
+const privateKeyBytes = Hex.fromHexString(process.env.PRIVATE_KEY || "").toUint8Array();
+const privateKey = new Ed25519PrivateKey(privateKeyBytes);
+const account = Account.fromPrivateKey({ privateKey });
+const aas = new Aas(account, 'aptos', Network.TESTNET);
+
+// Create schema (same as above)
+const schemaTemplate = "name: string, age: u64";
+const codec = new Codec(schemaTemplate);
+const schema = bcs.string().serialize(schemaTemplate).toBytes();
+const res = await aas.createSchema(schema, "User Profile", "Description", "https://example.com", false, '0x0');
+
+// Extract schema address
+const events = (res as any).events;
+let schemaAddress = "";
+for (const event of events) {
+  if (event.type.includes("SchemaCreated")) {
+    schemaAddress = event.data.schema_address;
+    break;
+  }
+}
+
+// Prepare attestation data
+const item = { name: "Alice", age: 30n };
+const attestationRaw = codec.encodeToBytes(item);
+
+// Compute hash + blobName (default path)
+const dataHash = computeBlake2b256(attestationRaw);
+const dataHashHex = Buffer.from(dataHash).toString('hex');
+const blobName = `movera/user-profile/${dataHashHex}`;
+
+// Upload to Shelby
+const upload = await uploadToShelby({
+  account,
+  blobName,
+  blobData: attestationRaw,
+  apiKey: process.env.SHELBY_API_KEY,
+  network: Network.SHELBYNET,
+});
+
+// Create off-chain attestation
+const res2 = await aas.createAttestationOffChain(
+  account.accountAddress.toString(),
+  schemaAddress,
+  '0x0',
+  0,
+  false,
+  upload.dataHash,
+  upload.account,
+  upload.blobName,
+  upload.blobMerkleRoot,
+  upload.registerTxHash
+);
+
+console.log('Off-chain attestation created:', res2);
+```
 ## Core Classes
 
 ### Sas (Sui Attestation Service)
@@ -547,7 +609,7 @@ const decryptedData = await sealWrapper.decryptData(
 
 ## Utilities
 
-### getAttestationData
+### getAttestationData (Sui)
 
 Automatically retrieves and decrypts attestation data based on storage type.
 
@@ -562,7 +624,7 @@ const data = await getAttestationData(
   network
 );
 
-// For off-chain attestations
+// For off-chain attestations (Walrus)
 const data = await getAttestationData(
   attestationId,
   userAddress,
@@ -588,13 +650,17 @@ const data = await getAttestationData(
 
 ```typescript
 import { 
-  getClient, 
-  getKeypair, 
-  getPackageId, 
+  getClient,
+  getKeypair,
+  getPackageId,
   getAttestationRegistryId,
   blake2b256,
-  computeSealKeyId 
+  computeSealKeyId,
+  computeBlake2b256,
+  uploadToShelby,
+  downloadFromShelby
 } from '@movera/sdk';
+import { Network } from '@aptos-labs/ts-sdk';
 
 // Get Sui client
 const client = getClient('sui', 'testnet');
@@ -613,6 +679,15 @@ const hash = blake2b256(data);
 
 // Compute Seal key ID (matching contract's compute_key_id)
 const sealId = computeSealKeyId(attestorAddress, nonce);
+
+// Aptos Shelby helpers
+const aptosHash = computeBlake2b256(data);
+const downloaded = await downloadFromShelby({
+  account: '0x...',
+  blobName: 'movera/schema/abcd...',
+  apiKey: process.env.SHELBY_API_KEY,
+  network: Network.SHELBYNET,
+});
 ```
 
 ## Storage Types
@@ -628,17 +703,24 @@ Traditional on-chain storage. All data is stored directly on the Sui blockchain.
 
 ### StorageType.OFF_CHAIN
 
-Off-chain storage using Walrus decentralized storage.
+Off-chain storage using decentralized storage.
 
 **Usage**:
 - Suitable for large data
 - Lower gas costs (only metadata stored on-chain)
-- Data stored in Walrus, hash stored on-chain for integrity
+- Data stored off-chain, hash stored on-chain for integrity
 
 **Requirements**:
-- `walrusSuiObjectId`: Sui object ID of the Walrus blob
-- `walrusBlobId`: Walrus blob ID (base64url string)
-- `dataHash`: Blake2b-256 hash of the original data
+- **Sui (Walrus)**:
+  - `walrusSuiObjectId`: Sui object ID of the Walrus blob
+  - `walrusBlobId`: Walrus blob ID (base64url string)
+  - `dataHash`: Blake2b-256 hash of the original data
+- **Aptos (Shelby)**:
+  - `shelbyAccount`: Shelby account address
+  - `shelbyBlobName`: Blob path (default `movera/<schema-name>/<file-hash>`)
+  - `dataHash`: Blake2b-256 hash of the original data
+  - `shelbyBlobMerkleRoot`: Merkle root from Shelby commitments
+  - `shelbyRegisterTxHash`: Shelby register transaction hash
 
 ### Encrypted Storage
 
@@ -723,7 +805,7 @@ interface SuiAttestation {
 ```typescript
 enum StorageType {
   ON_CHAIN = 0,
-  OFF_CHAIN = 1, // Default: Walrus
+  OFF_CHAIN = 1, // Off-chain: Walrus (Sui) / Shelby (Aptos)
 }
 ```
 

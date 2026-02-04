@@ -60,7 +60,7 @@ module resolver_example::schema_resolver_tests {
     timestamp::update_global_time_for_test_secs(10000000);
     aas::revoke_attestation(test_account, schema_addr, attestation_addr);
 
-    let (_, _, _, _, revocation_time, _, _, _, _) = attestation::attestation_unpacked(attestation_addr);
+    let (_, _, _, _, revocation_time, _, _, _, _, _, _, _, _) = attestation::attestation_unpacked(attestation_addr);
     assert!(revocation_time == 10000000, 2);
   }
 

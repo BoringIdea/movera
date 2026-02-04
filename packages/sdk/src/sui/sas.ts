@@ -5,11 +5,11 @@ import {
 import { Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
-import { getAttestationRegistryId, getClient, getPackageId, Network } from './utils';
-import { Schema } from './schema';
-import { SuiAttestation, AttestationRegistry, StorageType } from './types';
-import { WalrusClient } from './walrus';
-import { SealWrapper } from './seal';
+import { getAttestationRegistryId, getClient, getPackageId, Network } from './utils.js';
+import { Schema } from './schema.js';
+import { SuiAttestation, AttestationRegistry, StorageType } from './types.js';
+import { WalrusClient } from './walrus.js';
+import { SealWrapper } from './seal.js';
 
 export class Sas {
   private client: SuiClient;
@@ -500,7 +500,7 @@ export async function getAttestationData(
     // Step 2c: Verify data integrity
     // dataHash is calculated from ORIGINAL data (before encryption) using blake2b256
     // We verify by calculating hash of decrypted/retrieved data using blake2b256
-    const { blake2b256 } = await import('./utils');
+    const { blake2b256 } = await import('./utils.js');
     const computedHash = blake2b256(data);
     if (!walrusClient.arraysEqual(computedHash, attestation.dataHash!)) {
       throw new Error('Data integrity verification failed: hash mismatch. Expected hash of original data, but computed hash does not match.');
@@ -521,7 +521,7 @@ export async function getAttestations(chain: string, network: Network): Promise<
     parentId: tableId,
   });
 
-  const attestationPromises = tableData.data.map(async (dataItem) => {
+  const attestationPromises = tableData.data.map(async (dataItem: any) => {
     // Get the table item
     const tableItem = await client.getObject({
       id: dataItem.objectId,

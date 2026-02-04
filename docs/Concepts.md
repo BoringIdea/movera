@@ -48,9 +48,9 @@ Movera supports two storage mechanisms:
 - **Advantages**: Fully transparent, verifiable, immutable
 - **Disadvantages**: Higher gas costs, limited size
 
-#### Off-Chain Storage (Walrus)
+#### Off-Chain Storage (Walrus / Shelby)
 
-- **Definition**: Data stored in Walrus decentralized storage, with metadata on-chain
+- **Definition**: Data stored in decentralized storage (Walrus for Sui, Shelby for Aptos), with metadata on-chain
 - **Use Case**: Large data, cost optimization
 - **Advantages**: Lower costs, no size limits
 - **Disadvantages**: Requires additional infrastructure
@@ -69,7 +69,7 @@ For sensitive data, Movera integrates with Seal to provide end-to-end encryption
 1. Generate random nonce
 2. Compute Seal key ID: `[attestor][nonce]`
 3. Encrypt data using Seal
-4. Store encrypted data in Walrus
+4. Store encrypted data in Walrus (Sui only)
 5. Store hash of original data on-chain
 6. Recipient can decrypt with on-chain authorization
 
@@ -138,7 +138,7 @@ A timestamp indicating when an attestation was revoked. Once revoked, an attesta
 2. **Register Schema**: Register schema on-chain
 3. **Encode Data**: Use Codec to encode data according to schema
 4. **Create Attestation**: Call `attest()` or `attest_off_chain()` function
-5. **Store Data**: Data stored on-chain or off-chain (Walrus)
+5. **Store Data**: Data stored on-chain or off-chain (Walrus for Sui, Shelby for Aptos)
 6. **Emit Event**: `AttestationCreated` event emitted
 
 ### Retrieving an Attestation
@@ -147,7 +147,7 @@ A timestamp indicating when an attestation was revoked. Once revoked, an attesta
 2. **Fetch Metadata**: Get attestation object from chain
 3. **Retrieve Data**: 
    - On-chain: Read directly from object
-   - Off-chain: Download from Walrus using blob ID
+   - Off-chain: Download from Walrus (Sui) or Shelby (Aptos)
 4. **Decode Data**: Use Codec to decode data
 5. **Verify Integrity**: Check hash matches (for off-chain)
 
@@ -186,4 +186,3 @@ A timestamp indicating when an attestation was revoked. Once revoked, an attesta
 ---
 
 **Next**: [Roadmap](./Roadmap.md) →
-
