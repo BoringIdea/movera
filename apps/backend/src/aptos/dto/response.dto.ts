@@ -219,6 +219,38 @@ export class ShelbyDownloadResponseDto {
   data_hash: string;
 }
 
+export class ShelbyUploadResponseDto {
+  @ApiProperty({
+    description: 'Shelby account address for blob owner',
+    example: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  })
+  account: string;
+
+  @ApiProperty({
+    description: 'Shelby blob path/name',
+    example: 'movera/user-profile/abcd1234...',
+  })
+  blob_name: string;
+
+  @ApiProperty({
+    description: 'Blake2b_256 hash of the blob data (hex)',
+    example: '0xabcdef1234567890',
+  })
+  data_hash: string;
+
+  @ApiProperty({
+    description: 'Shelby blob merkle root (commitment)',
+    example: '0xabcdef1234567890',
+  })
+  blob_merkle_root: string;
+
+  @ApiProperty({
+    description: 'Shelby blob register transaction hash',
+    example: '0xabcdef1234567890',
+  })
+  register_tx_hash: string;
+}
+
 export class CountResponseDto {
   @ApiProperty({
     description: 'Count result',

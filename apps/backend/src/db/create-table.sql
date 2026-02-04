@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS aptos_attestations (
     data_hash TEXT,
     shelby_account TEXT,
     shelby_blob_name TEXT,
+    shelby_blob_merkle_root TEXT,
+    shelby_register_tx_hash TEXT,
     tx_hash TEXT NOT NULL
 );
 

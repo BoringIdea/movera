@@ -54,6 +54,7 @@
     "@mysten/sui": "^1.30.1",
     "@mysten/seal": "^0.9.4",
     "@mysten/walrus": "^0.8.4",
+    "@noble/hashes": "^1.7.0",
     "@shelby-protocol/sdk": "latest",
     "@thalalabs/surf": "^1.9.6",
     "dotenv": "^16.5.0",

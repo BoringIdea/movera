@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param, ValidationPipe, UsePipes, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Query, Param, ValidationPipe, UsePipes, HttpStatus, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AptosService } from './aptos.service';
 import {
@@ -9,6 +9,7 @@ import {
   SearchSchemaQueryDto,
   ShelbyDownloadQueryDto,
 } from './dto/query-params.dto';
+import { ShelbyUploadRequestDto } from './dto/request.dto';
 import {
   SchemaResponseDto,
   AttestationWithSchemaResponseDto,
@@ -19,6 +20,7 @@ import {
   SingleAttestationResponseDto,
   CountApiResponseDto,
   ShelbyDownloadResponseDto,
+  ShelbyUploadResponseDto,
 } from './dto/response.dto';
 import { ApiResponse as IApiResponse } from '../common';
 import { ResponseUtil } from '../common/utils/response.util';
@@ -427,5 +429,26 @@ export class AptosController {
   ): Promise<IApiResponse<ShelbyDownloadResponseDto>> {
     const data = await this.aptosService.downloadOffChainData(query.account, query.blobName);
     return ResponseUtil.success(data, 'Successfully retrieved off-chain data');
+  }
+
+  @Post('attestations/offchain/upload')
+  @ApiOperation({
+    summary: 'Upload off-chain attestation data (Shelby)',
+    description: 'Uploads blob data to Shelby using a backend uploader account',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid request payload',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully uploaded off-chain data',
+    type: ShelbyUploadResponseDto,
+  })
+  async uploadOffChainData(
+    @Body() body: ShelbyUploadRequestDto,
+  ): Promise<IApiResponse<ShelbyUploadResponseDto>> {
+    const data = await this.aptosService.uploadOffChainData(body.schema_name, body.data_base64);
+    return ResponseUtil.success(data, 'Successfully uploaded off-chain data');
   }
 }

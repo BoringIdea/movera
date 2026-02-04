@@ -59,6 +59,28 @@ export interface OffChainData {
   data_hash?: string;
 }
 
+export interface AptosOffChainUploadRequest {
+  schema_name: string;
+  data_base64: string;
+}
+
+export interface AptosOffChainUploadResponse {
+  account: string;
+  blob_name: string;
+  data_hash: string;
+  blob_merkle_root: string;
+  register_tx_hash: string;
+}
+
+export interface SuiOffChainUploadRequest {
+  data_base64: string;
+}
+
+export interface SuiOffChainUploadResponse {
+  walrus_sui_object_id: string;
+  walrus_blob_id: string;
+}
+
 export interface AttestationWithSchema extends Attestation {
   schema_id?: number;
   schema_name?: string;
