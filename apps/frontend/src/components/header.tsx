@@ -25,7 +25,7 @@ import {
 
 const chains = getChains()
 
-const hoverStyles = "transition-colors duration-200 hover:text-[#2792FF]"
+const hoverStyles = "transition-colors duration-200 hover:text-[#5f9bff]"
 
 export function Header() {
   const { currentChain, setCurrentChain } = useChain()
@@ -54,7 +54,7 @@ export function Header() {
     return (
       <Link
         href={href}
-        className={`text-xs font-black uppercase tracking-[0.2em] ${hoverStyles} ${isActive ? 'text-black border-b-2 border-black pb-1' : 'text-black/60'}`}
+        className={`font-mono text-[11px] uppercase tracking-[0.16em] ${hoverStyles} ${isActive ? 'border-b border-black/70 pb-1 text-black' : 'text-black/52'}`}
         target={isExternal ? '_blank' : target}
         rel={isExternal ? 'noreferrer noopener' : rel}
         scroll={false}
@@ -123,45 +123,45 @@ export function Header() {
       }}
       onOpenChange={setIsOpen}
     >
-      <Select.Trigger className="inline-flex items-center justify-center px-3 py-2 text-sm leading-none h-10 gap-2 bg-gradient-to-r from-blue-100/80 to-indigo-100/80 hover:from-blue-200/80 hover:to-indigo-200/80 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300/50 border-2 border-blue-200/70 hover:border-blue-300/70 shadow-md hover:shadow-lg">
+      <Select.Trigger className="inline-flex h-10 items-center justify-center gap-2 border border-black/10 bg-white/72 px-3 py-2 text-sm leading-none transition-colors hover:bg-white focus:outline-none">
         <div className="flex items-center space-x-2">
           {selectedChain && (
             <>
-              <Image src={selectedChain.icon} alt={selectedChain.name} width={20} height={20} className="rounded-full shadow-sm" />
-              <span className="font-bold text-blue-800 text-sm">{selectedChain.name}</span>
+              <Image src={selectedChain.icon} alt={selectedChain.name} width={20} height={20} className="border border-black/10" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-black/72">{selectedChain.name}</span>
             </>
           )}
         </div>
         <Select.Icon>
-          <ChevronDownIcon className="w-4 h-4 text-blue-600" />
+          <ChevronDownIcon className="h-4 w-4 text-black/42" />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         <Select.Content
-          className="overflow-hidden rounded-xl shadow-2xl border-2 border-blue-200/70 z-50"
+          className="z-50 overflow-hidden border border-black/10 bg-white/96"
           position="popper"
           sideOffset={8}
           style={{ backgroundColor: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(20px)', minWidth: '280px' }}
         >
           <Select.Viewport className="p-2">
             <Select.Group>
-              <Select.Label className="px-4 py-3 text-base text-blue-700 font-bold border-b border-blue-200/50 mb-2">
+              <Select.Label className="mb-2 border-b border-black/10 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 Choose Your Chain
               </Select.Label>
               {chains.map((chain) => (
                 <Select.Item
                   key={chain.chain}
                   value={chain.chain}
-                  className="text-base text-gray-800 rounded-xl flex items-center h-12 px-4 relative select-none data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-gradient-to-r data-[highlighted]:from-blue-100/70 data-[highlighted]:to-indigo-100/70 cursor-pointer transition-all duration-200 hover:shadow-md"
+                  className="relative flex h-12 cursor-pointer select-none items-center px-4 text-base text-black/75 transition-colors data-[disabled]:pointer-events-none data-[disabled]:text-black/30 data-[highlighted]:bg-[rgba(245,249,255,0.92)] data-[highlighted]:outline-none"
                 >
                   <Select.ItemText>
                     <div className="flex items-center space-x-4">
-                      <Image src={chain.icon} alt={chain.name} width={28} height={28} className="rounded-full shadow-sm" />
-                      <span className="font-semibold">{chain.name}</span>
+                      <Image src={chain.icon} alt={chain.name} width={28} height={28} className="border border-black/10" />
+                      <span className="font-mono text-[11px] uppercase tracking-[0.16em]">{chain.name}</span>
                     </div>
                   </Select.ItemText>
                   <Select.ItemIndicator className="absolute right-4 inline-flex items-center justify-center">
-                    <div className="w-5 h-5 text-blue-600" />
+                    <div className="h-5 w-5 text-[#5f9bff]" />
                   </Select.ItemIndicator>
                 </Select.Item>
               ))}
@@ -187,28 +187,21 @@ export function Header() {
   }, [])
 
   return (
-    <header className="flex flex-col md:flex-row items-center justify-between h-auto md:h-16 px-4 py-3 md:py-0 border-b-2 border-blue-200/50 backdrop-blur-md bg-white/95 sticky top-0 z-50 shadow-lg">
+    <header className="sticky top-0 z-50 flex h-auto flex-col items-center justify-between border-b border-black/10 bg-[rgba(248,251,255,0.9)] px-4 py-3 backdrop-blur-md md:h-16 md:flex-row md:py-0">
       <div className="flex items-center justify-between w-full md:w-auto">
-        <a href="/dashboard" className="flex items-center gap-2 text-lg font-bold md:text-base group">
-          <div className="w-20 h-10 md:w-24 md:h-12 relative transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl">
-            <Image
-              src="/mas-logo.jpg"
-              alt="Movera Logo"
-              fill
-              style={{ objectFit: 'contain' }}
-              className="transition-all duration-300 group-hover:opacity-90"
-            />
-          </div>
-          <span className="sr-only">Movera</span>
+        <a href="/dashboard" className="flex items-end text-lg font-bold md:text-base group">
+          <span className="font-[family-name:var(--font-display)] text-[26px] leading-none tracking-[-0.025em] text-black transition-colors duration-300 group-hover:text-[#5f9bff] md:text-[30px]">
+            Movera
+          </span>
         </a>
         {!isMobile && (
-          <nav className="hidden md:flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] md:gap-4 ml-4 mr-2">
+          <nav className="ml-4 mr-2 hidden items-center gap-3 md:flex md:gap-4">
             <NavLink href="/attestations">Attestations</NavLink>
             <NavLink href="/schemas">Schemas</NavLink>
             {currentChain !== 'sui' && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className={`flex items-center gap-1 text-xs font-black uppercase tracking-[0.2em] ${hoverStyles} text-black/60`}>
+                  <button className={`flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.16em] ${hoverStyles} text-black/52`}>
                     More <ChevronDownIcon className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
@@ -216,7 +209,7 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link
                       href="/passport"
-                      className="w-full text-xs font-black uppercase tracking-[0.2em] text-black/80"
+                      className="w-full font-mono text-[11px] uppercase tracking-[0.16em] text-black/72"
                     >
                       Passport
                     </Link>
@@ -231,51 +224,51 @@ export function Header() {
       {!isMobile && (
         <div className="hidden md:flex flex-grow justify-center mx-2">
           <div className="relative w-full max-w-4xl">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-500" />
+            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5f9bff]" />
             <Input
               type="search"
               placeholder="Search Attestation or Schema UID..."
-              className="pl-10 w-full h-10 text-sm rounded-xl border-2 border-blue-300/70 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg"
+              className="mv-input h-10 w-full border pl-10 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {isLoading && (
-              <div className="absolute top-full mt-3 bg-white/98 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-full border-2 border-blue-200/70"
+              <div className="absolute top-full mt-3 w-full border border-black/10 bg-white/96 p-4 backdrop-blur-md"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.98)',
                   opacity: 1
                 }}
               >
-                <div className="flex items-center gap-3 text-blue-700 font-semibold text-lg">
-                  <div className="w-5 h-5 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-[#5f9bff]">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#5f9bff] border-t-transparent"></div>
                   Searching...
                 </div>
               </div>
             )}
             {error && (
-              <div className="absolute top-full mt-3 bg-red-50/90 text-red-700 p-4 rounded-2xl w-full border-2 border-red-200/70 backdrop-blur-md shadow-2xl"
+              <div className="absolute top-full mt-3 w-full border border-red-500/20 bg-red-50/90 p-4 text-red-700 backdrop-blur-md"
                 style={{
                   backgroundColor: 'rgba(254, 242, 242, 0.9)',
                   opacity: 1
                 }}
               >
-                <div className="font-semibold text-lg">{error}</div>
+                <div className="font-mono text-[11px] uppercase tracking-[0.16em]">{error}</div>
               </div>
             )}
             {searchResult && (
               <div
-                className="absolute top-full mt-3 bg-white/98 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-full border-2 border-blue-200/70"
+                className="absolute top-full mt-3 w-full border border-black/10 bg-white/96 p-4 backdrop-blur-md"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.98)',
                   opacity: 1
                 }}
               >
-                <div className="text-blue-700 text-lg mb-2 font-bold">
+                <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#5f9bff]">
                   View {searchResult.type}
                 </div>
                 <Link
                   href={`/${searchResult.type}/${searchResult.uid}`}
-                  className={`text-blue-700 hover:text-blue-800 font-bold text-lg ${hoverStyles}`}
+                  className={`font-primary text-base text-black ${hoverStyles}`}
                 >
                   {searchResult.uid}
                 </Link>
@@ -292,7 +285,7 @@ export function Header() {
               href="https://github.com/HashIdea/movera"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+              className="border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
             >
               <GitHubIcon className="w-4 h-4" />
             </Link>
@@ -300,17 +293,17 @@ export function Header() {
               href="https://movera-docs.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+              className="flex items-center justify-center border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
               aria-label="View Docs"
             >
               <LinkIcon className="w-4 h-4" />
               <span className="sr-only">Docs</span>
             </Link>
             <Link
-              href="https://x.com/movera_protocol"
+              href="https://x.com/BoringIdea"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+              className="border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
             >
               <X className="w-4 h-4" />
             </Link>
@@ -320,10 +313,10 @@ export function Header() {
         {currentChain === "sui" ? <ConnectButton /> : <WalletSelector />}
         {isMobile && (
           <button
-            className="md:hidden p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-100/80 hover:to-indigo-100/80 transition-all duration-300 shadow-md hover:shadow-lg"
+            className="p-3 transition-colors duration-300 hover:bg-white md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <Menu className="w-7 h-7 text-blue-700" />
+            <Menu className="h-7 w-7 text-[#5f9bff]" />
           </button>
         )}
       </div>
@@ -332,51 +325,51 @@ export function Header() {
         <>
           <div className="w-full mt-6">
             <div className="relative w-full">
-              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-500" />
+              <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#5f9bff]" />
               <Input
                 type="search"
                 placeholder="Search Attestation or Schema UID..."
-                className="pl-12 w-full h-14 text-lg rounded-2xl border-2 border-blue-300/70 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-lg"
+                className="mv-input h-14 w-full border pl-12 text-lg"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               {isLoading && (
-                <div className="absolute top-full mt-3 bg-white/98 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-full border-2 border-blue-200/70"
+                <div className="absolute top-full mt-3 w-full border border-black/10 bg-white/96 p-4 backdrop-blur-md"
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.98)',
                     opacity: 1
                   }}
                 >
-                  <div className="flex items-center gap-3 text-blue-700 font-semibold text-lg">
-                    <div className="w-5 h-5 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-[#5f9bff]">
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#5f9bff] border-t-transparent"></div>
                     Searching...
                   </div>
                 </div>
               )}
               {error && (
-                <div className="absolute top-full mt-3 bg-red-50/90 text-red-700 p-4 rounded-2xl w-full border-2 border-red-200/70 backdrop-blur-md shadow-2xl"
+                <div className="absolute top-full mt-3 w-full border border-red-500/20 bg-red-50/90 p-4 text-red-700 backdrop-blur-md"
                   style={{
                     backgroundColor: 'rgba(254, 242, 242, 0.9)',
                     opacity: 1
                   }}
                 >
-                  <div className="font-semibold text-lg">{error}</div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.16em]">{error}</div>
                 </div>
               )}
               {searchResult && (
                 <div
-                  className="absolute top-full mt-3 bg-white/98 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-full border-2 border-blue-200/70"
+                  className="absolute top-full mt-3 w-full border border-black/10 bg-white/96 p-4 backdrop-blur-md"
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.98)',
                     opacity: 1
                   }}
                 >
-                  <div className="text-blue-700 text-lg mb-2 font-bold">
+                  <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#5f9bff]">
                     View {searchResult.type}
                   </div>
                   <Link
                     href={`/${searchResult.type}/${searchResult.uid}`}
-                    className={`text-blue-700 hover:text-blue-800 font-bold text-lg ${hoverStyles}`}
+                    className={`font-primary text-base text-black ${hoverStyles}`}
                   >
                     {searchResult.uid}
                   </Link>
@@ -385,23 +378,23 @@ export function Header() {
             </div>
           </div>
 
-          <nav className={`w-full mt-6 flex flex-col items-start gap-5 p-6 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/50 backdrop-blur-md border-2 border-blue-200/50 shadow-lg ${isMenuOpen ? 'block' : 'hidden'}`}>
+          <nav className={`mt-6 flex w-full flex-col items-start gap-5 border border-black/10 bg-white/90 p-6 backdrop-blur-md ${isMenuOpen ? 'block' : 'hidden'}`}>
             <NavLink href="/attestations">Attestations</NavLink>
             <NavLink href="/schemas">Schemas</NavLink>
             {currentChain !== 'sui' && (
               <div className="flex flex-col items-start gap-3">
-                <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">
                   More
                 </span>
                 <NavLink href="/passport">Passport</NavLink>
               </div>
             )}
-            <div className="flex items-center gap-4 mt-6 pt-6 border-t-2 border-blue-200/50">
+            <div className="mt-6 flex items-center gap-4 border-t border-black/10 pt-6">
               <Link
                 href="https://github.com/BoringIdea/movera"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+                className="border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
               >
                 <GitHubIcon className="w-4 h-4" />
               </Link>
@@ -409,15 +402,15 @@ export function Header() {
                 href="https://movera-docs.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+                className="border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
               >
                 <LinkIcon className="w-4 h-4" />
               </Link>
               <Link
-                href="https://www.x.com/movera_protocol"
+                href="https://x.com/BoringIdea"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-black px-3 py-2 rounded-none hover:bg-black/5 transition-colors duration-200"
+                className="border border-black/10 px-3 py-2 transition-colors duration-200 hover:bg-white"
               >
                 <X className="w-4 h-4" />
               </Link>

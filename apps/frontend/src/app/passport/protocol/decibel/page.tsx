@@ -130,15 +130,15 @@ export default function DecibelProtocolOptimizedPage() {
 
   if (metricsError) {
     return (
-      <div className="min-h-screen bg-[#F4F7FF] text-black">
+      <div className="mv-shell">
         <Header />
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 text-red-500">
+            <div className="mx-auto mb-4 h-16 w-16 text-red-500">
               <Shield className="w-16 h-16" />
             </div>
-            <h2 className="text-xl font-semibold text-black mb-2">Failed to load Decibel data</h2>
-            <p className="text-sm text-black/70">{metricsError}</p>
+            <h2 className="mv-heading mb-2">Failed to load Decibel data</h2>
+            <p className="mv-copy">{metricsError}</p>
           </div>
         </div>
       </div>
@@ -158,17 +158,17 @@ export default function DecibelProtocolOptimizedPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="max-w-6xl mx-auto space-y-6 px-4 py-8">
-        <section className="border border-black bg-white px-6 py-5 space-y-3">
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Decibel Protocol</p>
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel space-y-3 px-6 py-5">
+          <p className="mv-kicker">Decibel Protocol</p>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
             <div>
-              <h1 className="text-3xl font-black">Perp DEX analytics and insights</h1>
-              <p className="text-sm font-bold text-black/60">On-chain metrics, snapshot events, and badges</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Perp DEX analytics and insights</h1>
+              <p className="mv-copy">On-chain metrics, snapshot events, and badges</p>
             </div>
-            <span className="rounded-none border border-black bg-[#D0E8FF] px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] text-[#2792FF]">
+            <span className="mv-accent-tag">
               {currentChain?.toUpperCase() ?? 'CHAIN'}
             </span>
           </div>
@@ -179,8 +179,8 @@ export default function DecibelProtocolOptimizedPage() {
             <button
               key={key}
               onClick={() => setActiveTab(key)}
-              className={`border border-black rounded-none px-4 py-2 text-xs font-black uppercase tracking-[0.2em] ${
-                activeTab === key ? 'bg-black text-white' : 'bg-white text-black'
+              className={`border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
+                activeTab === key ? 'border-black/10 bg-[color:var(--fg-strong)] text-white' : 'border-black/10 bg-white/72 text-black/65'
               }`}
             >
               {key}
@@ -189,14 +189,14 @@ export default function DecibelProtocolOptimizedPage() {
         </section>
 
         {activeTab === 'analysis' && (
-          <section className="border border-black bg-white px-6 py-5 space-y-6">
+          <section className="mv-panel space-y-6 px-6 py-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {metricCards.map((card) => (
-                <div key={card.label} className={`border border-black ${card.color} px-4 py-3 space-y-1`}>
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+                <div key={card.label} className={`border border-black/10 px-4 py-4 space-y-1 ${card.color}`}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                     {card.emoji} {card.label}
                   </p>
-                  <p className="text-xl font-black text-black">
+                  <p className="mv-heading text-2xl">
                     {card.value !== undefined
                       ? typeof card.value === 'number'
                         ? card.label === 'Active Traders'
@@ -210,11 +210,11 @@ export default function DecibelProtocolOptimizedPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="border border-black bg-white px-4 py-3 text-sm font-black uppercase tracking-[0.2em]">All Markets</div>
+              <div className="mv-panel-muted px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em]">All Markets</div>
               <div className="overflow-x-auto">
-                <table className="w-full border border-black text-left text-xs uppercase tracking-[0.2em]">
+                <table className="w-full border border-black/10 text-left text-xs uppercase tracking-[0.16em]">
                   <thead>
-                    <tr className="border-b border-black">
+                    <tr className="border-b border-black/10 bg-white/72">
                       <th className="px-3 py-2">Market</th>
                       <th className="px-3 py-2 text-right">Price</th>
                       <th className="px-3 py-2 text-right">24h Change</th>
@@ -225,18 +225,18 @@ export default function DecibelProtocolOptimizedPage() {
                   </thead>
                   <tbody>
                     {sortedMarkets.map((market) => (
-                      <tr key={market.market_addr} className="border-b border-black text-sm">
-                        <td className="px-3 py-2 font-black">{market.market_name}</td>
+                      <tr key={market.market_addr} className="border-b border-black/10 text-sm">
+                        <td className="px-3 py-2 font-mono text-[11px] text-black">{market.market_name}</td>
                         <td className="px-3 py-2 text-right">${market.mark_price.toFixed(2)}</td>
                         <td
-                          className={`px-3 py-2 text-right font-black ${
-                            market.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'
+                          className={`px-3 py-2 text-right font-mono text-[11px] ${
+                            market.price_change_24h >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'
                           }`}
                         >
                           {market.price_change_24h >= 0 ? '▲' : '▼'} {Math.abs(market.price_change_24h).toFixed(2)}%
                         </td>
                         <td className="px-3 py-2 text-right">${(market.volume_24h * market.mark_price).toLocaleString()}</td>
-                        <td className="px-3 py-2 text-right text-green-600">{(market.funding_rate * 100).toFixed(4)}%</td>
+                        <td className={`px-3 py-2 text-right ${market.funding_rate >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>{(market.funding_rate * 100).toFixed(4)}%</td>
                         <td className="px-3 py-2 text-right">${market.open_interest.toLocaleString()}</td>
                       </tr>
                     ))}
@@ -246,14 +246,14 @@ export default function DecibelProtocolOptimizedPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="border border-black px-4 py-4 space-y-2 bg-[#F4F7FF]">
+              <div className="mv-panel-muted px-4 py-4 space-y-2">
                 <div className="flex items-center justify-between">
                   {/* <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">24h Volume Trend</p> */}
                   {/* <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Total ${volumeData?.reduce((sum, point) => sum + (point.volume || 0), 0)?.toLocaleString() ?? '0'}</p> */}
                 </div>
                 <VolumeTrendChart data={volumeData || []} />
               </div>
-              <div className="border border-black px-4 py-4 space-y-2 bg-[#F4F7FF]">
+              <div className="mv-panel-muted px-4 py-4 space-y-2">
                 <div className="flex items-center justify-between">
                   {/* <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Open Interest Distribution</p> */}
                   {/* <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Total ${metricsValue(platformMetrics?.totalOpenInterest)}</p> */}
@@ -263,9 +263,9 @@ export default function DecibelProtocolOptimizedPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="border border-black px-4 py-4 space-y-3">
+            <div className="mv-panel px-4 py-4 space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Funding Rates</p>
+                <p className="mv-kicker">Funding Rates</p>
                 <span className="text-xs text-black/40">Updated 8h</span>
               </div>
                 {positiveFunding.length === 0 ? (
@@ -274,27 +274,27 @@ export default function DecibelProtocolOptimizedPage() {
                   positiveFunding.map((market) => (
                     <div key={market.market_addr} className="flex items-center justify-between text-sm">
                       <span>{market.market_name}</span>
-                      <span className="text-green-600">{(market.funding_rate * 100).toFixed(4)}%</span>
+                      <span className="text-[#5f9bff]">{(market.funding_rate * 100).toFixed(4)}%</span>
                     </div>
                   ))
                 )}
                 <div className="pt-3 border-t border-black/10">
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Highest negative</p>
+                  <p className="mv-kicker">Highest negative</p>
                   {negativeFunding.length === 0 ? (
                     <p className="text-xs text-black/60">None</p>
                   ) : (
                     negativeFunding.map((market) => (
                       <div key={market.market_addr} className="flex items-center justify-between text-sm">
                         <span>{market.market_name}</span>
-                        <span className="text-red-600">{(market.funding_rate * 100).toFixed(4)}%</span>
+                        <span className="text-[#b42318]">{(market.funding_rate * 100).toFixed(4)}%</span>
                       </div>
                     ))
                   )}
                 </div>
               </div>
-              <div className="border border-black px-4 py-4 space-y-3">
+              <div className="mv-panel px-4 py-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Live Trade Feed</p>
+                  <p className="mv-kicker">Live Trade Feed</p>
                   <span className="text-xs text-black/40">{trades?.length ? `${trades.length} trades` : 'No data'}</span>
                 </div>
                 {trades && trades.length > 0 ? (
@@ -306,10 +306,10 @@ export default function DecibelProtocolOptimizedPage() {
                     return (
                       <div 
                         key={`${trade.timestamp}-${trade.market}-${index}`} 
-                        className="border border-black/30 rounded-none px-3 py-2 text-xs font-black uppercase tracking-[0.1em] flex items-center justify-between"
+                        className="flex items-center justify-between border border-black/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em]"
                       >
                         <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <span className={`${isLong ? 'text-green-600' : 'text-red-600'}`}>
+                          <span className={`${isLong ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
                             {isLong ? '▲' : '▼'}
                           </span>
                           <span className="text-black/80 truncate">{trade.marketName || trade.market}</span>
@@ -330,20 +330,20 @@ export default function DecibelProtocolOptimizedPage() {
               </div>
             </div>
 
-            <section className="border border-black px-4 py-4 space-y-3">
+            <section className="mv-panel px-4 py-4 space-y-3">
               <header className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Top Traders</p>
+                <p className="mv-kicker">Top Traders</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.65rem] font-black uppercase tracking-[0.25em] text-black/40">Sort by:</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Sort by:</span>
                   <div className="flex gap-1">
                     {(['volume', 'realized_pnl', 'roi'] as SortKey[]).map((key) => (
                       <button
                         key={key}
                         onClick={() => setSortBy(key)}
-                        className={`px-2 py-1 text-[0.65rem] font-black uppercase tracking-[0.2em] border border-black transition-colors ${
+                        className={`border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
                           sortBy === key
-                            ? 'bg-black text-white'
-                            : 'bg-white text-black hover:bg-black/5'
+                            ? 'border-black/10 bg-[color:var(--fg-strong)] text-white'
+                            : 'border-black/10 bg-white text-black hover:bg-[rgba(245,249,255,0.92)]'
                         }`}
                       >
                         {key === 'realized_pnl' ? 'PnL' : key === 'roi' ? 'ROI' : 'Volume'}
@@ -360,19 +360,19 @@ export default function DecibelProtocolOptimizedPage() {
                         <th className="px-2 py-2 text-left bg-white">Rank</th>
                         <th className="px-2 py-2 text-left bg-white">Trader</th>
                         <th 
-                          className={`px-2 py-2 text-right cursor-pointer hover:text-black/70 bg-white ${sortBy === 'realized_pnl' ? 'text-black font-black' : ''}`}
+                          className={`bg-white px-2 py-2 text-right cursor-pointer hover:text-black/70 ${sortBy === 'realized_pnl' ? 'text-black font-mono' : ''}`}
                           onClick={() => setSortBy('realized_pnl')}
                         >
                           PnL {sortBy === 'realized_pnl' ? '▼' : ''}
                         </th>
                         <th 
-                          className={`px-2 py-2 text-right cursor-pointer hover:text-black/70 bg-white ${sortBy === 'roi' ? 'text-black font-black' : ''}`}
+                          className={`bg-white px-2 py-2 text-right cursor-pointer hover:text-black/70 ${sortBy === 'roi' ? 'text-black font-mono' : ''}`}
                           onClick={() => setSortBy('roi')}
                         >
                           ROI {sortBy === 'roi' ? '▼' : ''}
                         </th>
                         <th 
-                          className={`px-2 py-2 text-right cursor-pointer hover:text-black/70 bg-white ${sortBy === 'volume' ? 'text-black font-black' : ''}`}
+                          className={`bg-white px-2 py-2 text-right cursor-pointer hover:text-black/70 ${sortBy === 'volume' ? 'text-black font-mono' : ''}`}
                           onClick={() => setSortBy('volume')}
                         >
                           Volume {sortBy === 'volume' ? '▼' : ''}
@@ -389,21 +389,21 @@ export default function DecibelProtocolOptimizedPage() {
                       const vol = typeof entry.volume === 'number' ? entry.volume : 0;
                       return (
                         <tr key={`${addr}-${index}`} className="border-b border-black/10 text-sm">
-                          <td className="px-2 py-2 font-black text-black/70">{index + 1}</td>
-                          <td className="px-2 py-2 font-black">
+                          <td className="px-2 py-2 font-mono text-black/70">{index + 1}</td>
+                          <td className="px-2 py-2 font-mono">
                             {addr && addr.length > 11 ? `${addr.slice(0, 8)}...${addr.slice(-4)}` : addr}
                           </td>
                           <td
-                            className={`px-2 py-2 text-right font-black ${
-                              pnl >= 0 ? 'text-green-600' : 'text-red-600'
+                            className={`px-2 py-2 text-right font-mono ${
+                              pnl >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'
                             }`}
                           >
                             {pnl >= 0 ? '+' : '-'}${Math.abs(pnl).toLocaleString(undefined, { maximumFractionDigits: 2 })}
                           </td>
-                          <td className={`px-2 py-2 text-right font-black ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          <td className={`px-2 py-2 text-right font-mono ${roi >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
                             {roi >= 0 ? '+' : '-'}{Math.abs(roi).toFixed(2)}%
                           </td>
-                          <td className="px-2 py-2 text-right font-black text-black/70">
+                          <td className="px-2 py-2 text-right font-mono text-black/70">
                             ${formatNumber(vol)}
                           </td>
                         </tr>
@@ -424,43 +424,43 @@ export default function DecibelProtocolOptimizedPage() {
           </section>
         )}
         {activeTab === 'analysis' && (
-          <section className="grid gap-4 lg:grid-cols-3 border border-black bg-white px-6 py-5">
-            <div className="border border-black px-4 py-4 bg-[#F4F7FF] space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Avg ROI</p>
-              <p className={`text-xl font-black ${avgRoi >= 0 ? 'text-green-600' : 'text-red-600'}`}>{avgRoi.toFixed(2)}%</p>
+          <section className="mv-panel grid gap-4 px-6 py-5 lg:grid-cols-3">
+            <div className="mv-panel-muted px-4 py-4 space-y-2">
+              <p className="mv-kicker">Avg ROI</p>
+              <p className={`mv-heading text-xl ${avgRoi >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>{avgRoi.toFixed(2)}%</p>
             </div>
-            <div className="border border-black px-4 py-4 bg-[#F4F7FF] space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Total PnL</p>
-              <p className={`text-xl font-black ${totalPnlDisplay >= 0 ? 'text-green-600' : 'text-red-600'}`}>${formatNumber(Math.abs(totalPnlDisplay))}</p>
+            <div className="mv-panel-muted px-4 py-4 space-y-2">
+              <p className="mv-kicker">Total PnL</p>
+              <p className={`mv-heading text-xl ${totalPnlDisplay >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>${formatNumber(Math.abs(totalPnlDisplay))}</p>
             </div>
-            <div className="border border-black px-4 py-4 bg-[#F4F7FF] space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Total Volume</p>
-              <p className="text-xl font-black text-black">${formatNumber(totalVolumeDisplay)}</p>
+            <div className="mv-panel-muted px-4 py-4 space-y-2">
+              <p className="mv-kicker">Total Volume</p>
+              <p className="mv-heading text-xl text-black">${formatNumber(totalVolumeDisplay)}</p>
             </div>
           </section>
         )}
 
         {activeTab === 'activity' && (
-          <section className="border border-black bg-white px-6 py-5 space-y-4">
+          <section className="mv-panel px-6 py-5 space-y-4">
             {!userAddress ? (
-              <div className="border border-black px-4 py-4 text-xs font-black uppercase tracking-[0.2em] text-black/60">
+              <div className="border border-black/10 px-4 py-4 font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 Connect your wallet to see on-chain activity.
               </div>
             ) : (
               <div className="space-y-3">
-                <div className="border border-black px-4 py-4 space-y-1">
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-black/60">Account Overview</p>
-                  <p className="text-lg font-black text-black">{summary?.totalTrades ?? '—'}</p>
+                <div className="border border-black/10 px-4 py-4 space-y-1">
+                  <p className="mv-kicker">Account Overview</p>
+                  <p className="mv-heading text-lg text-black">{summary?.totalTrades ?? '—'}</p>
                   <p className="text-xs text-black/60">Win rate {summary?.winRatePct?.toFixed(0) ?? '—'}%</p>
                 </div>
                 {(events || []).slice(0, 5).map((event) => (
-                  <div key={event.timestamp} className="border border-black px-4 py-3 text-sm font-black uppercase tracking-[0.2em] text-black/70 flex items-center justify-between">
+                  <div key={event.timestamp} className="flex items-center justify-between border border-black/10 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/70">
                     <span>🚀 {event.action}</span>
                     <span>{event.marketName}</span>
                   </div>
                 ))}
                 {!events?.length && (
-                  <div className="border border-black px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-black/50">
+                  <div className="border border-black/10 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
                     No recent events
                   </div>
                 )}
@@ -470,26 +470,26 @@ export default function DecibelProtocolOptimizedPage() {
         )}
 
         {activeTab === 'tasks' && (
-          <section className="border border-black bg-white px-6 py-5 space-y-3">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Tasks & Badges</p>
+          <section className="mv-panel px-6 py-5 space-y-3">
+            <p className="mv-kicker">Tasks & Badges</p>
             {(badges || []).map((badge) => (
-              <div key={badge.id} className="border border-black px-4 py-3 rounded-none text-sm font-black uppercase tracking-[0.2em] text-black/70 flex items-center justify-between">
+              <div key={badge.id} className="flex items-center justify-between border border-black/10 px-4 py-3 text-sm uppercase tracking-[0.16em] text-black/70">
                 <span>✨ {badge.name}</span>
-                <span className="text-[0.6rem] font-bold text-black/40">{badge.description}%</span>
+                <span className="font-mono text-[10px] text-black/40">{badge.description}%</span>
               </div>
             ))}
             {!badges?.length && (
-              <div className="border border-black px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-black/50">
+              <div className="border border-black/10 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
                 No badges yet
               </div>
             )}
             {tasks?.slice(0, 3).map((task) => (
-              <div key={task.id} className="border border-black px-4 py-3 space-y-1">
-                <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.2em] text-black/60">
+              <div key={task.id} className="border border-black/10 px-4 py-3 space-y-1">
+                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                   <span>{task.tier ?? 'bronze'}</span>
                   <span>{task.status.replace('_', ' ')}</span>
                 </div>
-                <p className="text-sm font-black text-black">{task.title}</p>
+                <p className="text-sm text-black">{task.title}</p>
                 <p className="text-xs text-black/60">{task.description}</p>
               </div>
             ))}

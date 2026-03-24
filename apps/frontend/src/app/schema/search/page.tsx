@@ -8,8 +8,13 @@ export default function SchemaSearchPage() {
 
   if (!currentChain) {
     return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
-        <p className="text-sm font-black uppercase tracking-[0.3em] text-black/60">Select a chain to start searching schemas.</p>
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <div className="mv-shell flex min-h-screen items-center justify-center">
+          <div className="mv-panel px-8 py-8 text-center">
+            <p className="mv-kicker">Schema Search</p>
+            <p className="mv-copy mt-3">Select a chain to start searching schemas.</p>
+          </div>
+        </div>
       </div>
     )
   }

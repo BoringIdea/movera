@@ -20,13 +20,13 @@ export function LeaderboardWidget({ data }: LeaderboardWidgetProps) {
   const topTraders = data.slice(0, 10);
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <Card className="mv-panel p-6">
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
-          <h3 className="text-lg font-semibold text-gray-900">Top Traders</h3>
+          <Trophy className="w-5 h-5 text-[#9a6700]" />
+          <h3 className="mv-heading text-[1.55rem]">Top Traders</h3>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
           By Realized PnL
         </div>
       </div>
@@ -34,25 +34,25 @@ export function LeaderboardWidget({ data }: LeaderboardWidgetProps) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <tr className="border-b border-black/10">
+              <th className="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 Rank
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 Trader
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 PnL
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 ROI
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 Volume
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-black/10">
             {topTraders.map((entry) => (
               <LeaderboardRow key={entry.account} entry={entry} />
             ))}
@@ -61,7 +61,7 @@ export function LeaderboardWidget({ data }: LeaderboardWidgetProps) {
       </div>
 
       {/* Stats Summary */}
-      <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-3 gap-4 border-t border-black/10 pt-6">
         <StatCard
           label="Avg ROI"
           value={`${(calculateAverage(topTraders.map(t => t.roi)) * 100).toFixed(2)}%`}
@@ -93,28 +93,28 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   };
 
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
+    <tr className="transition-colors hover:bg-[#fbfbf8]">
       <td className="px-4 py-4">
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 font-semibold text-sm">
+        <div className="flex h-8 w-8 items-center justify-center border border-black/10 bg-[#fbfbf8] font-mono text-xs">
           {getMedalEmoji(entry.rank)}
         </div>
       </td>
       <td className="px-4 py-4">
-        <div className="font-mono text-sm text-gray-900">
+        <div className="font-mono text-sm text-black">
           {maskAddress(entry.account)}
         </div>
       </td>
       <td className="px-4 py-4 text-right">
-        <span className={`font-semibold ${entry.realized_pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <span className={`font-mono text-sm ${entry.realized_pnl >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
           {entry.realized_pnl >= 0 ? '+' : ''}${formatCurrency(entry.realized_pnl)}
         </span>
       </td>
       <td className="px-4 py-4 text-right">
-        <span className={`font-semibold ${entry.roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <span className={`font-mono text-sm ${entry.roi >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
           {entry.roi >= 0 ? '+' : ''}{(entry.roi * 100).toFixed(2)}%
         </span>
       </td>
-      <td className="px-4 py-4 text-right font-medium text-gray-900">
+      <td className="px-4 py-4 text-right font-mono text-sm text-black">
         ${formatCurrency(entry.volume)}
       </td>
     </tr>
@@ -123,12 +123,12 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
 
 function StatCard({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="text-center p-3 bg-gray-50 rounded-lg">
-      <div className="flex items-center justify-center mb-1 text-gray-500">
+    <div className="border border-black/10 bg-[#fbfbf8] p-3 text-center">
+      <div className="mb-1 flex items-center justify-center text-black/45">
         {icon}
       </div>
-      <div className="text-xs text-gray-600 mb-1">{label}</div>
-      <div className="text-lg font-bold text-gray-900">{value}</div>
+      <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{label}</div>
+      <div className="mv-heading text-[1.55rem]">{value}</div>
     </div>
   );
 }

@@ -56,22 +56,22 @@ export default function PassportHomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="max-w-6xl mx-auto space-y-6 px-4 py-8">
-        <section className="border border-black bg-white px-6 py-5 space-y-4">
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel space-y-4 px-6 py-5">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Passport Profile</p>
-              <h1 className="text-3xl font-black">Identity trusted on-chain</h1>
-              <p className="text-sm font-bold text-black/60">Track your reputation and attestations with an immutable Passport.</p>
+              <p className="mv-kicker">Passport Profile</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Identity trusted on-chain</h1>
+              <p className="mv-copy">Track your reputation and attestations with an immutable Passport.</p>
             </div>
             <div className="text-right space-y-2">
               {isWalletConnected ? (
                 isRegistered ? (
                   <Link
                     href="/passport/score"
-                    className="rounded-none border border-black bg-[#2792FF] px-5 py-2 text-sm font-black uppercase tracking-[0.2em] text-white inline-flex items-center justify-center"
+                    className="mv-btn-primary inline-flex"
                   >
                     View Score
                   </Link>
@@ -80,18 +80,18 @@ export default function PassportHomePage() {
                     type="button"
                     onClick={registerPassport}
                     disabled={isRegistering || isWaitingForSignature}
-                    className="rounded-none border border-black bg-[#2792FF] px-5 py-2 text-sm font-black uppercase tracking-[0.2em] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mv-btn-primary disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isWaitingForSignature ? 'Waiting for signature' : isRegistering ? 'Registering...' : 'Register Passport'}
                   </button>
                 )
               ) : (
-                <span className="text-xs font-black uppercase tracking-[0.3em] text-black/50">Connect wallet to continue</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Connect wallet to continue</span>
               )}
             </div>
           </div>
           {registrationError && (
-            <div className="border border-black/30 bg-[#FFEFEF] px-4 py-3 text-sm font-bold text-red-600">
+            <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
               {registrationError}
             </div>
           )}
@@ -99,60 +99,60 @@ export default function PassportHomePage() {
 
         <section className="grid gap-4 md:grid-cols-4">
           {[
-            { label: 'Passport Score', value: passportData?.score ?? 0, accent: 'text-purple-600', icon: <Award className="w-5 h-5" /> },
-            { label: 'Protocols', value: passportData?.protocols ?? 0, accent: 'text-blue-600', icon: <TrendingUp className="w-5 h-5" /> },
-            { label: 'Volume', value: passportData?.volume ?? 0, accent: 'text-teal-600', icon: <Wallet className="w-5 h-5" /> },
+            { label: 'Passport Score', value: passportData?.score ?? 0, accent: 'text-[#5842b0]', icon: <Award className="w-5 h-5" /> },
+            { label: 'Protocols', value: passportData?.protocols ?? 0, accent: 'text-[#1f4ea3]', icon: <TrendingUp className="w-5 h-5" /> },
+            { label: 'Volume', value: passportData?.volume ?? 0, accent: 'text-[#18794e]', icon: <Wallet className="w-5 h-5" /> },
             { label: 'Decibel Delta', value: decibelOverview?.score ?? 0, accent: 'text-black', icon: <TrendingUp className="w-5 h-5" /> },
           ].map((card) => (
-            <div key={card.label} className="border border-black bg-white px-4 py-4 space-y-2">
-              <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.3em] text-black/60">
+            <div key={card.label} className="mv-panel px-4 py-4 space-y-2">
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 <span>{card.label}</span>
                 {card.icon}
               </div>
-              <p className={`text-3xl font-black ${card.accent}`}>{card.label === 'Volume' ? formatLargeNumber(card.value) : card.value?.toLocaleString?.() ?? card.value}</p>
+              <p className={`mv-heading text-3xl ${card.accent}`}>{card.label === 'Volume' ? formatLargeNumber(card.value) : card.value?.toLocaleString?.() ?? card.value}</p>
             </div>
           ))}
         </section>
 
-        <section className="border border-black bg-white px-6 py-5 space-y-5">
+        <section className="mv-panel space-y-5 px-6 py-5">
           <div className="space-y-2">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Protocol Explorer</p>
-            <h3 className="text-2xl font-black">Discover and analyze DeFi protocols</h3>
+            <p className="mv-kicker">Protocol Explorer</p>
+            <h3 className="mv-heading">Discover and analyze DeFi protocols</h3>
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
-            <article className="border border-black bg-white px-5 py-5 space-y-3">
+            <article className="mv-panel px-5 py-5 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-black uppercase tracking-[0.3em] text-black/60">Decibel</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Decibel</p>
                   <p className="text-sm text-black/70">Perp DEX analytics and insights</p>
                 </div>
-                <span className="h-8 w-8 border border-black bg-[#F4F7FF] flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-[#2792FF]" />
+                <span className="flex h-8 w-8 items-center justify-center border border-black/10 bg-[rgba(245,249,255,0.92)]">
+                  <TrendingUp className="h-5 w-5 text-[#5f9bff]" />
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {overviewCards.map((card) => (
-                  <div key={card.label} className={`border border-black ${card.background} px-3 py-2 space-y-1`}>
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">{card.label}</p>
-                    <p className="text-lg font-black text-black">{card.value}</p>
+                  <div key={card.label} className={`border border-black/10 ${card.background} px-3 py-2 space-y-1`}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{card.label}</p>
+                    <p className="mv-heading text-[1.45rem]">{card.value}</p>
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.2em] text-black/60">
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 <span>Live now</span>
-                <Link href="/passport/protocol/decibel" className="rounded-none border border-black bg-black px-4 py-2 text-white">
+                <Link href="/passport/protocol/decibel" className="mv-btn-secondary px-4 py-2 text-black">
                   View Decibel
                 </Link>
               </div>
             </article>
             {[1, 2].map((index) => (
-              <article key={index} className="border border-black/40 bg-[#F9FBFF] px-5 py-5 space-y-3 text-black/60">
+              <article key={index} className="border border-black/10 bg-[rgba(245,249,255,0.92)] px-5 py-5 space-y-3 text-black/60">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-black uppercase tracking-[0.3em]">More protocols</p>
-                  <span className="h-8 w-8 border border-black/40 flex items-center justify-center rounded-full text-xs">•••</span>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em]">More protocols</p>
+                  <span className="flex h-8 w-8 items-center justify-center border border-black/10 text-xs">•••</span>
                 </div>
-                <p className="text-sm font-bold">Coming soon...</p>
-                <p className="text-[0.65rem]">Additional protocols will be added here</p>
+                <p className="text-sm">Coming soon...</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em]">Additional protocols will be added here</p>
               </article>
             ))}
           </div>

@@ -20,9 +20,9 @@ const LoaderCircle = () => (
 )
 
 const LoadingText = ({ text }: { text?: string }) => (
-  <div className="text-center space-y-1">
-    <p className="text-xl font-black text-black">{text || "Loading..."}</p>
-    <p className="text-xs text-black/40">Please wait while we prepare your content</p>
+  <div className="space-y-1 text-center">
+    <p className="mv-heading text-2xl">{text || "Loading..."}</p>
+    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Please wait while we prepare your content</p>
   </div>
 )
 
@@ -31,7 +31,7 @@ const LoadingDots = () => (
     {[0, 1, 2].map((dot) => (
       <span
         key={dot}
-        className="w-3 h-3 rounded-full bg-blue-300 animate-bounce"
+        className="h-3 w-3 animate-bounce border border-black/10 bg-[#f3f7ff]"
         style={{ animationDelay: `${dot * 150}ms` }}
       />
     ))}
@@ -39,8 +39,8 @@ const LoadingDots = () => (
 )
 
 const ProgressBar = () => (
-  <div className="w-64 h-1.5 bg-blue-100/70 rounded-full mx-auto overflow-hidden my-4">
-    <div className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse" />
+  <div className="mx-auto my-4 h-1.5 w-64 overflow-hidden border border-black/10 bg-white/70">
+    <div className="h-full animate-pulse bg-[linear-gradient(90deg,#95b9ff_0%,#1f4ea3_100%)]" />
   </div>
 )
 
@@ -59,9 +59,9 @@ export function LoadingOverlay({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center p-6",
+        "flex flex-col items-center justify-center p-6 text-center",
         sizeClasses[size],
-        showBackground ? "bg-white" : "",
+        showBackground ? "mv-panel" : "",
         className
       )}
     >
@@ -81,10 +81,10 @@ export function FullPageLoading({
   showHeader?: boolean 
 }) {
   return (
-    <div className="min-h-screen bg-white text-black">
-      {showHeader && <div className="h-16 bg-white/90 border-b border-black" />}
+    <div className="mv-shell">
+      {showHeader && <div className="h-16 border-b border-black/10 bg-white/80" />}
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="px-6">
+        <div className="mv-panel px-6 py-10">
           {/* <LoaderCircle /> */}
           <LoadingText text={text} />
           <ProgressBar />
@@ -103,8 +103,8 @@ export function PageTransitionLoading({
   showProgress?: boolean 
 }) {
   return (
-    <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="px-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/90 backdrop-blur-sm">
+      <div className="mv-panel px-6 py-10">
         {/* <LoaderCircle /> */}
         <LoadingText text={text} />
         {showProgress && <ProgressBar />}

@@ -412,28 +412,28 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
   const hasData = decodedData !== null;
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="max-w-5xl mx-auto space-y-6 px-4 py-8">
-        <section className="border border-black bg-white px-6 py-5">
+      <main className="mv-shell space-y-6 py-8">
+        <section className="mv-panel-muted px-6 py-5">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Attestation Detail</p>
-              <h1 className="text-3xl font-black">
+              <p className="mv-kicker">Attestation Detail</p>
+              <h1 className="mv-title mt-3 text-3xl md:text-4xl">
                 {isOffChain ? 'Off-chain Attestation' : 'On-chain Attestation'}
                 {isEncrypted && (
-                  <span className="ml-3 inline-flex items-center gap-1 rounded-none border border-black bg-[#FFE7C8] px-2 py-1 text-xs font-black uppercase tracking-[0.2em] text-[#FF6B00]">
+                  <span className="mv-tag ml-3 inline-flex items-center gap-1 border-[#f1d7b0] bg-[#fff3df] px-2 py-1 text-[#b96a1b]">
                     <Lock className="w-3 h-3" />
                     ENCRYPTED
                   </span>
                 )}
               </h1>
-              <p className="text-sm font-bold text-black/60">Ledger reference: {attestation.address}</p>
+              <p className="mv-copy mt-3">Ledger reference: {attestation.address}</p>
             </div>
             {isOffChain && (
               <div className="flex gap-2">
                 {isOffChain && !isEncrypted && (
-                  <span className="inline-block whitespace-nowrap rounded-none border border-black bg-[#D0E8FF] px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-[#2792FF]">
+                  <span className="mv-accent-tag whitespace-nowrap px-3 py-1">
                     OFF CHAIN
                   </span>
                 )}
@@ -441,7 +441,7 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
                   <Button
                     onClick={handleDecrypt}
                     disabled={isDecrypting || !isConnected || (isOffChain && isLoadingOffChain && !offChainRawData)}
-                    className="flex items-center gap-2 whitespace-nowrap rounded-none border border-black bg-[#2792FF] text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] disabled:opacity-50"
+                    className="mv-btn-primary flex h-11 items-center gap-2 whitespace-nowrap px-4 disabled:opacity-50"
                   >
                     {isDecrypting ? (
                       <>
@@ -462,7 +462,7 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
                   </Button>
                 )}
                 {isEncrypted && hasData && (
-                  <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-none border border-black bg-[#F4FFF9] px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-[#00A86B]">
+                  <span className="mv-tag inline-flex items-center gap-1 whitespace-nowrap border-[#c9e7da] bg-[#eefaf3] px-3 py-1 text-[#18794e]">
                     <LockOpen className="w-3 h-3" />
                     DECRYPTED
                   </span>
@@ -472,59 +472,55 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
           </div>
         </section>
 
-        <section className="border border-black bg-white px-6 py-5 space-y-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Basic Information</p>
-          </div>
+        <section className="mv-panel space-y-4 px-6 py-5">
+          <div><p className="mv-kicker">Basic Information</p></div>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">UID</p>
-              <a href={`${getExplorerUrl(chain)}/object/${attestation.address}`} className="font-mono text-black hover:text-[#2792FF] block break-all">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">UID</p>
+              <a href={`${getExplorerUrl(chain)}/object/${attestation.address}`} className="mt-2 block break-all font-mono text-xs text-black transition-colors hover:text-[#5f9bff]">
                 {attestation.address}
               </a>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Schema</p>
-              <p className="font-bold text-black">{attestation.schema_name || `Schema #${attestation.schema_id ?? '—'}`}</p>
-              <a href={`/schema/${attestation.schema_address}`} className="font-mono text-black/80 hover:text-[#2792FF] break-all">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Schema</p>
+              <p className="mt-2 font-[family-name:var(--font-display)] text-2xl leading-none text-black">{attestation.schema_name || `Schema #${attestation.schema_id ?? '—'}`}</p>
+              <a href={`/schema/${attestation.schema_address}`} className="mt-2 block break-all font-mono text-xs text-black/55 transition-colors hover:text-[#5f9bff]">
                 {attestation.schema_address}
               </a>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Created</p>
-              <p className="font-bold text-black">{toDate(attestation.time)}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Created</p>
+              <p className="mt-2 text-sm text-black/72">{toDate(attestation.time)}</p>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Revocable</p>
-              <p className="font-bold text-black">{attestation.revocable ? 'Yes' : 'No'}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Revocable</p>
+              <p className="mt-2 text-sm text-black/72">{attestation.revocable ? 'Yes' : 'No'}</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Expiration</p>
-              <p className="font-bold text-black">{toDate(attestation.expiration_time)}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Expiration</p>
+              <p className="mt-2 text-sm text-black/72">{toDate(attestation.expiration_time)}</p>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Revoked</p>
-              <p className="font-bold text-black">{attestation.revocation_time && attestation.revocation_time !== '0' ? toDate(attestation.revocation_time) : 'No'}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Revoked</p>
+              <p className="mt-2 text-sm text-black/72">{attestation.revocation_time && attestation.revocation_time !== '0' ? toDate(attestation.revocation_time) : 'No'}</p>
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-6 py-5 space-y-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Participants</p>
-          </div>
+        <section className="mv-panel space-y-4 px-6 py-5">
+          <div><p className="mv-kicker">Participants</p></div>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Attestor</p>
-              <a href={`/address/${attestation.attestor}`} className="font-mono text-black hover:text-[#2792FF] break-all">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Attestor</p>
+              <a href={`/address/${attestation.attestor}`} className="mt-2 block break-all font-mono text-xs text-black transition-colors hover:text-[#5f9bff]">
                 {attestation.attestor}
               </a>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Recipient</p>
-              <a href={`/address/${attestation.recipient}`} className="font-mono text-black hover:text-[#2792FF] break-all">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Recipient</p>
+              <a href={`/address/${attestation.recipient}`} className="mt-2 block break-all font-mono text-xs text-black transition-colors hover:text-[#5f9bff]">
                 {attestation.recipient}
               </a>
             </div>
@@ -532,12 +528,12 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
         </section>
 
         {isOffChain && isEncrypted && !hasData && (
-          <section className="border border-black bg-[#FFF6EF] px-6 py-5 space-y-4">
+          <section className="mv-panel space-y-4 border-[#f1d7b0] bg-[#fff7ec] px-6 py-5">
             <div className="flex items-start gap-3">
-              <Lock className="w-5 h-5 text-[#FF6B00] mt-0.5" />
+              <Lock className="mt-0.5 h-5 w-5 text-[#b96a1b]" />
               <div className="flex-1">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-[#FF6B00] mb-2">Encrypted Data</p>
-                <p className="text-sm font-bold text-black/70 mb-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#b96a1b]">Encrypted Data</p>
+                <p className="mv-copy mt-3 mb-4">
                   This attestation contains encrypted data stored off-chain.
                   {isConnected ?
                     ' Click the "Decrypt Data" button above to view the contents.' :
@@ -545,13 +541,13 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
                   }
                 </p>
                 {decryptError && (
-                  <div className="border border-red-500 bg-red-50 px-4 py-3">
-                    <p className="text-xs font-bold text-red-700">{decryptError}</p>
+                  <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3">
+                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#b42318]">{decryptError}</p>
                   </div>
                 )}
                 {isOffChain && (attestation.walrus_sui_object_id || attestation.walrus_blob_id) && (
                   <div className="mt-3 space-y-2">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Storage Information</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Storage Information</p>
                     {attestation.walrus_sui_object_id && (
                       <p className="text-xs font-mono text-black/70 break-all">
                         <span className="font-bold">Walrus Sui Object ID:</span> {attestation.walrus_sui_object_id}
@@ -576,16 +572,14 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
 
         {/* Decoded Data section - show loading mask when loading off-chain data */}
         {(hasData || (isOffChain && !isEncrypted && isLoadingOffChain) || (isOffChain && isEncrypted && isDecrypting)) && (
-          <section className="border border-black bg-white px-6 py-5 space-y-4 relative">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Decoded Data</p>
-            </div>
+          <section className="mv-panel relative space-y-4 px-6 py-5">
+            <div><p className="mv-kicker">Decoded Data</p></div>
             {/* Loading mask */}
             {((isOffChain && !isEncrypted && isLoadingOffChain) || (isOffChain && isEncrypted && isDecrypting)) && !hasData && (
               <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#2792FF]" />
-                  <p className="text-sm font-bold text-black/70">
+                  <Loader2 className="h-6 w-6 animate-spin text-[#5f9bff]" />
+                  <p className="mv-copy">
                     {isOffChain && isEncrypted ? 'Decrypting and decoding data...' : 'Loading and decoding data...'}
                   </p>
                 </div>
@@ -594,19 +588,19 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
             <div className="space-y-3">
               {hasData ? (
                 item.map((field: any, index: number) => (
-                  <div key={index} className="border border-black px-4 py-3">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">{field.type}</p>
-                    <p className="font-bold text-black">{field.name}</p>
-                    <p className="font-mono text-xs font-black text-black/70 break-all">{formatValue(decodedData[field.name])}</p>
+                  <div key={index} className="mv-panel-muted space-y-2 px-4 py-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{field.type}</p>
+                    <p className="mv-heading text-[1.55rem]">{field.name}</p>
+                    <p className="font-mono text-xs text-black/72 break-all">{formatValue(decodedData[field.name])}</p>
                   </div>
                 ))
               ) : (
                 // Show skeleton while loading
                 item.map((field: any, index: number) => (
-                  <div key={index} className="border border-black px-4 py-3 opacity-50">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">{field.type}</p>
-                    <p className="font-bold text-black">{field.name}</p>
-                    <div className="h-4 bg-gray-200 animate-pulse rounded mt-2"></div>
+                  <div key={index} className="mv-panel-muted px-4 py-3 opacity-50">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{field.type}</p>
+                    <p className="mv-heading mt-2 text-[1.55rem]">{field.name}</p>
+                    <div className="mt-2 h-4 animate-pulse bg-black/8"></div>
                   </div>
                 ))
               )}
@@ -615,63 +609,59 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
         )}
 
         {isOffChain && !isEncrypted && (
-          <section className="border border-black bg-white px-6 py-5 space-y-4">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Off-chain Storage Information</p>
-            </div>
+          <section className="mv-panel space-y-4 px-6 py-5">
+            <div><p className="mv-kicker">Off-chain Storage Information</p></div>
             <div className="space-y-3">
               {attestation.walrus_sui_object_id && (
-                <div className="border border-black px-4 py-3">
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Walrus Sui Object ID</p>
-                  <p className="font-mono text-xs font-black text-black break-all">
+                <div className="mv-panel-muted px-4 py-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Walrus Sui Object ID</p>
+                  <p className="mt-2 font-mono text-xs text-black break-all">
                     {attestation.walrus_sui_object_id}
                   </p>
                   <a
                     href={`${getExplorerUrl(chain)}/object/${attestation.walrus_sui_object_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-[#2792FF] hover:underline mt-1 inline-block"
+                    className="mt-1 inline-block font-mono text-xs uppercase tracking-[0.16em] text-[#5f9bff] hover:underline"
                   >
                     View on Explorer
                   </a>
                 </div>
               )}
-              <div className="border border-black px-4 py-3">
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Walrus Blob ID (Base64url)</p>
+              <div className="mv-panel-muted px-4 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Walrus Blob ID (Base64url)</p>
                 {isLoadingOffChain && !attestation.walrus_blob_id ? (
                   <div className="flex items-center gap-2 mt-2">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    <p className="text-xs text-black/60">Loading...</p>
+                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-black/45">Loading...</p>
                   </div>
                 ) : (
-                  <p className="font-mono text-xs font-black text-black break-all">
+                  <p className="mt-2 font-mono text-xs text-black break-all">
                     {attestation.walrus_blob_id || walrusBlobId || '—'}
                   </p>
                 )}
               </div>
             </div>
             {decryptError && (
-              <div className="border border-red-500 bg-red-50 px-4 py-3">
-                <p className="text-xs font-bold text-red-700">{decryptError}</p>
+              <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3">
+                <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#b42318]">{decryptError}</p>
               </div>
             )}
           </section>
         )}
 
-        <section className="border border-black bg-white px-6 py-5 space-y-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Transaction Information</p>
-          </div>
+        <section className="mv-panel space-y-4 px-6 py-5">
+          <div><p className="mv-kicker">Transaction Information</p></div>
           <div className="grid gap-4">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Transaction ID</p>
-              <a href={`${getExplorerTxUrl(chain)}/${attestation.tx_hash}`} className="font-mono text-black hover:text-[#2792FF] break-all">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Transaction ID</p>
+              <a href={`${getExplorerTxUrl(chain)}/${attestation.tx_hash}`} className="mt-2 block break-all font-mono text-xs text-black transition-colors hover:text-[#5f9bff]">
                 {attestation.tx_hash}
               </a>
             </div>
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Reference</p>
-              <p className="font-bold text-black">{attestation.ref_attestation && attestation.ref_attestation !== '0x0000000000000000000000000000000000000000000000000000000000000000' ? attestation.ref_attestation : 'No reference'}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Reference</p>
+              <p className="mt-2 text-sm text-black/72">{attestation.ref_attestation && attestation.ref_attestation !== '0x0000000000000000000000000000000000000000000000000000000000000000' ? attestation.ref_attestation : 'No reference'}</p>
             </div>
           </div>
         </section>
@@ -679,11 +669,11 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
         {/* Raw Data section - show for all attestations, with loading mask when loading off-chain data */}
         {(!isOffChain && attestation.data) ||
           (isOffChain && (offChainRawData || isLoadingOffChain || (isEncrypted && decryptedDataBytes))) ? (
-          <section className="border border-black bg-white px-6 py-5 space-y-4 relative">
+          <section className="mv-panel relative space-y-4 px-6 py-5">
             <div className="flex items-center gap-2">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Raw Data</p>
+              <p className="mv-kicker">Raw Data</p>
               {isOffChain && isEncrypted && offChainRawData && !decryptedDataBytes && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-black bg-[#FFE7C8] px-2 py-0.5 text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#FF6B00]">
+                <span className="mv-tag inline-flex items-center gap-1 border-[#f1d7b0] bg-[#fff3df] px-2 py-0.5 text-[#b96a1b]">
                   <Lock className="w-2.5 h-2.5" />
                   ENCRYPTED
                 </span>
@@ -693,8 +683,8 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
             {isOffChain && isLoadingOffChain && !offChainRawData ? (
               <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#2792FF]" />
-                  <p className="text-sm font-bold text-black/70">
+                  <Loader2 className="h-6 w-6 animate-spin text-[#5f9bff]" />
+                  <p className="mv-copy">
                     Loading raw data...
                   </p>
                 </div>
@@ -704,16 +694,16 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
             {isOffChain && isEncrypted && isDecrypting && !decryptedDataBytes && offChainRawData ? (
               <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#2792FF]" />
-                  <p className="text-sm font-bold text-black/70">
+                  <Loader2 className="h-6 w-6 animate-spin text-[#5f9bff]" />
+                  <p className="mv-copy">
                     Decrypting raw data...
                   </p>
                 </div>
               </div>
             ) : null}
-            <div className="border border-black bg-white px-4 py-3 space-y-3">
+            <div className="border border-black/10 bg-[#fbfbf8] px-4 py-3 space-y-3">
               <div>
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60 mb-2">Base64</p>
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Base64</p>
                 {(!isOffChain && attestation.data) || (isOffChain && (decryptedDataBytes || offChainRawData)) ? (
                   <p className="font-mono text-xs text-black break-words">
                     {isOffChain
@@ -723,13 +713,13 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
                   </p>
                 ) : (
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
-                    <div className="h-4 bg-gray-200 animate-pulse rounded w-3/4"></div>
+                    <div className="h-4 animate-pulse bg-black/8"></div>
+                    <div className="h-4 w-3/4 animate-pulse bg-black/8"></div>
                   </div>
                 )}
               </div>
               <div>
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60 mb-2">Hexadecimal</p>
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Hexadecimal</p>
                 {(!isOffChain && attestation.data) || (isOffChain && (decryptedDataBytes || offChainRawData)) ? (
                   <p className="font-mono text-xs text-black break-words">
                     {isOffChain && (decryptedDataBytes || offChainRawData)
@@ -746,9 +736,9 @@ export function SuiAttestation({ chain, attestation }: { chain: Chain; attestati
                   </p>
                 ) : (
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
-                    <div className="h-4 bg-gray-200 animate-pulse rounded w-4/5"></div>
-                    <div className="h-4 bg-gray-200 animate-pulse rounded w-2/3"></div>
+                    <div className="h-4 animate-pulse bg-black/8"></div>
+                    <div className="h-4 w-4/5 animate-pulse bg-black/8"></div>
+                    <div className="h-4 w-2/3 animate-pulse bg-black/8"></div>
                   </div>
                 )}
               </div>

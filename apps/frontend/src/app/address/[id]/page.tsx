@@ -57,7 +57,7 @@ export default function AddressPage({ params }: { params: { id: string } }) {
 
   if (summaryLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F7FF] text-black">
+      <div className="mv-shell">
         <Header />
         <div className="max-w-4xl mx-auto py-20">
           <LoadingOverlay
@@ -72,13 +72,13 @@ export default function AddressPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="max-w-6xl mx-auto space-y-6 px-4 py-8">
-        <section className="border border-black bg-white px-6 py-5 space-y-2">
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Address Ledger</p>
-          <h1 className="text-3xl font-black tracking-tight">{formatAddress(id)}</h1>
-          <p className="text-sm font-bold text-black/70">Aggregated attestations on {currentChain?.toUpperCase() || 'CHAIN'}</p>
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel space-y-2 px-6 py-5">
+          <p className="mv-kicker">Address Ledger</p>
+          <h1 className="mv-title text-3xl md:text-4xl tracking-tight">{formatAddress(id)}</h1>
+          <p className="mv-copy">Aggregated attestations on {currentChain?.toUpperCase() || 'CHAIN'}</p>
         </section>
 
         <section className="grid gap-4 md:grid-cols-3">
@@ -92,18 +92,18 @@ export default function AddressPage({ params }: { params: { id: string } }) {
             label: 'Received',
             value: attestationCntByRecipient
           }].map((metric) => (
-            <div key={metric.label} className="border border-black bg-white px-5 py-4">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">{metric.label}</p>
-              <p className="text-3xl font-black text-black">{metric.value?.toLocaleString() ?? '0'}</p>
+            <div key={metric.label} className="mv-panel px-5 py-4">
+              <p className="mv-kicker">{metric.label}</p>
+              <p className="mv-heading text-3xl">{metric.value?.toLocaleString() ?? '0'}</p>
             </div>
           ))}
         </section>
 
-        <section className="border border-black bg-white">
-          <div className="border-b border-black px-6 py-4 space-y-1">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Attestation History</p>
-            <h2 className="text-2xl font-black text-black">Recent entries</h2>
-            <p className="text-xs font-bold text-black/60">Paginated list of attestations involving this address</p>
+        <section className="mv-panel">
+          <div className="space-y-1 border-b border-black/10 px-6 py-4">
+            <p className="mv-kicker">Attestation History</p>
+            <h2 className="mv-heading">Recent entries</h2>
+            <p className="text-xs text-black/60">Paginated list of attestations involving this address</p>
           </div>
           <div className="px-0 py-6">
             {isLoading ? (
@@ -123,7 +123,7 @@ export default function AddressPage({ params }: { params: { id: string } }) {
 
         {totalPages > 1 && (
           <div className="flex justify-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 border border-black bg-white px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-black">
+            <div className="mv-panel flex flex-wrap items-center justify-center gap-2 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black">
               {['First', '<', '>', 'Last'].map((label, index) => {
                 const handlers = [
                   () => setCurrentPage(1),
@@ -143,13 +143,13 @@ export default function AddressPage({ params }: { params: { id: string } }) {
                     type="button"
                     onClick={handlers[index]}
                     disabled={disabled}
-                    className="rounded-none border border-black px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="border border-black/10 px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {label}
                   </button>
                 );
               })}
-              <span className="px-3 py-1 text-xs font-black">Page {currentPage} of {totalPages}</span>
+              <span className="px-3 py-1">Page {currentPage} of {totalPages}</span>
             </div>
           </div>
         )}

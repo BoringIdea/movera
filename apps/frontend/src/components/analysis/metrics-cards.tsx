@@ -1,6 +1,5 @@
 'use client'
 
-import { Card } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, DollarSign, Activity, Grid, Users } from 'lucide-react';
 
 interface PlatformMetrics {
@@ -67,46 +66,46 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, subtitle, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    orange: 'bg-orange-500',
+    blue: 'text-[#5f9bff]',
+    green: 'text-[#5f9bff]',
+    purple: 'text-[#5f9bff]',
+    orange: 'text-[#5f9bff]',
   };
 
   const bgColorClasses = {
-    blue: 'bg-blue-50',
-    green: 'bg-green-50',
-    purple: 'bg-purple-50',
-    orange: 'bg-orange-50',
+    blue: 'bg-[#eef5ff]',
+    green: 'bg-[rgba(245,249,255,0.92)]',
+    purple: 'bg-[#eef5ff]',
+    orange: 'bg-[rgba(245,249,255,0.92)]',
   };
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow">
+    <div className="mv-panel p-6 transition-colors hover:bg-white">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{value}</h3>
+          <p className="mv-kicker mb-1">{title}</p>
+          <h3 className="mv-heading mb-1 text-2xl">{value}</h3>
           {change !== undefined && (
             <div className="flex items-center gap-1">
               {change >= 0 ? (
-                <TrendingUp className="w-4 h-4 text-green-500" />
+                <TrendingUp className="h-4 w-4 text-[#5f9bff]" />
               ) : (
-                <TrendingDown className="w-4 h-4 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-[#b42318]" />
               )}
-              <span className={`text-sm font-medium ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`font-mono text-[11px] ${change >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
                 {change >= 0 ? '+' : ''}{change.toFixed(2)}%
               </span>
             </div>
           )}
           {subtitle && (
-            <p className="text-sm text-gray-500">{subtitle}</p>
+            <p className="text-sm text-black/50">{subtitle}</p>
           )}
         </div>
-        <div className={`${bgColorClasses[color]} p-3 rounded-lg`}>
-          <Icon className={`w-6 h-6 ${colorClasses[color].replace('bg-', 'text-')}`} />
+        <div className={`${bgColorClasses[color]} border border-black/10 p-3`}>
+          <Icon className={`h-6 w-6 ${colorClasses[color]}`} />
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 

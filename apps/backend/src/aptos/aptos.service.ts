@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Account, Aptos, AptosConfig, ClientConfig, Ed25519PrivateKey, Hex, Network } from '@aptos-labs/ts-sdk';
-import { computeBlake2b256, downloadFromShelby, uploadToShelby } from '@movera/sdk';
 import { db } from '../db/db';
 import { aptos_schemas, aptos_attestations } from '../db/schema';
 import { sql, eq, desc, or, like } from 'drizzle-orm';
@@ -11,6 +10,11 @@ type NewAptosSchema = typeof aptos_schemas.$inferInsert;
 type NewAptosAttestation = typeof aptos_attestations.$inferInsert;
 
 const APTOS_ADDRESS = process.env.APTOS_PACKAGE_ADDRESS;
+const SHELBY_NETWORK = 'SHELBYNET' as unknown as Network;
+
+async function loadMoveraSdk() {
+  return import('@movera/sdk');
+}
 
 @Injectable()
 export class AptosService implements OnModuleInit {
@@ -502,11 +506,12 @@ export class AptosService implements OnModuleInit {
   async downloadOffChainData(account: string, blobName: string) {
     let data: Uint8Array;
     try {
+      const { downloadFromShelby } = await loadMoveraSdk();
       data = await downloadFromShelby({
         account,
         blobName,
         apiKey: process.env.SHELBY_API_KEY,
-        network: Network.SHELBYNET,
+        network: SHELBY_NETWORK,
       });
     } catch (error) {
       const apiKey = process.env.SHELBY_API_KEY;
@@ -527,6 +532,7 @@ export class AptosService implements OnModuleInit {
       const buffer = await response.arrayBuffer();
       data = new Uint8Array(buffer);
     }
+    const { computeBlake2b256 } = await loadMoveraSdk();
     const hash = computeBlake2b256(data);
     return {
       data_base64: Buffer.from(data).toString('base64'),
@@ -545,6 +551,7 @@ export class AptosService implements OnModuleInit {
     const account = Account.fromPrivateKey({ privateKey });
 
     const data = Buffer.from(dataBase64, 'base64');
+    const { computeBlake2b256, uploadToShelby } = await loadMoveraSdk();
     const dataHash = computeBlake2b256(new Uint8Array(data));
     const dataHashHex = Buffer.from(dataHash).toString('hex');
 
@@ -560,7 +567,7 @@ export class AptosService implements OnModuleInit {
       blobName,
       blobData: new Uint8Array(data),
       apiKey: process.env.SHELBY_API_KEY,
-      network: Network.SHELBYNET,
+      network: SHELBY_NETWORK,
     });
 
     const normalizeHex = (value: string) =>

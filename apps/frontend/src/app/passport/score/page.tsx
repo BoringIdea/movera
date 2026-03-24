@@ -172,14 +172,14 @@ export default function PassportScoreOptimizedPage() {
   )
 
   const getScoreGrade = (score: number) => {
-    if (score >= 90) return { grade: 'S', color: 'text-purple-600', bg: 'bg-purple-100' }
-    if (score >= 80) return { grade: 'A', color: 'text-blue-600', bg: 'bg-blue-100' }
-    if (score >= 70) return { grade: 'B', color: 'text-green-600', bg: 'bg-green-100' }
-    if (score >= 60) return { grade: 'C', color: 'text-yellow-600', bg: 'bg-yellow-100' }
-    return { grade: 'D', color: 'text-red-600', bg: 'bg-red-100' }
+    if (score >= 90) return { grade: 'S', className: 'border-[#cfd8f8] bg-[#f4f2ff] text-[#5842b0]' }
+    if (score >= 80) return { grade: 'A', className: 'border-[#d5e5ff] bg-[#eef5ff] text-[#1f4ea3]' }
+    if (score >= 70) return { grade: 'B', className: 'border-[#cfe6db] bg-[#eef8f1] text-[#18794e]' }
+    if (score >= 60) return { grade: 'C', className: 'border-[#f1dfbd] bg-[#fff6e8] text-[#9a6700]' }
+    return { grade: 'D', className: 'border-[#efc0b8] bg-[#fff2ef] text-[#b42318]' }
   }
 
-  const grade = basicData ? getScoreGrade(basicData.score) : { grade: 'D', color: 'text-gray-600', bg: 'bg-gray-100' }
+  const grade = basicData ? getScoreGrade(basicData.score) : { grade: 'D', className: 'border-black/10 bg-[#f6f6f2] text-black/45' }
   const formatVolumeValue = (value?: number) => {
     if (value === undefined || value === null) return '$0'
     if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`
@@ -207,17 +207,17 @@ export default function PassportScoreOptimizedPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <section className="border border-black bg-[#F4F7FF] px-5 py-5 space-y-2">
+      <main className="mv-shell space-y-6 py-8">
+        <section className="mv-panel-muted space-y-3 px-5 py-5">
           <div className="flex items-center justify-between">
-            <p className="text-[0.55rem] font-black uppercase tracking-[0.4em] text-black/50">Your on-chain reputation breakdown and history</p>
-            <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">Your on-chain reputation breakdown and history</p>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">
               {currentChain?.toUpperCase() ?? 'CHAIN'}
             </span>
           </div>
-          <h1 className="text-2xl font-black text-black">Passport Score</h1>
+          <h1 className="mv-title">Passport Score</h1>
           <div className="flex flex-wrap gap-4 text-sm text-black/60">
             <span>Wallet {formatAddress(currentUserAddress)}</span>
             <span>Attestation reputation</span>
@@ -225,28 +225,28 @@ export default function PassportScoreOptimizedPage() {
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
-          <section className="border border-black bg-white px-5 py-5 space-y-3">
+          <section className="mv-panel space-y-3 px-5 py-5">
             {basicError ? (
-              <div className="border border-black/40 bg-white px-4 py-3 text-sm text-red-700">
+              <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
                 Error loading score data: {basicError}
               </div>
             ) : basicData ? (
               <>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Current score</p>
-                  <span className={`text-[0.6rem] font-black uppercase tracking-[0.3em] px-3 py-1 border border-black ${grade.bg} ${grade.color}`}>
+                  <p className="mv-kicker">Current score</p>
+                  <span className={`border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] ${grade.className}`}>
                     Grade {grade.grade}
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="text-5xl font-black text-black">{basicData.score.toFixed(2)}</div>
+                  <div className="font-[family-name:var(--font-display)] text-6xl leading-none text-black">{basicData.score.toFixed(2)}</div>
                   <div className="flex flex-col text-sm text-black/60">
                     <span>Score snapshot</span>
                     <span>Last updated {basicData.lastUpdated ? new Date(basicData.lastUpdated).toLocaleString() : '—'}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-black/60">
-                  <TrendingUp className="w-4 h-4 text-[#2792FF]" />
+                <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
+                  <TrendingUp className="w-4 h-4 text-[#5f9bff]" />
                   <span>Reliable reputation for attestations</span>
                 </div>
               </>
@@ -255,23 +255,23 @@ export default function PassportScoreOptimizedPage() {
             )}
           </section>
 
-          <section className="border border-black bg-white px-5 py-5 space-y-3">
+          <section className="mv-panel space-y-3 px-5 py-5">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Quick stats</p>
-              <span className="text-[0.6rem] uppercase tracking-[0.3em] text-black/40">Summary</span>
+              <p className="mv-kicker">Quick stats</p>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Summary</span>
             </div>
             {basicLoading ? (
               <StatsSkeleton />
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 {quickStats.map((stat) => (
-                  <div key={stat.label} className="border border-black px-3 py-2 space-y-1">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60 flex items-center gap-2">
+                  <div key={stat.label} className="mv-panel-muted space-y-1 px-3 py-2">
+                    <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                       <span>{stat.emoji}</span>
                       {stat.label}
                     </p>
-                    <p className="text-xl font-black text-black">{stat.value}</p>
-                    <p className="text-[0.65rem] text-black/40 uppercase tracking-[0.2em]">{stat.helper}</p>
+                    <p className="mv-heading text-[1.6rem]">{stat.value}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">{stat.helper}</p>
                   </div>
                 ))}
               </div>
@@ -281,15 +281,15 @@ export default function PassportScoreOptimizedPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
           <div className="space-y-6">
-            <section className="border border-black bg-white px-5 py-5 space-y-4">
+            <section className="mv-panel space-y-4 px-5 py-5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Score history</p>
-                <div className="flex gap-2 text-xs font-black uppercase tracking-[0.2em]">
+                <p className="mv-kicker">Score history</p>
+                <div className="flex gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
                   {['24h', '7d', '30d', '90d'].map((range) => (
                     <button
                       key={range}
                       onClick={() => setSelectedTimeRange(range)}
-                      className={`px-3 py-1 border border-black text-[0.55rem] ${selectedTimeRange === range ? 'bg-black text-white' : 'bg-white text-black'}`}
+                      className={`h-9 border px-3 ${selectedTimeRange === range ? 'border-transparent bg-[#5f9bff] text-white' : 'border-black/10 bg-white/72 text-black'}`}
                     >
                       {range}
                     </button>
@@ -297,7 +297,7 @@ export default function PassportScoreOptimizedPage() {
                 </div>
               </div>
               {scoreHistoryError ? (
-                <div className="border border-black/40 px-4 py-3 text-sm text-red-700">
+                <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
                   Error loading history: {scoreHistoryError}
                 </div>
               ) : scoreHistoryLoading ? (
@@ -309,15 +309,15 @@ export default function PassportScoreOptimizedPage() {
                       const height = Math.min(Math.max((Number(point.score) / 100) * 100, 10), 100)
                       return (
                         <div key={index} className="flex flex-col items-center gap-1">
-                          <div className="w-6 bg-black" style={{ height: `${height}%` }} />
-                          <span className="text-[0.6rem] text-black/40">
+                          <div className="w-6 border border-black/10 bg-[linear-gradient(180deg,#95b9ff_0%,#1f4ea3_100%)]" style={{ height: `${height}%` }} />
+                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">
                             {new Date(point.date).getDate()}
                           </span>
                         </div>
                       )
                     })
                   ) : (
-                    <div className="flex-1 border border-black/20 rounded px-4 py-8 text-center text-sm text-black/60">
+                    <div className="flex-1 border border-black/10 bg-[#fbfbf8] px-4 py-8 text-center text-sm text-black/60">
                       No score data yet
                     </div>
                   )}
@@ -327,13 +327,13 @@ export default function PassportScoreOptimizedPage() {
               )}
             </section>
 
-            <section className="border border-black bg-white px-5 py-5 space-y-3">
+            <section className="mv-panel space-y-3 px-5 py-5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">On-chain activity</p>
-                <span className="text-[0.6rem] text-black/40">Latest 5 events</span>
+                <p className="mv-kicker">On-chain activity</p>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">Latest 5 events</span>
               </div>
               {activityError ? (
-                <div className="border border-black/40 px-4 py-3 text-sm text-red-700">
+                <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
                   Activity load error: {activityError}
                 </div>
               ) : activityLoading ? (
@@ -342,20 +342,20 @@ export default function PassportScoreOptimizedPage() {
                 <div className="space-y-3">
                   {activityData.recentActivity && activityData.recentActivity.length > 0 ? (
                     activityData.recentActivity.map((activity: ActivityItem, index: number) => (
-                      <div key={index} className="border border-black px-4 py-3 space-y-1">
-                        <div className="flex items-center justify-between text-sm font-black text-black/70">
+                      <div key={index} className="mv-panel-muted space-y-2 px-4 py-3">
+                        <div className="flex items-center justify-between text-sm text-black/72">
                           <span>🚀 {activity.action}</span>
-                          <span className="text-[0.65rem] uppercase tracking-[0.2em] text-black/40">{activity.status}</span>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">{activity.status}</span>
                         </div>
-                        <div className="text-xs text-black/50">{activity.amount} • {activity.token}</div>
-                        <div className="text-[0.65rem] text-black/40 flex items-center justify-between">
+                        <div className="font-mono text-xs text-black/50">{activity.amount} • {activity.token}</div>
+                        <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">
                           <span>{activity.time}</span>
                           {activity.txHash ? (
                             <a
                               href={`${getExplorerTxUrl(currentChain)}/${activity.txHash}?network=mainnet`}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-blue-600 underline"
+                              className="text-[#5f9bff] underline"
                             >
                               {activity.txHash.slice(0, 6)}...{activity.txHash.slice(-4)}
                             </a>
@@ -366,7 +366,7 @@ export default function PassportScoreOptimizedPage() {
                       </div>
                     ))
                   ) : (
-                    <div className="text-sm text-black/50 text-center py-4">No activity available</div>
+                    <div className="py-4 text-center text-sm text-black/50">No activity available</div>
                   )}
                 </div>
               ) : (
@@ -375,10 +375,10 @@ export default function PassportScoreOptimizedPage() {
             </section>
 
             {basicData && (
-              <section className="border border-black bg-white px-5 py-5 space-y-3">
+              <section className="mv-panel space-y-3 px-5 py-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Factor breakdown</p>
-                  <span className="text-[0.6rem] text-black/40">Components</span>
+                  <p className="mv-kicker">Factor breakdown</p>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">Components</span>
                 </div>
                 <div className="space-y-3">
                   {basicData.breakdown ? (
@@ -397,20 +397,20 @@ export default function PassportScoreOptimizedPage() {
                       const scoreValue = Number(value)
                       const fill = Math.min(Math.max(scoreValue, 0), 100)
                       return (
-                        <div key={index} className="border border-black/30 px-3 py-3 space-y-1">
-                          <div className="flex items-center justify-between text-sm font-black text-black">
+                        <div key={index} className="mv-panel-muted space-y-2 px-3 py-3">
+                          <div className="flex items-center justify-between text-sm text-black">
                             <span>{factor.name}</span>
-                            <span>{scoreValue.toFixed(1)}</span>
+                            <span className="font-mono text-xs">{scoreValue.toFixed(1)}</span>
                           </div>
-                          <div className="h-2 border border-black bg-[#F4F7FF]">
-                            <div className="h-2 bg-[#2792FF]" style={{ width: `${fill}%` }} />
+                          <div className="h-2 border border-black/10 bg-[#eef3fb]">
+                            <div className="h-2 bg-[linear-gradient(90deg,#95b9ff_0%,#1f4ea3_100%)]" style={{ width: `${fill}%` }} />
                           </div>
-                          <p className="text-[0.65rem] text-black/40">{factor.description}</p>
+                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">{factor.description}</p>
                         </div>
                       )
                     })
                   ) : (
-                    <div className="text-sm text-black/50 text-center py-4">No breakdown data available</div>
+                    <div className="py-4 text-center text-sm text-black/50">No breakdown data available</div>
                   )}
                 </div>
               </section>
@@ -418,13 +418,13 @@ export default function PassportScoreOptimizedPage() {
           </div>
 
           <div className="space-y-6">
-            <section className="border border-black bg-white px-5 py-5 space-y-3">
+            <section className="mv-panel space-y-3 px-5 py-5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Badges & achievements</p>
-                <span className="text-[0.6rem] text-black/40">Earned</span>
+                <p className="mv-kicker">Badges & achievements</p>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">Earned</span>
               </div>
               {badgesError ? (
-                <div className="border border-black/40 px-4 py-3 text-sm text-red-700">
+                <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
                   Badge load error: {badgesError}
                 </div>
               ) : badgesLoading ? (
@@ -435,22 +435,22 @@ export default function PassportScoreOptimizedPage() {
                     badgesData.badges.map((badge: Badge) => (
                       <div
                         key={badge.id}
-                        className={`border border-black/30 px-3 py-3 space-y-1 ${badge.earned ? 'bg-[#E2FFE1]' : 'bg-white'}`}
+                        className={`mv-panel-muted space-y-2 px-3 py-3 ${badge.earned ? 'border-[#d5e5ff] bg-[#eef5ff]' : ''}`}
                       >
-                        <div className="flex items-center justify-between text-sm font-black text-black">
+                        <div className="flex items-center justify-between text-sm text-black">
                           <span>{badge.icon} {badge.name}</span>
-                          <span className="text-[0.65rem] text-black/50">{badge.category}</span>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/50">{badge.category}</span>
                         </div>
                         <p className="text-xs text-black/50">{badge.description}</p>
                         {!badge.earned && (
-                          <div className="h-1 bg-black/10 rounded-full">
-                            <div className="h-1 bg-[#2792FF]" style={{ width: `${badge.progress}%` }} />
+                          <div className="h-1 bg-black/10">
+                            <div className="h-1 bg-[linear-gradient(90deg,#95b9ff_0%,#1f4ea3_100%)]" style={{ width: `${badge.progress}%` }} />
                           </div>
                         )}
                       </div>
                     ))
                   ) : (
-                    <div className="text-sm text-black/50 text-center py-4">No badges yet</div>
+                    <div className="py-4 text-center text-sm text-black/50">No badges yet</div>
                   )}
                 </div>
               ) : (
@@ -458,13 +458,13 @@ export default function PassportScoreOptimizedPage() {
               )}
             </section>
 
-            <section className="border border-black bg-white px-5 py-5 space-y-3">
+            <section className="mv-panel space-y-3 px-5 py-5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Optimization tips</p>
-                <span className="text-[0.6rem] text-black/40">Protocol focus</span>
+                <p className="mv-kicker">Optimization tips</p>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">Protocol focus</span>
               </div>
               {protocolsError ? (
-                <div className="border border-black/40 px-4 py-3 text-sm text-red-700">
+                <div className="border border-[#efc0b8] bg-[#fff2ef] px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-[#b42318]">
                   Tips load error: {protocolsError}
                 </div>
               ) : protocolsLoading ? (
@@ -474,12 +474,12 @@ export default function PassportScoreOptimizedPage() {
                   {protocolsData.optimizationTips && protocolsData.optimizationTips.length > 0 ? (
                     protocolsData.optimizationTips.map((tip: string, index: number) => (
                       <div key={index} className="flex items-start gap-3 text-sm text-black/70">
-                        <Zap className="w-4 h-4 text-[#2792FF]" />
+                        <Zap className="h-4 w-4 text-[#5f9bff]" />
                         <div>{tip}</div>
                       </div>
                     ))
                   ) : (
-                    <div className="text-sm text-black/50 text-center py-4">No tips available</div>
+                    <div className="py-4 text-center text-sm text-black/50">No tips available</div>
                   )}
                 </div>
               ) : (
