@@ -2,6 +2,8 @@ import { Account, Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { ClayErasureCodingProvider, generateCommitments, ShelbyNodeClient } from "@shelby-protocol/sdk/node";
 import { blake2b } from "@noble/hashes/blake2b";
 
+const SHELBY_NETWORK = "SHELBYNET" as unknown as Network;
+
 export interface ShelbyUploadOptions {
   account: Account;
   blobName: string;
@@ -52,13 +54,13 @@ export async function uploadToShelby(options: ShelbyUploadOptions): Promise<Shel
     blobName,
     blobData,
     apiKey,
-    network = Network.SHELBYNET,
+    network = SHELBY_NETWORK,
     expirationMicros,
     aptosClient,
     shelbyClient,
   } = options;
 
-  const shelbyNetwork = (network ?? Network.SHELBYNET) as any;
+  const shelbyNetwork = (network ?? SHELBY_NETWORK) as any;
   const client = shelbyClient ?? new ShelbyNodeClient({ network: shelbyNetwork, apiKey });
   const aptos = aptosClient ?? new Aptos(new AptosConfig({ network: shelbyNetwork }));
 
@@ -98,11 +100,11 @@ export async function downloadFromShelby(options: ShelbyDownloadOptions): Promis
     account,
     blobName,
     apiKey,
-    network = Network.SHELBYNET,
+    network = SHELBY_NETWORK,
     shelbyClient,
   } = options;
 
-  const shelbyNetwork = (network ?? Network.SHELBYNET) as any;
+  const shelbyNetwork = (network ?? SHELBY_NETWORK) as any;
   const client = shelbyClient ?? new ShelbyNodeClient({ network: shelbyNetwork, apiKey });
   const blob: any = await client.download({ account, blobName });
 

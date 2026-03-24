@@ -5,7 +5,6 @@ import { bcs } from '@mysten/bcs';
 import { db } from '../db/db';
 import { sql, eq, desc, or } from 'drizzle-orm';
 import { sui_schemas, sui_attestations } from 'src/db/schema';
-import { getAttestation, Network, WalrusClient } from '@movera/sdk';
 import { fromHEX } from '@mysten/bcs';
 
 type NewSuiSchema = typeof sui_schemas.$inferInsert;
@@ -13,6 +12,10 @@ type NewSuiAttestation = typeof sui_attestations.$inferInsert;
 
 const PACKAGE_ID = process.env.SUI_PACKAGE_ID;
 const SUI_NETWORK = process.env.SUI_NETWORK || 'testnet';
+
+async function loadMoveraSdk() {
+  return import('@movera/sdk');
+}
 
 @Injectable()
 export class SuiService implements OnModuleInit {
@@ -511,10 +514,11 @@ export class SuiService implements OnModuleInit {
     // If not found in database, try to fetch from chain as fallback
     if (!res[0]) {
       try {
+        const { getAttestation } = await loadMoveraSdk();
         const chainAttestation = await getAttestation(
           address,
           'sui',
-          (process.env.SUI_NETWORK as Network) || 'testnet'
+          (process.env.SUI_NETWORK as any) || 'testnet'
         );
 
         // Return chain data in compatible format
@@ -685,6 +689,7 @@ export class SuiService implements OnModuleInit {
     const walrusKeypair = Ed25519Keypair.fromSecretKey(fromHEX(secretKey));
     const walrusOwner = process.env.WALRUS_OWNER_ADDRESS || walrusKeypair.toSuiAddress();
 
+    const { WalrusClient } = await loadMoveraSdk();
     const walrusClient = new WalrusClient(this.suiClient as any, {
       network: SUI_NETWORK as any,
       uploadRelay: SUI_NETWORK === 'testnet' ? {
