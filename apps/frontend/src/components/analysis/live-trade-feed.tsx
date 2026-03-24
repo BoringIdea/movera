@@ -1,6 +1,5 @@
 'use client'
 
-import { Card } from '@/components/ui/card';
 import { Activity } from 'lucide-react';
 
 export interface Trade {
@@ -22,18 +21,18 @@ export function LiveTradeFeed({ trades }: LiveTradeFeedProps) {
   const recentTrades = trades.slice(0, 15);
 
   return (
-    <Card className="p-6">
+    <div className="mv-panel p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Live Trade Feed</h3>
+        <h3 className="mv-heading text-xl">Live Trade Feed</h3>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <Activity className="w-5 h-5 text-gray-400" />
+          <div className="h-2 w-2 animate-pulse bg-[#5f9bff]" />
+          <Activity className="h-5 w-5 text-black/35" />
         </div>
       </div>
 
       <div className="space-y-2 max-h-[300px] overflow-y-auto">
         {recentTrades.length === 0 ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className="py-8 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-black/35">
             No recent trades
           </div>
         ) : (
@@ -42,7 +41,7 @@ export function LiveTradeFeed({ trades }: LiveTradeFeedProps) {
           ))
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -55,25 +54,25 @@ function TradeItem({ trade }: { trade: Trade }) {
   const displayTrader = trade.trader ? `${trade.trader.substring(0, 6)}...${trade.trader.substring(trade.trader.length - 4)}` : '';
 
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100">
+    <div className="flex items-center justify-between border border-black/10 p-3 transition-colors hover:bg-white/72">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {/* Direction indicator */}
-        <div className={`w-1.5 h-10 rounded-full flex-shrink-0 ${isLong ? 'bg-green-500' : 'bg-red-500'}`} />
+        <div className={`h-10 w-1.5 flex-shrink-0 ${isLong ? 'bg-[#5f9bff]' : 'bg-[#b42318]'}`} />
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className={`text-sm font-semibold ${isLong ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`font-mono text-[11px] uppercase tracking-[0.16em] ${isLong ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
               {isLong ? '🟢 Long' : '🔴 Short'}
             </span>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm text-black">
               {displayMarket}
             </span>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-black/50">
             {formatSize(trade.size)} @ ${formatPrice(trade.price)}
           </div>
           {displayTrader && (
-            <div className="text-xs text-gray-400 font-mono mt-1">
+            <div className="mt-1 font-mono text-xs text-black/35">
               {displayTrader}
             </div>
           )}
@@ -81,11 +80,11 @@ function TradeItem({ trade }: { trade: Trade }) {
       </div>
 
       <div className="text-right flex-shrink-0 ml-3">
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-black/45">
           {timeAgo}
         </div>
         {trade.is_profit !== undefined && (
-          <div className={`text-xs font-medium ${trade.is_profit ? 'text-green-600' : 'text-gray-500'}`}>
+          <div className={`font-mono text-[10px] uppercase tracking-[0.16em] ${trade.is_profit ? 'text-[#5f9bff]' : 'text-black/40'}`}>
             {trade.is_profit ? '✓ Profit' : ''}
           </div>
         )}

@@ -129,22 +129,22 @@ export function PassportRegistrationProgress({
   const progressPercent = Math.min((elapsedTime / totalEstimated) * 100, 100)
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white border border-black rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-3xl w-full p-6 space-y-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+      <div className="mv-panel w-full max-w-3xl space-y-5 p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[0.6rem] font-black text-black/50 uppercase tracking-[0.3em]">Passport creation</p>
-            <h2 className="text-2xl font-black text-black">We are building your Passport</h2>
-            <p className="text-sm text-black/60">Gathering attestations, histories, and signals to compute your score.</p>
+            <p className="mv-kicker">Passport creation</p>
+            <h2 className="mv-heading">We are building your Passport</h2>
+            <p className="mv-copy">Gathering attestations, histories, and signals to compute your score.</p>
           </div>
-          <div className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-black/50 text-right">
+          <div className="text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
             <div>{Math.round(progressPercent)}% done</div>
             <div>{formatTime(remainingTime)} remaining</div>
           </div>
         </div>
 
-        <div className="w-full h-1 bg-black/10 rounded-full">
-          <div className="h-1 bg-black transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} />
+        <div className="h-1 w-full border border-black/10 bg-white/72">
+          <div className="h-1 bg-[#5f9bff] transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -154,21 +154,21 @@ export function PassportRegistrationProgress({
             return (
               <div
                 key={step.id}
-                className={`border rounded-lg px-4 py-3 flex items-start gap-3 transition-colors duration-300 ${
-                  active ? 'border-[#2792FF] bg-[#E1F0FF]' : completed ? 'border-black bg-[#F4F7FF]' : 'border-black/30 bg-white'
+                className={`flex items-start gap-3 border px-4 py-3 transition-colors duration-300 ${
+                  active ? 'border-[#8dbbff] bg-[rgba(245,249,255,0.92)]' : completed ? 'border-black/10 bg-[rgba(245,249,255,0.92)]' : 'border-black/10 bg-white/72'
                 }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    completed || active ? 'bg-black text-white' : 'bg-black/10 text-black/50'
+                  className={`flex h-8 w-8 items-center justify-center border ${
+                    completed || active ? 'border-transparent bg-[color:var(--fg-strong)] text-white' : 'border-black/10 bg-white/72 text-black/50'
                   }`}
                 >
                   {completed ? <CheckCircle className="w-4 h-4" /> : step.icon}
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center justify-between text-sm font-black text-black">
+                  <div className="flex items-center justify-between text-sm text-black">
                     <span>{step.title}</span>
-                    <span className="text-[0.6rem] text-black/40">{step.estimatedTime}s</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">{step.estimatedTime}s</span>
                   </div>
                   <p className="text-xs text-black/50">{step.description}</p>
                 </div>

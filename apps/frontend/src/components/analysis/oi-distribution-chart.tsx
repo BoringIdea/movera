@@ -8,7 +8,7 @@ interface OIDistributionChartProps {
   markets: Market[];
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#cbd5f5']
+const COLORS = ['#5f9bff', '#8dbbff', '#c5dbff', '#dce9ff', '#eef5ff', '#f4f8ff']
 
 export function OIDistributionChart({ markets }: OIDistributionChartProps) {
   const totalOI = markets.reduce((sum, m) => sum + m.open_interest, 0) || 1;
@@ -37,16 +37,16 @@ export function OIDistributionChart({ markets }: OIDistributionChartProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.2em] text-black/60">
+      <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
         <span>Open Interest Distribution</span>
         <span className="text-xs text-black/50">${formatCurrency(totalOI)}</span>
       </div>
       <div className="flex flex-col gap-4 md:flex-row items-center">
         <div
-          className="relative w-40 h-40 rounded-full border border-black"
+          className="relative h-40 w-40 rounded-full border border-black/10"
           style={{ background: gradientStyle }}
         >
-          <div className="absolute inset-4 rounded-full border border-black bg-white flex items-center justify-center text-xs font-black uppercase tracking-[0.2em] text-black/60">
+          <div className="absolute inset-4 flex items-center justify-center rounded-full border border-black/10 bg-white font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
             Total OI
           </div>
         </div>
@@ -54,12 +54,12 @@ export function OIDistributionChart({ markets }: OIDistributionChartProps) {
           {data.map((item) => (
             <div key={item.name} className="flex items-center justify-between gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }} />
-                <span className="font-black">{item.name}</span>
+                <span className="h-3 w-3" style={{ backgroundColor: item.color }} />
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em]">{item.name}</span>
               </div>
               <div className="text-right">
                 <div className="text-xs text-black/40">{item.percentage.toFixed(1)}%</div>
-                <div className="font-semibold text-black">${formatCurrency(item.value)}</div>
+                <div className="text-black">${formatCurrency(item.value)}</div>
               </div>
             </div>
           ))}

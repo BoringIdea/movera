@@ -56,18 +56,18 @@ export function Attestations({
   const formattedChain = chain.charAt(0).toUpperCase() + chain.slice(1);
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="max-w-6xl mx-auto space-y-6 px-4 py-8">
-        <section className="border border-black bg-white px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <main className="mv-shell space-y-6 py-8">
+        <section className="mv-panel-muted flex flex-col gap-4 px-6 py-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Attestation Ledger</p>
-            <h1 className="text-3xl font-black text-black">{formattedChain} Attestations</h1>
-            <p className="text-sm font-bold text-black/60">Real-time record of attestations produced on-chain.</p>
+            <p className="mv-kicker">Attestation Ledger</p>
+            <h1 className="mv-title mt-3 text-3xl md:text-4xl">{formattedChain} Attestations</h1>
+            <p className="mv-copy mt-3 max-w-2xl">Structured attestations, recent issuance, and attestor activity across the current chain.</p>
           </div>
           <Button
             variant="default"
-            className="rounded-none border border-black bg-[#2792FF] text-white font-black tracking-[0.2em] px-5 py-2 text-xs"
+            className="mv-btn-primary h-11 px-5"
             onClick={() => router.push('/schema/search')}
           >
             CREATE ATTESTATION
@@ -86,24 +86,24 @@ export function Attestations({
             detail: 'Unique attestors',
             gradient: 'linear-gradient(180deg, #fff6ef 0%, #ffe7c8 100%)'
           }].map((card) => (
-            <div key={card.title} className="border border-black px-5 py-4" style={{ backgroundImage: card.gradient }}>
-              <div className="inline-flex px-3 py-1 rounded-none border border-black bg-white/80 mb-3">
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">{card.title}</p>
+            <div key={card.title} className="mv-panel space-y-3 px-5 py-4" style={{ backgroundImage: card.gradient }}>
+              <div className="inline-flex border border-black/10 bg-white/80 px-3 py-1">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{card.title}</p>
               </div>
-              <p className="text-3xl font-black text-black">{card.value?.toLocaleString() ?? '0'}</p>
-              <p className="text-xs font-bold text-black/60">{card.detail}</p>
+              <p className="font-[family-name:var(--font-display)] text-4xl leading-none text-black">{card.value?.toLocaleString() ?? '0'}</p>
+              <p className="mv-copy text-sm">{card.detail}</p>
             </div>
           ))}
         </section>
 
-        <section className="border border-black bg-white">
-          <div className="border-b border-black px-6 py-4">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/70">Recent Attestations</p>
-            <h2 className="text-2xl font-black text-black">Latest entries</h2>
+        <section className="mv-panel">
+          <div className="border-b border-black/10 px-6 py-4">
+            <p className="mv-kicker">Recent Attestations</p>
+            <h2 className="mv-heading mt-2">Latest entries</h2>
           </div>
           <div className="px-0 py-6">
             {isLoading ? (
-              <div className="flex justify-center py-10 text-sm font-black text-black/60">Loading attestations...</div>
+              <div className="flex justify-center py-10 font-mono text-xs uppercase tracking-[0.16em] text-black/45">Loading attestations...</div>
             ) : (
               <>{chain === 'sui' ? <SuiAttestationTable attestations={attestations} /> : <AptosAttestationTable attestations={attestations} />}</>
             )}
@@ -112,12 +112,12 @@ export function Attestations({
 
         {totalPages > 1 && (
           <div className="flex justify-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 border border-black bg-white px-4 py-3 text-xs font-black tracking-[0.2em] text-black">
+            <div className="mv-panel flex flex-wrap items-center justify-center gap-2 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/65">
               <button
                 type="button"
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1 || isLoading}
-                className="rounded-none border border-black px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mv-btn-secondary h-9 px-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 FIRST
               </button>
@@ -125,16 +125,16 @@ export function Attestations({
                 type="button"
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1 || isLoading}
-                className="rounded-none border border-black px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mv-btn-secondary h-9 px-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 &lt;
               </button>
-              <span className="px-3 py-1 text-xs font-black">Page {currentPage} of {totalPages}</span>
+              <span className="px-3 py-1">Page {currentPage} of {totalPages}</span>
               <button
                 type="button"
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages || isLoading}
-                className="rounded-none border border-black px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mv-btn-secondary h-9 px-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 &gt;
               </button>
@@ -142,7 +142,7 @@ export function Attestations({
                 type="button"
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages || isLoading}
-                className="rounded-none border border-black px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mv-btn-secondary h-9 px-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 LAST
               </button>

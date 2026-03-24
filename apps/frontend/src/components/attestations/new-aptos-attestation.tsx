@@ -197,34 +197,34 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
     <div className="min-h-screen bg-white text-black">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <section className="border border-black bg-[#F4F7FF] px-6 py-5 space-y-3">
+        <section className="mv-panel-muted px-6 py-5 space-y-3">
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Attestation</p>
-              <h1 className="text-3xl font-black">Create a new attestation</h1>
-              <p className="text-sm font-bold text-black/60">Issue a signed statement using schema #{schema.id}.</p>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40 break-all">{schema.address}</p>
+              <p className="mv-kicker">Schema Attestation</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Create a new attestation</h1>
+              <p className="mv-copy">Issue a signed statement using schema #{schema.id}.</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40 break-all">{schema.address}</p>
             </div>
-            <div className="text-right space-y-1 text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40">
+            <div className="text-right space-y-1 font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">
               <span>{chain.toUpperCase()} network</span>
               <span>{schemaItem.length} fields</span>
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel px-5 py-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Fields</p>
-              <p className="text-xs font-bold text-black/50">Populate each attribute before submission.</p>
+              <p className="mv-kicker">Schema Fields</p>
+              <p className="text-xs text-black/50">Populate each attribute before submission.</p>
             </div>
-            <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">Required</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Required</span>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {schemaItem.map((field: SchemaField, index: number) => (
-              <div key={index} className="border border-black px-4 py-3 space-y-2">
-                <Label className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-black/60 flex items-center gap-2">
-                  <span className="px-2 py-[2px] border border-black text-[0.6rem] font-black tracking-[0.3em]">{field.type}</span>
+              <div key={index} className="border border-black/10 bg-white/72 px-4 py-3 space-y-2">
+                <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60 flex items-center gap-2">
+                  <span className="px-2 py-[2px] border border-black/10 text-[10px] tracking-[0.16em]">{field.type}</span>
                   {field.name}
                 </Label>
                 <Input
@@ -232,72 +232,72 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
                   placeholder={`Enter ${field.name} (${field.type})`}
                   value={fieldValues[field.name] || ''}
                   onChange={(e) => handleInputChange(field.name, e.target.value)}
-                  className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                  className="mv-input w-full h-12 px-3 text-sm tracking-[0.08em]"
                 />
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel px-5 py-5 space-y-4">
           <div>
-            <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Basic Information</p>
-            <p className="text-xs font-bold text-black/50">Recipient and expiration metadata.</p>
+            <p className="mv-kicker">Basic Information</p>
+            <p className="text-xs text-black/50">Recipient and expiration metadata.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Recipient Address</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Recipient Address</Label>
               <Input
                 type="text"
                 placeholder="0x..."
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold uppercase tracking-[0.1em] focus:outline-none"
+                className="mv-input w-full h-12 px-3 text-sm uppercase tracking-[0.08em]"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Expiration Time</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Expiration Time</Label>
               <Input
                 type="number"
                 placeholder="Unix timestamp (0 for none)"
                 value={expirationTime}
                 onChange={(e) => setExpirationTime(parseInt(e.target.value) || 0)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold uppercase tracking-[0.1em] focus:outline-none"
+                className="mv-input w-full h-12 px-3 text-sm uppercase tracking-[0.08em]"
               />
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel px-5 py-5 space-y-4">
           <div>
-            <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Advanced Options</p>
-            <p className="text-xs font-bold text-black/50">Add a reference ID and choose type.</p>
+            <p className="mv-kicker">Advanced Options</p>
+            <p className="text-xs text-black/50">Add a reference ID and choose type.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Reference Attestation ID</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Reference Attestation ID</Label>
               <Input
                 type="text"
                 placeholder="0x..."
                 value={refAttestationId}
                 onChange={(e) => setRefAttestationId(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold uppercase tracking-[0.1em] focus:outline-none"
+                className="mv-input w-full h-12 px-3 text-sm uppercase tracking-[0.08em]"
               />
             </div>
             <div className="space-y-2">
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Attestation Type</p>
+              <p className="mv-kicker">Attestation Type</p>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => handleButtonClick('offchain')}
-                  className={`flex-1 h-12 border border-black font-black uppercase tracking-[0.3em] transition ${selectedButton === 'offchain' ? 'bg-[#2792FF] text-white' : 'bg-white text-black'}`}
+                  className={`flex-1 h-12 border font-mono text-[10px] uppercase tracking-[0.16em] transition ${selectedButton === 'offchain' ? 'border-transparent bg-[#5f9bff] text-white' : 'border-black/10 bg-white/72 text-black hover:bg-[#fbfbf8]'}`}
                 >
                   Off-chain
                 </button>
                 <button
                   type="button"
                   onClick={() => handleButtonClick('onchain')}
-                  className={`flex-1 h-12 border border-black font-black uppercase tracking-[0.3em] transition ${selectedButton === 'onchain' ? 'bg-[#2792FF] text-white' : 'bg-white text-black'}`}
+                  className={`flex-1 h-12 border font-mono text-[10px] uppercase tracking-[0.16em] transition ${selectedButton === 'onchain' ? 'border-transparent bg-[#5f9bff] text-white' : 'border-black/10 bg-white/72 text-black hover:bg-[#fbfbf8]'}`}
                 >
                   On-chain
                 </button>
@@ -311,7 +311,7 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
           </div>
         </section>
 
-        <section className="border border-black bg-[#F4F7FF] px-5 py-4 space-y-4">
+        <section className="mv-panel-muted px-5 py-4 space-y-4">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -320,14 +320,14 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
               onChange={handleRevocableChange}
               className="w-4 h-4 border border-black"
             />
-            <Label htmlFor="revocable" className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+            <Label htmlFor="revocable" className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
               Make this attestation revocable
             </Label>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
             <Link
               href="/schemas"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               ← Back to Schemas
             </Link>
@@ -335,7 +335,7 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
               type="button"
               onClick={handleCreateAttestation}
               disabled={isLoading || !connected}
-              className="flex items-center justify-center gap-2 border border-black bg-[#2792FF] text-white px-5 py-2 text-xs font-black uppercase tracking-[0.3em] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mv-btn-primary flex items-center justify-center gap-2 px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -351,24 +351,24 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
       </main>
 
       {digest && (
-        <section className="max-w-6xl mx-auto px-4 py-5 space-y-3 border border-black bg-[#F4FFF9]">
-          <div className="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/50">
+        <section className="mv-frame space-y-3 border border-black/10 bg-[rgba(245,249,255,0.92)] px-4 py-5">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
             <span>Attestation created</span>
             <span>Transaction hash</span>
           </div>
-          <p className="text-sm font-black text-black break-all">{digest}</p>
+          <p className="text-sm text-black break-all">{digest}</p>
           <div className="flex flex-wrap gap-3">
             <a
               href={`${getExplorerTxUrl(chain)}/${digest}`}
               target="_blank"
               rel="noreferrer"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View on explorer
             </a>
             <Link
               href="/attestations"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View all attestations
             </Link>
@@ -377,8 +377,8 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
       )}
 
       <AlertDialog.Root open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialog.Content className="bg-white border border-black px-6 py-5 max-w-md mx-auto">
-          <AlertDialog.Title className="text-lg font-black text-black mb-2">
+        <AlertDialog.Content className="mx-auto max-w-md border border-black/10 bg-white px-6 py-5">
+          <AlertDialog.Title className="mv-heading text-lg mb-2">
             {alertMessage.includes('successfully') ? 'Success' : 'Notice'}
           </AlertDialog.Title>
           <AlertDialog.Description className="text-black/70 mb-4 whitespace-pre-wrap">
@@ -386,7 +386,7 @@ export function NewAptosAttestation({ chain, schema }: { chain: Chain, schema: a
           </AlertDialog.Description>
           <Flex gap="3" justify="end">
             <AlertDialog.Cancel>
-              <button className="px-4 py-2 border border-black text-xs font-black uppercase tracking-[0.3em]">Close</button>
+              <button className="mv-btn-secondary px-4 py-2">Close</button>
             </AlertDialog.Cancel>
           </Flex>
         </AlertDialog.Content>

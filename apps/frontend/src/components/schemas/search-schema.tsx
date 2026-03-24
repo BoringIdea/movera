@@ -78,19 +78,19 @@ export function SearchSchema({ chain }: { chain: Chain }) {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <section className="border border-black px-6 py-5 space-y-3 bg-white">
-          <p className="text-[0.6rem] font-black uppercase tracking-[0.4em] text-black/50">Schema Search</p>
-          <h1 className="text-3xl font-black">Make an attestation</h1>
-          <p className="text-sm font-bold text-black/60">Use existing schemas to issue attestations quickly.</p>
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel bg-white px-6 py-5 space-y-3">
+          <p className="mv-kicker">Schema Search</p>
+          <h1 className="mv-title text-3xl md:text-4xl">Make an attestation</h1>
+          <p className="mv-copy">Use existing schemas to issue attestations quickly.</p>
         </section>
 
-        <section className="border border-black bg-[#F5F8FF] px-5 py-5 space-y-4">
+        <section className="mv-panel-muted px-5 py-5 space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Search By Schema ID / UID</p>
-            <span className="text-[0.6rem] font-black tracking-[0.3em] text-black/40">{chain.toUpperCase()}</span>
+            <p className="mv-kicker">Search By Schema ID / UID</p>
+            <span className="font-mono text-[10px] tracking-[0.16em] text-black/40">{chain.toUpperCase()}</span>
           </div>
           <div className="flex flex-col md:flex-row gap-3">
             <input
@@ -98,42 +98,42 @@ export function SearchSchema({ chain }: { chain: Chain }) {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="e.g. 7 or 0x3969bb..."
-              className="flex-1 h-12 border border-black bg-white px-4 text-sm font-bold focus:outline-none"
+              className="mv-input flex-1 h-12 px-4 text-sm"
             />
             <button
               onClick={handleSearch}
               disabled={isSearching}
-              className="h-12 border border-black bg-[#2792FF] text-white font-black text-sm uppercase tracking-[0.4em] disabled:opacity-60"
+              className="mv-btn-primary h-12 disabled:opacity-60"
             >
               {isSearching ? 'SEARCHING...' : 'SEARCH'}
             </button>
           </div>
-          <p className="text-xs font-bold text-black/40">Search both on-chain schema IDs and their UID addresses.</p>
+          <p className="text-xs text-black/40">Search both on-chain schema IDs and their UID addresses.</p>
         </section>
 
-        <section className="border border-black bg-white px-6 py-5 space-y-3">
+        <section className="mv-panel bg-white px-6 py-5 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Search Result</p>
-            <span className="text-[0.6rem] font-black tracking-[0.2em] text-black/40">Latest match</span>
+            <p className="mv-kicker">Search Result</p>
+            <span className="font-mono text-[10px] tracking-[0.16em] text-black/40">Latest match</span>
           </div>
           {searchResult ? (
             <Link href={`/schema/${searchResult.uid}`} className="block">
-              <div className="border border-black bg-[#D0E8FF] px-5 py-4 space-y-1">
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">#{searchResult.id}</p>
-                <p className="text-sm font-black text-black break-all">{searchResult.uid}</p>
+              <div className="border border-black/10 bg-[rgba(245,249,255,0.92)] px-5 py-4 space-y-1">
+                <p className="mv-kicker">#{searchResult.id}</p>
+                <p className="text-sm text-black break-all">{searchResult.uid}</p>
               </div>
             </Link>
           ) : (
-            <div className="border border-black/30 px-4 py-6 text-sm font-bold text-black/60 text-center">No matching schema found yet.</div>
+            <div className="border border-black/10 px-4 py-6 text-sm text-black/60 text-center">No matching schema found yet.</div>
           )}
         </section>
 
-        <section className="border border-black bg-[#F9FBFF] px-5 py-5 space-y-4">
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-black/60">Need inspiration?</p>
+        <section className="mv-panel-muted px-5 py-5 space-y-4">
+          <p className="mv-kicker">Need inspiration?</p>
           {isLoadingFeatured ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="border border-black bg-white px-4 py-4 space-y-1 animate-pulse">
+                <div key={i} className="border border-black/10 bg-white/72 px-4 py-4 space-y-1 animate-pulse">
                   <div className="h-3 bg-gray-200 w-16"></div>
                   <div className="h-5 bg-gray-200 w-3/4"></div>
                   <div className="h-3 bg-gray-200 w-full"></div>
@@ -146,16 +146,16 @@ export function SearchSchema({ chain }: { chain: Chain }) {
                 <Link
                   href={`/schema/${schema.uid}`}
                   key={schema.id}
-                  className="border border-black bg-white px-4 py-4 space-y-1 hover:bg-[#D0E8FF] transition-colors"
+                  className="border border-black/10 bg-white px-4 py-4 space-y-1 transition-colors hover:bg-[rgba(245,249,255,0.92)]"
                 >
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">#{schema.id}</p>
-                  <p className="text-base font-black text-black">{schema.label}</p>
-                  <p className="text-[0.6rem] font-bold tracking-[0.2em] text-black/40 break-all">{schema.uid}</p>
+                  <p className="mv-kicker">#{schema.id}</p>
+                  <p className="text-base text-black">{schema.label}</p>
+                  <p className="font-mono text-[10px] tracking-[0.16em] text-black/40 break-all">{schema.uid}</p>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="border border-black/30 px-4 py-6 text-sm font-bold text-black/60 text-center">
+            <div className="border border-black/10 px-4 py-6 text-sm text-black/60 text-center">
               No schemas available at the moment.
             </div>
           )}

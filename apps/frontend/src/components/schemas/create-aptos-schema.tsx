@@ -117,51 +117,51 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
   return (
     <div className="min-h-screen bg-white text-black">
       <Header />
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <section className="border border-black bg-[#F4F7FF] px-6 py-5 space-y-3">
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel-muted space-y-3 px-6 py-5">
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Creation</p>
-              <h1 className="text-3xl font-black">Create an Aptos schema</h1>
-              <p className="text-sm font-bold text-black/60">Define attestations that run on {chain.toUpperCase()}.</p>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40">{fields.length} field(s)</p>
+              <p className="mv-kicker">Schema Creation</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Create an Aptos schema</h1>
+              <p className="mv-copy">Define attestations that run on {chain.toUpperCase()}.</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">{fields.length} field(s)</p>
             </div>
-            <div className="text-right space-y-1 text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40">
+            <div className="text-right space-y-1 font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">
               <span>{network?.toUpperCase() ?? chain.toUpperCase()}</span>
               <span>{isRevocable ? 'Revocable' : 'Fixed'}</span>
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel space-y-4 px-5 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Fields</p>
-              <p className="text-xs font-bold text-black/50">Name fields, pick types, toggle vectors.</p>
+              <p className="mv-kicker">Schema Fields</p>
+              <p className="text-xs text-black/50">Name fields, pick types, toggle vectors.</p>
             </div>
-            <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">Editable</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Editable</span>
           </div>
           <div className="space-y-3">
             {fields.map((field, index) => (
-              <div key={index} className="border border-black px-4 py-4 space-y-3">
-                <div className="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/50">
+              <div key={index} className="space-y-3 border border-black/10 bg-white/72 px-4 py-4">
+                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
                   <span>Field #{index + 1}</span>
                   <span>{field.array ? 'Vector' : 'Scalar'}</span>
                 </div>
                 <div className="grid gap-3 md:grid-cols-3">
                   <div className="space-y-1">
-                    <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Field Name</Label>
+                    <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Field Name</Label>
                     <Input
                       placeholder="Enter field name"
                       value={field.name}
                       onChange={(e) => handleFieldChange(index, 'name', e.target.value)}
-                      className="w-full h-11 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                      className="mv-input h-11 w-full px-3 text-sm tracking-[0.08em]"
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Field Type</Label>
+                    <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Field Type</Label>
                     <Select value={field.type} onValueChange={(value) => handleFieldChange(index, 'type', value)}>
-                      <SelectTrigger className="border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none">
+                      <SelectTrigger className="mv-input text-sm tracking-[0.08em]">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -179,7 +179,7 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
                       onCheckedChange={(checked) => handleFieldChange(index, 'array', Boolean(checked))}
                       className="border border-black rounded-none"
                     />
-                    <span className="text-[0.7rem] font-black uppercase tracking-[0.3em] text-black/60">Array</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Array</span>
                   </div>
                 </div>
               </div>
@@ -188,62 +188,62 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
           <button
             type="button"
             onClick={handleAddField}
-            className="w-full border border-black bg-[#D0E8FF] text-black font-black uppercase tracking-[0.3em] px-4 py-2"
+            className="w-full border border-black/10 bg-[rgba(245,249,255,0.92)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black"
           >
             + Add Field
           </button>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel space-y-4 px-5 py-5">
           <div>
-            <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Metadata</p>
-            <p className="text-xs font-bold text-black/50">Describe the schema before publishing.</p>
+            <p className="mv-kicker">Schema Metadata</p>
+            <p className="text-xs text-black/50">Describe the schema before publishing.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Name (Optional)</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Name (Optional)</Label>
               <Input
                 type="text"
                 placeholder="Set the name of the schema"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
               />
             </div>
             <div className="space-y-1">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">URL (Optional)</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">URL (Optional)</Label>
               <Input
                 type="text"
                 placeholder="Set the URL of the schema"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
               />
             </div>
           </div>
           <div className="space-y-1">
-            <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Description (Optional)</Label>
+            <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Description (Optional)</Label>
             <Input
               type="text"
               placeholder="Set the description of the schema"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full h-12 px-3 border border-black text-sm font-semibold uppercase tracking-[0.1em] focus:outline-none"
+              className="mv-input h-12 w-full px-3 text-sm uppercase tracking-[0.08em]"
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Resolver Address (Optional)</Label>
+            <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Resolver Address (Optional)</Label>
             <Input
               type="text"
               placeholder="Optional smart contract address"
               value={resolver}
               onChange={(e) => setResolver(e.target.value)}
-              className="w-full h-12 px-3 border border-black text-sm font-semibold uppercase tracking-[0.1em] focus:outline-none"
+              className="mv-input h-12 w-full px-3 text-sm uppercase tracking-[0.08em]"
             />
           </div>
         </section>
 
-        <section className="border border-black bg-[#F4F7FF] px-5 py-4 space-y-4">
+        <section className="mv-panel-muted space-y-4 px-5 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <input
@@ -253,18 +253,18 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
                 onChange={() => setIsRevocable(!isRevocable)}
                 className="w-4 h-4 border border-black"
               />
-              <Label htmlFor="revocable" className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+              <Label htmlFor="revocable" className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 Make schema revocable
               </Label>
             </div>
-            <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/50">Tx: {digest || 'Pending'}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">Tx: {digest || 'Pending'}</span>
           </div>
           <div>
             <button
               type="button"
               onClick={() => handleMoveCall(fields, isRevocable)}
               disabled={!isFormValid() || isLoading || !connected}
-              className="w-full md:w-auto border border-black bg-[#2792FF] text-white px-6 py-3 text-xs font-black uppercase tracking-[0.3em] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mv-btn-primary w-full md:w-auto disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -280,24 +280,24 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
       </main>
 
       {digest && (
-        <section className="max-w-6xl mx-auto px-4 py-5 space-y-3 border border-black bg-[#F4FFF9]">
-          <div className="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/50">
+        <section className="mv-frame space-y-3 border border-black/10 bg-[rgba(245,249,255,0.92)] px-4 py-5">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
             <span>Schema published</span>
             <span>Digest</span>
           </div>
-          <p className="text-sm font-black text-black break-all">{digest}</p>
+          <p className="break-all text-sm text-black">{digest}</p>
           <div className="flex flex-wrap gap-3">
             <a
               href={`${getExplorerTxUrl(chain)}/${digest}`}
               target="_blank"
               rel="noreferrer"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View on explorer
             </a>
             <Link
               href="/schemas"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View all schemas
             </Link>
@@ -306,8 +306,8 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
       )}
 
       <AlertDialog.Root open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialog.Content className="bg-white border border-black px-6 py-5 max-w-md mx-auto">
-          <AlertDialog.Title className="text-lg font-black text-black mb-2">
+        <AlertDialog.Content className="mx-auto max-w-md border border-black/10 bg-white px-6 py-5">
+          <AlertDialog.Title className="mv-heading mb-2 text-lg">
             {alertMessage.includes('successfully') ? 'Success' : 'Notice'}
           </AlertDialog.Title>
           <AlertDialog.Description className="text-black/70 mb-4 whitespace-pre-wrap">
@@ -315,7 +315,7 @@ export function CreateAptosSchema({ chain }: { chain: Chain }) {
           </AlertDialog.Description>
           <Flex gap="3" justify="end">
             <AlertDialog.Cancel>
-              <button className="px-4 py-2 border border-black text-xs font-black uppercase tracking-[0.3em]">Close</button>
+              <button className="mv-btn-secondary px-4 py-2">Close</button>
             </AlertDialog.Cancel>
           </Flex>
         </AlertDialog.Content>

@@ -15,7 +15,7 @@ interface VolumeTrendChartProps {
 export function VolumeTrendChart({ data }: VolumeTrendChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-24 text-xs font-bold uppercase tracking-[0.2em] text-black/50 border border-dashed border-black rounded">
+      <div className="flex h-24 items-center justify-center border border-dashed border-black/20 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
         No data available
       </div>
     );
@@ -29,7 +29,7 @@ export function VolumeTrendChart({ data }: VolumeTrendChartProps) {
 
   return (
     <div className="space-y-3 flex flex-col h-full">
-      <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.2em] text-black/60">
+      <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
         <span>24h Volume</span>
         <span>Total ${formatVolume(data.reduce((sum, point) => sum + point.volume, 0))}</span>
       </div>
@@ -41,7 +41,7 @@ export function VolumeTrendChart({ data }: VolumeTrendChartProps) {
             style={{ minWidth: '1rem' }}
           >
             <div
-              className="w-full bg-[#2792FF] rounded-md transition-all"
+              className="w-full bg-[#5f9bff] transition-all"
               style={{ height: `${point.heightPx}px` }}
               title={`${point.hour}: $${formatVolume(point.volume)}`}
             />

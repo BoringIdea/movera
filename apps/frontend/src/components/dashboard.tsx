@@ -79,71 +79,71 @@ export function Dashboard({
   }));
 
   return (
-    <div className="min-h-screen bg-[#F4F7FF] text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="flex flex-col items-center border-t border-black bg-[#F4F7FF] px-4 pb-10 pt-6">
-        <div className="w-full max-w-6xl space-y-6">
-          <section className="flex flex-col gap-4 border border-black bg-white px-6 py-5 md:flex-row md:items-center md:justify-between">
+      <main className="border-t border-black/10 px-4 pb-10 pt-6 md:px-6">
+        <div className="mv-frame space-y-6">
+          <section className="mv-panel flex flex-col gap-4 px-6 py-6 md:flex-row md:items-end md:justify-between">
             <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/70">Ledger Overview</p>
-              <h1 className="text-3xl font-black tracking-tight text-black">Movera Protocol Dashboard</h1>
-              <p className="text-sm font-bold text-black/80">
+              <p className="mv-kicker">Ledger Overview</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Movera Protocol Dashboard</h1>
+              <p className="mv-copy">
                 Chain: {formattedChain} · Network: {network ?? 'mainnet'}
               </p>
             </div>
-            <div className="flex flex-col items-start gap-2 text-right text-sm font-bold md:items-end">
-              <span className="rounded-none border border-black bg-[#D0E8FF] px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#2792FF]">
+            <div className="flex flex-col items-start gap-2 text-right md:items-end">
+              <span className="mv-accent-tag">
                 Live
               </span>
-              <p className="text-xs uppercase tracking-[0.2em] text-black/70">Last synced {lastSyncedTime}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Last synced {lastSyncedTime}</p>
               <button
                 type="button"
                 onClick={() => router.push('/schema/search')}
-                className="rounded-none border border-black bg-[#2792FF] px-5 py-2 text-sm font-bold uppercase tracking-[0.15em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+                className="mv-btn-primary"
               >
                 Start attestation
               </button>
             </div>
           </section>
 
-          <section className="grid gap-4 border border-black bg-white px-4 py-4 md:grid-cols-3">
+          <section className="grid gap-4 md:grid-cols-3">
             {[
               {
                 title: 'Total Attestations',
                 value: attestationCount,
                 label: 'Created attestations',
-                gradient: 'linear-gradient(180deg, #f7f8ff 0%, #dbe7ff 100%)'
+                tone: 'bg-[rgba(238,245,255,0.9)]'
               },
               {
                 title: 'Unique Attestors',
                 value: attestorCount,
                 label: 'Active attestors',
-                gradient: 'linear-gradient(180deg, #fff6ef 0%, #ffe7c8 100%)'
+                tone: 'bg-white/88'
               },
               {
                 title: 'Schemas',
                 value: schemaCount,
                 label: 'Available schemas',
-                gradient: 'linear-gradient(180deg, #effffe 0%, #d8ffe2 100%)'
+                tone: 'bg-[rgba(243,248,255,0.92)]'
               },
             ].map((card) => (
-              <div key={card.title} className="border border-black px-4 py-4 text-black" style={{ backgroundImage: card.gradient }}>
-                <div className="inline-flex px-3 py-1 rounded-none border border-black mb-3 bg-white/70">
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.25em] text-black/70">{card.title}</p>
+              <div key={card.title} className={`mv-panel px-4 py-5 text-black ${card.tone}`}>
+                <div className="mv-tag mb-3 bg-white/70">
+                  <p>{card.title}</p>
                 </div>
-                <p className="text-3xl font-black text-black">{card.value?.toLocaleString() ?? '0'}</p>
-                <p className="text-xs font-bold text-black/60">{card.label}</p>
+                <p className="mv-heading text-4xl">{card.value?.toLocaleString() ?? '0'}</p>
+                <p className="mt-2 text-sm text-black/55">{card.label}</p>
               </div>
             ))}
           </section>
 
-          <section className="space-y-4 border border-black bg-white px-6 py-5">
+          <section className="mv-panel space-y-4 px-6 py-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/70">Status & history</p>
-                <h2 className="text-xl font-black text-black">Recent confirmations</h2>
+                <p className="mv-kicker">Status & history</p>
+                <h2 className="mv-heading">Recent confirmations</h2>
               </div>
-              <span className="rounded-none border border-black bg-[#D0E8FF] px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-black">
+              <span className="mv-accent-tag">
                 Attested
               </span>
             </div>
@@ -152,37 +152,37 @@ export function Dashboard({
                 timelineEvents.map((event) => (
                   <div
                     key={`${event.title}-${event.time}`}
-                    className="flex flex-col border-l-4 border-black bg-white px-4 py-3 md:flex-row md:items-center md:justify-between"
+                    className="flex flex-col border border-black/10 bg-white/72 px-4 py-3 md:flex-row md:items-center md:justify-between"
                   >
                     <div className="flex-1 space-y-1">
-                      <p className="text-sm font-black uppercase tracking-[0.2em] text-black">{event.title}</p>
-                      <p className="text-xs font-bold text-black/70">{event.detail}</p>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-black">{event.title}</p>
+                      <p className="text-sm text-black/62">{event.detail}</p>
                     </div>
-                    <div className="flex items-center gap-3 text-xs font-bold text-black">
+                    <div className="flex items-center gap-3 text-xs text-black">
                       <span>{event.time}</span>
-                      <span className="rounded-none border border-black bg-[#D0E8FF] px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] text-black">
+                      <span className="mv-accent-tag">
                         {formattedChain}
                       </span>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm font-bold text-black/60">No attestation events available yet.</p>
+                <p className="text-sm text-black/55">No attestation events available yet.</p>
               )}
             </div>
           </section>
 
-          <section className="border border-black bg-white">
-            <div className="border-b border-black px-6 py-4">
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/70">Latest entries</p>
-              <h2 className="text-2xl font-black text-black">Recent attestations</h2>
-              <p className="text-xs font-bold text-black/70">
+          <section className="mv-panel">
+            <div className="border-b border-black/10 px-6 py-4">
+              <p className="mv-kicker">Latest entries</p>
+              <h2 className="mv-heading">Recent attestations</h2>
+              <p className="mt-1 text-sm text-black/55">
                 Latest {formattedChain} Attestation activity recorded on-chain
               </p>
             </div>
             <div className="px-0 py-6">
               {isLoading ? (
-                <div className="flex justify-center py-10 text-sm font-bold text-black/60">
+                <div className="flex justify-center py-10 font-mono text-[11px] uppercase tracking-[0.16em] text-black/45">
                   Loading recent attestations...
                 </div>
               ) : (
@@ -199,12 +199,12 @@ export function Dashboard({
 
           {totalPages > 1 && (
             <div className="flex justify-center">
-              <div className="flex flex-wrap items-center justify-center gap-2 border border-black bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.2em] text-black">
+              <div className="mv-panel flex flex-wrap items-center justify-center gap-2 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-black/72">
                 <button
                   type="button"
                   onClick={() => setCurrentPage(1)}
                   disabled={currentPage === 1 || isLoading}
-                  className="rounded-none border border-black bg-white px-3 py-1 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border border-black/10 bg-white/72 px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   first
                 </button>
@@ -212,18 +212,18 @@ export function Dashboard({
                   type="button"
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1 || isLoading}
-                  className="rounded-none border border-black bg-white px-3 py-1 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border border-black/10 bg-white/72 px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   &lt;
                 </button>
-                <span className="px-3 py-1 text-xs font-bold text-black">
+                <span className="px-3 py-1 text-black">
                   Page {currentPage} of {totalPages} ({attestationCount} total)
                 </span>
                 <button
                   type="button"
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages || isLoading}
-                  className="rounded-none border border-black bg-white px-3 py-1 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border border-black/10 bg-white/72 px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   &gt;
                 </button>
@@ -231,7 +231,7 @@ export function Dashboard({
                   type="button"
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage === totalPages || isLoading}
-                  className="rounded-none border border-black bg-white px-3 py-1 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border border-black/10 bg-white/72 px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   last
                 </button>

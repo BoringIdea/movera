@@ -28,12 +28,12 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
     <div className="flex flex-wrap gap-2">
       <Link
         href={`/schema/${attestation.schema_address}`}
-        className="rounded-none border border-black bg-[#D0E8FF] px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#2792FF]"
+        className="mv-accent-tag px-2 py-0.5"
       >
         #{attestation.schema_id}
       </Link>
       {attestation.schema_name && (
-        <span className="rounded-none border border-black bg-white px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-black">
+        <span className="mv-tag bg-white px-2 py-0.5 text-black">
           {attestation.schema_name}
         </span>
       )}
@@ -45,27 +45,27 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
       <div className="min-w-full">
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-black bg-white">
-              <TableHead className="w-[90px] px-4 py-4 text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+            <TableRow className="border-b border-black/10 bg-white/70">
+              <TableHead className="w-[90px] px-4 py-4 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 UID
               </TableHead>
               {!isMobile && (
-                <TableHead className="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+                <TableHead className="px-6 py-4 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                   Schema
                 </TableHead>
               )}
-              <TableHead className="px-4 py-4 text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+              <TableHead className="px-4 py-4 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 From
               </TableHead>
-              <TableHead className="px-4 py-4 text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+              <TableHead className="px-4 py-4 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 To
               </TableHead>
               {!isMobile && (
-                <TableHead className="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+                <TableHead className="px-6 py-4 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                   Type
                 </TableHead>
               )}
-              <TableHead className="px-4 py-4 min-w-[120px] text-left text-xs font-black uppercase tracking-[0.3em] text-black">
+              <TableHead className="px-4 py-4 min-w-[120px] text-left font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 Age
               </TableHead>
             </TableRow>
@@ -74,12 +74,12 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
             {attestations.map((attestation: any, index: number) => (
               <TableRow
                 key={`${attestation.address}-${index}`}
-                className="border-b border-black hover:bg-[#D0E8FF]/30 transition-colors duration-150"
+                className="border-b border-black/10 transition-colors duration-150 hover:bg-[#eef5ff]/60"
               >
                 <TableCell className="px-4 py-4">
                   <Link
                     href={`/attestation/${attestation.address}`}
-                    className="font-bold text-black hover:text-[#2792FF] transition-colors duration-150"
+                    className="font-mono text-xs text-black transition-colors duration-150 hover:text-[#5f9bff]"
                   >
                     {shortenAddress(attestation.address)}
                   </Link>
@@ -92,7 +92,7 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
                 <TableCell className="px-4 py-4">
                   <Link
                     href={`/address/${attestation.attestor}`}
-                    className="font-semibold text-black hover:text-[#2792FF] transition-colors duration-150"
+                    className="font-mono text-xs text-black transition-colors duration-150 hover:text-[#5f9bff]"
                   >
                     {shortenAddress(attestation.attestor)}
                   </Link>
@@ -100,7 +100,7 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
                 <TableCell className="px-4 py-4">
                   <Link
                     href={`/address/${attestation.recipient}`}
-                    className="font-semibold text-black hover:text-[#2792FF] transition-colors duration-150"
+                    className="font-mono text-xs text-black transition-colors duration-150 hover:text-[#5f9bff]"
                   >
                     {shortenAddress(attestation.recipient)}
                   </Link>
@@ -113,13 +113,13 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
                       
                       if (storageType === 0) {
                         return (
-                          <span className="inline-block whitespace-nowrap rounded-none border border-black bg-white px-2 py-0.5 text-[0.65rem] font-black uppercase tracking-[0.2em] text-black">
+                          <span className="mv-tag whitespace-nowrap bg-white px-2 py-0.5 text-black">
                             ON CHAIN
                           </span>
                         );
                       } else {
                         return (
-                          <span className="inline-block whitespace-nowrap rounded-none border border-black bg-[#D0E8FF] px-2 py-0.5 text-[0.65rem] font-black uppercase tracking-[0.2em] text-[#2792FF]">
+                          <span className="mv-accent-tag whitespace-nowrap px-2 py-0.5">
                             OFF CHAIN
                           </span>
                         );
@@ -128,7 +128,7 @@ export function AptosAttestationTable({ attestations }: { attestations: any[] })
                   </TableCell>
                 )}
                 <TableCell className="px-4 py-4 min-w-[120px]">
-                  <span className="font-mono text-xs font-bold text-black/70 whitespace-nowrap">
+                  <span className="font-mono text-xs whitespace-nowrap text-black/55">
                     {formatDistanceToNow(parseTimestamp(attestation.time), { addSuffix: true })}
                   </span>
                 </TableCell>

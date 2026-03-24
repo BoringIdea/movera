@@ -49,19 +49,19 @@ export default function AttestationsWithSchema({ params }: { params: { schema: s
   }, [schema, currentChain, network, currentPage]);
 
   return (
-    <div className="flex flex-col w-full min-h-screen">
+    <div className="mv-shell flex w-full flex-col">
       <Header />
-      <div className="p-4">
-        <Link href={`/schema/${schema}`} className="text-blue-500 hover:underline">
-          <h1 className="text-xl font-bold">
+      <div className="mv-frame py-6">
+        <Link href={`/schema/${schema}`} className="transition-colors hover:text-[#5f9bff]">
+          <h1 className="mv-heading text-2xl">
             Attestations for Schema <span className="custom-blue-link">{schema}</span>
           </h1>
         </Link>
       </div>
-      <div className="p-4">
+      <div className="mv-frame pb-6">
         {isLoading ? (
-          <div className="flex justify-center items-center py-8">
-            <div className="text-gray-500">Loading attestations...</div>
+          <div className="flex items-center justify-center py-8">
+            <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-black/45">Loading attestations...</div>
           </div>
         ) : (
           <>
@@ -73,8 +73,8 @@ export default function AttestationsWithSchema({ params }: { params: { schema: s
         )}
       </div>
       {totalPages > 1 && (
-        <div>
-          <div className="flex justify-center items-center mt-4 space-x-2">
+        <div className="pb-8">
+          <div className="mv-panel mx-auto mt-4 flex w-fit items-center justify-center space-x-2 px-4 py-3">
             <Button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1 || isLoading}

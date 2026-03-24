@@ -16,10 +16,10 @@ export function FundingRatesWidget({ markets }: FundingRatesWidgetProps) {
   const topNegative = sortedByRate.filter(m => m.funding_rate < 0).slice(-3).reverse();
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Funding Rates</h3>
-        <div className="text-xs text-gray-500">
+    <Card className="mv-panel p-6">
+      <div className="mb-6 flex items-center justify-between">
+        <h3 className="mv-heading text-[1.55rem]">Funding Rates</h3>
+        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
           Updated every 8h
         </div>
       </div>
@@ -28,12 +28,12 @@ export function FundingRatesWidget({ markets }: FundingRatesWidgetProps) {
         {/* Highest Positive Rates */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-green-500" />
-            <h4 className="text-sm font-semibold text-gray-700">Highest Positive</h4>
+            <TrendingUp className="w-4 h-4 text-[#5f9bff]" />
+            <h4 className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55">Highest Positive</h4>
           </div>
           <div className="space-y-2">
             {topPositive.length === 0 ? (
-              <div className="text-sm text-gray-400">No positive rates</div>
+              <div className="font-mono text-xs uppercase tracking-[0.16em] text-black/35">No positive rates</div>
             ) : (
               topPositive.map((market, index) => (
                 <FundingRateItem
@@ -50,12 +50,12 @@ export function FundingRatesWidget({ markets }: FundingRatesWidgetProps) {
         {/* Highest Negative Rates */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <TrendingDown className="w-4 h-4 text-red-500" />
-            <h4 className="text-sm font-semibold text-gray-700">Highest Negative</h4>
+            <TrendingDown className="w-4 h-4 text-[#b42318]" />
+            <h4 className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/55">Highest Negative</h4>
           </div>
           <div className="space-y-2">
             {topNegative.length === 0 ? (
-              <div className="text-sm text-gray-400">No negative rates</div>
+              <div className="font-mono text-xs uppercase tracking-[0.16em] text-black/35">No negative rates</div>
             ) : (
               topNegative.map((market, index) => (
                 <FundingRateItem
@@ -71,21 +71,21 @@ export function FundingRatesWidget({ markets }: FundingRatesWidgetProps) {
       </div>
 
       {/* APY Estimate */}
-      <div className="mt-6 pt-6 border-t border-gray-200">
-        <div className="text-xs text-gray-500 mb-2">Estimated APY (annualized)</div>
+      <div className="mt-6 border-t border-black/10 pt-6">
+        <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">Estimated APY (annualized)</div>
         <div className="grid grid-cols-2 gap-4">
           {topPositive[0] && (
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <div className="text-xs text-gray-600 mb-1">{topPositive[0].market_name}</div>
-              <div className="text-lg font-bold text-green-600">
+            <div className="border border-[#d5e5ff] bg-[#eef5ff] p-3 text-center">
+              <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{topPositive[0].market_name}</div>
+              <div className="mv-heading text-[1.55rem] text-[#1f4ea3]">
                 +{(topPositive[0].funding_rate * 365 * 3 * 100).toFixed(2)}%
               </div>
             </div>
           )}
           {topNegative[0] && (
-            <div className="text-center p-3 bg-red-50 rounded-lg">
-              <div className="text-xs text-gray-600 mb-1">{topNegative[0].market_name}</div>
-              <div className="text-lg font-bold text-red-600">
+            <div className="border border-[#efc0b8] bg-[#fff2ef] p-3 text-center">
+              <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">{topNegative[0].market_name}</div>
+              <div className="mv-heading text-[1.55rem] text-[#b42318]">
                 {(topNegative[0].funding_rate * 365 * 3 * 100).toFixed(2)}%
               </div>
             </div>
@@ -106,24 +106,24 @@ function FundingRateItem({ market, rank, type }: FundingRateItemProps) {
   const isPositive = type === 'positive';
   
   return (
-    <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+    <div className="flex items-center justify-between border border-black/10 bg-[#fbfbf8] p-2 transition-colors hover:bg-white">
       <div className="flex items-center gap-3">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-          isPositive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+        <div className={`flex h-6 w-6 items-center justify-center border font-mono text-[10px] ${
+          isPositive ? 'border-[#d5e5ff] bg-[#eef5ff] text-[#1f4ea3]' : 'border-[#efc0b8] bg-[#fff2ef] text-[#b42318]'
         }`}>
           {rank}
         </div>
-        <span className="text-sm font-medium text-gray-900">
+        <span className="text-sm text-black">
           {market.market_name}
         </span>
       </div>
       <div className="text-right">
-        <div className={`text-sm font-semibold ${
-          isPositive ? 'text-green-600' : 'text-red-600'
+        <div className={`font-mono text-sm ${
+          isPositive ? 'text-[#1f4ea3]' : 'text-[#b42318]'
         }`}>
           {(market.funding_rate * 100).toFixed(4)}%
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
           per 8h
         </div>
       </div>

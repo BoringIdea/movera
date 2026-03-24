@@ -54,10 +54,10 @@ export function MarketsTable({ markets }: MarketsTableProps) {
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900">All Markets</h2>
-        <div className="text-sm text-gray-500">
+    <Card className="mv-panel p-6">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="mv-heading text-[1.65rem]">All Markets</h2>
+        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
           Real-time data • {markets.length} markets
         </div>
       </div>
@@ -65,7 +65,7 @@ export function MarketsTable({ markets }: MarketsTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-black/10">
               <SortableHeader
                 label="Market"
                 sortKey="market_name"
@@ -113,12 +113,12 @@ export function MarketsTable({ markets }: MarketsTableProps) {
                 onSort={handleSort}
                 align="right"
               />
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
                 24h Trend
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-black/10">
             {sortedMarkets.map((market) => (
               <MarketRow key={market.market_addr} market={market} />
             ))}
@@ -143,7 +143,7 @@ function SortableHeader({ label, sortKey, currentSortKey, sortDirection, onSort,
   
   return (
     <th
-      className={`px-4 py-3 ${align === 'right' ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 select-none`}
+      className={`cursor-pointer select-none px-4 py-3 ${align === 'right' ? 'text-right' : 'text-left'} font-mono text-[10px] uppercase tracking-[0.16em] text-black/45 hover:bg-[#fbfbf8]`}
       onClick={() => onSort(sortKey)}
     >
       <div className={`flex items-center gap-1 ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
@@ -164,30 +164,30 @@ function SortableHeader({ label, sortKey, currentSortKey, sortDirection, onSort,
 
 function MarketRow({ market }: { market: Market }) {
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
+    <tr className="transition-colors hover:bg-[#fbfbf8]">
       <td className="px-4 py-4">
         <div className="flex items-center gap-2">
           {renderMarketIcon(market.market_name)}
-          <span className="font-semibold text-gray-900">{market.market_name}</span>
+          <span className="text-sm text-black">{market.market_name}</span>
         </div>
       </td>
-      <td className="px-4 py-4 text-right font-medium text-gray-900">
+      <td className="px-4 py-4 text-right font-mono text-sm text-black">
         ${formatNumber(market.mark_price)}
       </td>
       <td className="px-4 py-4 text-right">
-        <span className={`font-medium ${market.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <span className={`font-mono text-sm ${market.price_change_24h >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
           {market.price_change_24h >= 0 ? '↑' : '↓'} {Math.abs(market.price_change_24h).toFixed(2)}%
         </span>
       </td>
-      <td className="px-4 py-4 text-right font-medium text-gray-900">
+      <td className="px-4 py-4 text-right font-mono text-sm text-black">
         ${formatCurrency(market.volume_24h * market.mark_price)}
       </td>
       <td className="px-4 py-4 text-right">
-        <span className={`font-medium ${market.funding_rate >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <span className={`font-mono text-sm ${market.funding_rate >= 0 ? 'text-[#5f9bff]' : 'text-[#b42318]'}`}>
           {(market.funding_rate * 100).toFixed(4)}%
         </span>
       </td>
-      <td className="px-4 py-4 text-right font-medium text-gray-900">
+      <td className="px-4 py-4 text-right font-mono text-sm text-black">
         ${formatCurrency(market.open_interest)}
       </td>
       <td className="px-4 py-4 text-right">

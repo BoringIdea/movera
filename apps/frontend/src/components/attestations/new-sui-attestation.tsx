@@ -374,37 +374,37 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="mv-shell">
       <Header />
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <section className="border border-black bg-[#F4F7FF] px-6 py-5 space-y-3">
+      <main className="mv-frame space-y-6 py-8">
+        <section className="mv-panel-muted space-y-3 px-6 py-5">
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-2">
-              <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Attestation</p>
-              <h1 className="text-3xl font-black">Create a new attestation</h1>
-              <p className="text-sm font-bold text-black/60">Issue a signed statement based on schema #{schema.id}.</p>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40 break-all">{schema.address}</p>
+              <p className="mv-kicker">Schema Attestation</p>
+              <h1 className="mv-title text-3xl md:text-4xl">Create a new attestation</h1>
+              <p className="mv-copy">Issue a signed statement based on schema #{schema.id}.</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40 break-all">{schema.address}</p>
             </div>
-            <div className="text-right space-y-1 text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/40">
+            <div className="space-y-1 text-right font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">
               <span>{chain.toUpperCase()} network</span>
               <span>{schemaItem.length} fields</span>
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel space-y-4 px-5 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Schema Fields</p>
-              <p className="text-xs font-bold text-black/50">Fill each field exactly as defined by the schema.</p>
+              <p className="mv-kicker">Schema Fields</p>
+              <p className="text-xs text-black/50">Fill each field exactly as defined by the schema.</p>
             </div>
-            <span className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/40">Required</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/40">Required</span>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {schemaItem.map((field: SchemaField, index: number) => (
-              <div key={index} className="border border-black px-4 py-3 space-y-2">
-                <Label className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-black/60 flex items-center gap-2">
-                  <span className="px-2 py-[2px] border border-black text-[0.6rem] font-black tracking-[0.3em]">{field.type}</span>
+              <div key={index} className="space-y-2 border border-black/10 bg-white/72 px-4 py-3">
+                <Label className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
+                  <span className="border border-black/10 px-2 py-[2px] text-[10px] tracking-[0.16em]">{field.type}</span>
                   {field.name}
                 </Label>
                 <Input
@@ -412,21 +412,21 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                   placeholder={`Enter ${field.name} (${field.type})`}
                   value={fieldValues[field.name] || ''}
                   onChange={(e) => handleInputChange(field.name, e.target.value)}
-                  className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                  className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
                 />
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel space-y-4 px-5 py-5">
           <div>
-            <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Basic Information</p>
-            <p className="text-xs font-bold text-black/50">Recipient and metadata for this attestation.</p>
+            <p className="mv-kicker">Basic Information</p>
+            <p className="text-xs text-black/50">Recipient and metadata for this attestation.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 Recipient Address <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -434,12 +434,12 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                 placeholder="0x..."
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 Name <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -447,12 +447,12 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                 placeholder="Attestation name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 Description <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -460,12 +460,12 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                 placeholder="Attestation description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                 URL <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -473,59 +473,59 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                 placeholder="https://..."
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
                 required
               />
             </div>
           </div>
         </section>
 
-        <section className="border border-black bg-white px-5 py-5 space-y-4">
+        <section className="mv-panel space-y-4 px-5 py-5">
           <div>
-            <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Advanced Options</p>
-            <p className="text-xs font-bold text-black/50">Set optional metadata and type preferences.</p>
+            <p className="mv-kicker">Advanced Options</p>
+            <p className="text-xs text-black/50">Set optional metadata and type preferences.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Expiration Time</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Expiration Time</Label>
               <Input
                 type="datetime-local"
                 value={expirationTime}
                 onChange={(e) => setExpirationTime(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Reference Attestation ID</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Reference Attestation ID</Label>
               <Input
                 type="text"
                 placeholder="0x..."
                 value={refAttestationId}
                 onChange={(e) => setRefAttestationId(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">Resolver Module</Label>
+              <Label className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">Resolver Module</Label>
               <Input
                 type="text"
                 placeholder="Resolver module address"
                 value={resolverModule}
                 onChange={(e) => setResolverModule(e.target.value)}
-                className="w-full h-12 px-3 border border-black text-sm font-semibold tracking-[0.1em] focus:outline-none"
+                className="mv-input h-12 w-full px-3 text-sm tracking-[0.08em]"
               />
             </div>
           </div>
           <div className="space-y-4">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60 mb-2">Storage Type</p>
+              <p className="mv-kicker mb-2">Storage Type</p>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => handleStorageTypeChange(StorageType.ON_CHAIN)}
-                  className={`flex-1 h-12 border border-black font-black uppercase tracking-[0.3em] transition ${storageType === StorageType.ON_CHAIN
-                      ? 'bg-[#2792FF] text-white'
-                      : 'bg-white text-black hover:bg-[#F4F7FF]'
+                  className={`h-12 flex-1 border font-mono text-[10px] uppercase tracking-[0.16em] transition ${storageType === StorageType.ON_CHAIN
+                      ? 'border-transparent bg-[#5f9bff] text-white'
+                      : 'border-black/10 bg-white/72 text-black hover:bg-[#fbfbf8]'
                     }`}
                 >
                   On-chain
@@ -533,23 +533,23 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                 <button
                   type="button"
                   onClick={() => handleStorageTypeChange(StorageType.OFF_CHAIN)}
-                  className={`flex-1 h-12 border border-black font-black uppercase tracking-[0.3em] transition ${storageType === StorageType.OFF_CHAIN
-                      ? 'bg-[#2792FF] text-white'
-                      : 'bg-white text-black hover:bg-[#F4F7FF]'
+                  className={`h-12 flex-1 border font-mono text-[10px] uppercase tracking-[0.16em] transition ${storageType === StorageType.OFF_CHAIN
+                      ? 'border-transparent bg-[#5f9bff] text-white'
+                      : 'border-black/10 bg-white/72 text-black hover:bg-[#fbfbf8]'
                     }`}
                 >
                   Off-chain (Walrus)
                 </button>
               </div>
               {storageType === StorageType.OFF_CHAIN && (
-                <p className="text-[0.65rem] text-black/60 mt-2">
+                <p className="mt-2 text-[11px] text-black/55">
                   Off-chain data is uploaded by the backend to Walrus. Your wallet only signs the final on-chain attestation.
                 </p>
               )}
             </div>
 
             {storageType === StorageType.OFF_CHAIN && (
-              <div className="border border-black bg-[#F4F7FF] px-4 py-3 space-y-3">
+              <div className="space-y-3 border border-black/10 bg-[rgba(245,249,255,0.92)] px-4 py-3">
                 <div className="flex items-center gap-3">
                   <Checkbox
                     id="encrypted"
@@ -557,24 +557,24 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
                     onCheckedChange={(checked) => handleEncryptedChange(checked === true)}
                     className="w-4 h-4 border border-black"
                   />
-                  <Label htmlFor="encrypted" className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60 cursor-pointer">
+                  <Label htmlFor="encrypted" className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
                     Encrypt data with Seal
                   </Label>
                 </div>
 
                 {isEncrypted && (
                   <div className="pl-7">
-                    <div className="border border-black bg-white px-4 py-3">
-                      <p className="text-xs font-bold text-black/70">
+                    <div className="border border-black/10 bg-white/72 px-4 py-3">
+                      <p className="text-xs text-black/70">
                         Seal encryption is configured automatically using the Private Data pattern.
                       </p>
-                      <p className="text-xs font-bold text-black/50 mt-1">
+                      <p className="mt-1 text-xs text-black/50">
                         • Access control: Only the recipient can decrypt
                       </p>
-                      <p className="text-xs font-bold text-black/50">
+                      <p className="text-xs text-black/50">
                         • Key servers: Using default {network} key servers
                       </p>
-                      <p className="text-xs font-bold text-black/50">
+                      <p className="text-xs text-black/50">
                         • Seal ID: Generated from [attestor address][nonce]
                       </p>
                     </div>
@@ -585,7 +585,7 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
           </div>
         </section>
 
-        <section className="border border-black bg-[#F4F7FF] px-5 py-4 space-y-4">
+        <section className="mv-panel-muted space-y-4 px-5 py-4">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -594,14 +594,14 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
               onChange={handleRevocableChange}
               className="w-4 h-4 border border-black"
             />
-            <Label htmlFor="revocable" className="text-[0.65rem] font-black uppercase tracking-[0.3em] text-black/60">
+            <Label htmlFor="revocable" className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
               Make this attestation revocable
             </Label>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
             <Link
               href="/schemas"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               ← Back to Schemas
             </Link>
@@ -609,7 +609,7 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
               type="button"
               onClick={handleCreateAttestation}
               disabled={isLoading || !isConnected}
-              className="flex items-center justify-center gap-2 border border-black bg-[#2792FF] text-white px-5 py-2 text-xs font-black uppercase tracking-[0.3em] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mv-btn-primary gap-2 px-5 py-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -625,24 +625,24 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
       </main>
 
       {digest && (
-        <section className="max-w-6xl mx-auto px-4 py-5 space-y-3 border border-black bg-[#F4FFF9]">
-          <div className="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-[0.3em] text-black/50">
+        <section className="mv-frame space-y-3 border border-black/10 bg-[rgba(245,249,255,0.92)] px-4 py-5">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-black/50">
             <span>Attestation created</span>
             <span>Transaction hash</span>
           </div>
-          <p className="text-sm font-black text-black break-all">{digest}</p>
+          <p className="break-all text-sm text-black">{digest}</p>
           <div className="flex flex-wrap gap-3">
             <a
               href={`${getExplorerTxUrl(chain)}/${digest}`}
               target="_blank"
               rel="noreferrer"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View on explorer
             </a>
             <Link
               href="/attestations"
-              className="border border-black px-4 py-2 text-xs font-black uppercase tracking-[0.3em]"
+              className="mv-btn-secondary px-4 py-2"
             >
               View all attestations
             </Link>
@@ -651,8 +651,8 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
       )}
 
       <AlertDialog.Root open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialog.Content className="bg-white border border-black px-6 py-5 max-w-md mx-auto">
-          <AlertDialog.Title className="text-lg font-black text-black mb-2">
+        <AlertDialog.Content className="mx-auto max-w-md border border-black/10 bg-white px-6 py-5">
+          <AlertDialog.Title className="mv-heading mb-2 text-lg">
             {alertMessage.includes('successfully') ? 'Success' : 'Notice'}
           </AlertDialog.Title>
           <AlertDialog.Description className="text-black/70 mb-4 whitespace-pre-wrap">
@@ -660,7 +660,7 @@ export function NewSuiAttestation({ chain, schema }: { chain: Chain, schema: any
           </AlertDialog.Description>
           <Flex gap="3" justify="end">
             <AlertDialog.Cancel>
-              <button className="px-4 py-2 border border-black text-xs font-black uppercase tracking-[0.3em]">Close</button>
+              <button className="mv-btn-secondary px-4 py-2">Close</button>
             </AlertDialog.Cancel>
           </Flex>
         </AlertDialog.Content>
