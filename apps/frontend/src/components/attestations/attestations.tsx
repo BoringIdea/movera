@@ -58,7 +58,7 @@ export function Attestations({
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="mv-shell space-y-6 py-8">
+      <main className="mv-frame space-y-6 py-8">
         <section className="mv-panel-muted flex flex-col gap-4 px-6 py-5 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mv-kicker">Attestation Ledger</p>

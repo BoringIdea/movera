@@ -120,7 +120,7 @@ export function AptosAttestation({ chain, attestation }: { chain: Chain; attesta
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="mv-shell space-y-6 py-8">
+      <main className="mv-frame max-w-5xl space-y-6 py-8">
         <section className="mv-panel-muted px-6 py-5">
           <p className="mv-kicker">Attestation Detail</p>
           <h1 className="mv-title mt-3 text-3xl md:text-4xl">{isOffChain ? 'Offchain Attestation' : 'Onchain Attestation'}</h1>
